@@ -1,0 +1,3 @@
+./bom.sh &
+./stls.sh &
+
