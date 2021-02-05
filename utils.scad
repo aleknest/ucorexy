@@ -22,6 +22,11 @@ module translate_rotate(tr)
 			children(i);
 }
 
+module report_wago()
+{
+	deb(str("WAGO 222-415, 5 pins"));
+}
+
 module report_xt90()
 {
 	deb(str("XT90 jack"));

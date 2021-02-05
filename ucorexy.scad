@@ -24,6 +24,7 @@ use <hotbed.scad>
 use <enclosure.scad>
 use <feeder_stand.scad>
 use <xt90.scad>
+use <wago.scad>
 
 xposition=0;//-55..55
 yposition=0;//-55..55
@@ -179,6 +180,10 @@ feeder_stand();
 
 deb("*XT90:");
 xt90();
+
+//////////////////////////////////////////////////////////////
+deb("*WAGO:");
+wago();
 
 //////////////////////////////////////////////////////////////
 

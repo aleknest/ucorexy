@@ -14,8 +14,9 @@ use <hotbed.scad>
 use <enclosure.scad>
 use <feeder_stand.scad>
 use <xt90.scad>
+use <wago.scad>
 
-cmd="motor_blocks/m6_screw_driver";
+cmd="wago/wago";
 
 module list(s)
 {
@@ -64,6 +65,8 @@ if (cmd=="list")
 	list("feeder_stand/feeder_stand");
 	
 	list("xt90/xt90");
+	
+	list("wago/wago");
 		
 	list("x_carriage/x_carriage_main");
 	list("x_carriage/x_carriage_fans");
@@ -241,6 +244,13 @@ if (cmd=="xt90/xt90")
 {
 	rotate ([0,90,0])
 		xt90();
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="wago/wago")
+{
+	wago();
 }
 
 //////////////////////////////////////////////////////////////

@@ -334,3 +334,5 @@ function feeder_nema_plate_thickness()=2;
 
 function xt90_dim()=[60,17.65,17.4];
 function xt90_tr()=[vec_add(y_slot_bottomright_tr()[0],[-10,y_slot()/2-xt90_dim().x/2-40,10]),[0,0,-90]];
+
+function wago_tr()=[vec_add(enclosure_tr()[0],[41.5,19.5,enclosure_dim().z]),[0,0,0]];

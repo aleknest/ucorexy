@@ -345,13 +345,13 @@ z=0;
 //proto_z_belt(z);
 
 proto_back_slots();
-proto_heatbed_slots(z);
+//proto_heatbed_slots(z);
 //proto_heatbed(z);
 
 //proto_z_rails(z);
 
-proto_slot_brackets();
-proto_back_slots();
+//proto_slot_brackets();
+//proto_back_slots();
 
 // fysetc s6
 //translate ([-0,-68,-220])
