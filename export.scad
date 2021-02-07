@@ -15,8 +15,9 @@ use <enclosure.scad>
 use <feeder_stand.scad>
 use <xt90.scad>
 use <wago.scad>
+use <slot_cover.scad>
 
-cmd="wago/wago";
+cmd="y_carriage/mgn9_y_stopper";
 
 module list(s)
 {
@@ -31,6 +32,7 @@ if (cmd=="list")
 	list("y_carriage/y_carriage_left");
 	list("y_carriage/y_carriage_right");
 	list("y_carriage/y_carriage_right_flag");
+	list("y_carriage/mgn9_y_stopper");
 	
 	list("z_carriage/z_endstop");
 	list("z_carriage/z_endstop_lock");
@@ -208,6 +210,12 @@ if (cmd=="y_carriage/y_carriage_right_flag")
 	rotate ([-90,0,0])
 	y_carriage_right_flag();
 }
+if (cmd=="y_carriage/mgn9_y_stopper")
+{
+	rotate ([90,0,0])
+	mgn9_y_stopper();
+}
+	
 
 //////////////////////////////////////////////////////////////
 

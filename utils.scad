@@ -411,20 +411,23 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 		translate ([0,0,up])
 		rotate ([180,0,0])
 		{
-			m3_screw(h=screw,cap_out=60);
-			translate ([0,0,screw-2.6])
+			if (nut_type=="hex")
 			{
-				if (nut_type=="hex")
+				translate ([0,0,2])
+					m3_screw(h=screw,cap_out=60);
+				translate ([0,0,screw-2.6])
 				{
 					m3_nut_inner();
 					translate ([0,0,m3_nut_h()-0.01])
 						m3_nut(20);
 				}
-				else
-				if (nut_type=="square")
-				{
+			}
+			else
+			if (nut_type=="square")
+			{
+				m3_screw(h=screw,cap_out=60);
+				translate ([0,0,screw-2.6])
 					m3_square_nut();
-				}
 			}
 		}
 	}

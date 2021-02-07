@@ -234,5 +234,5 @@ module y_carriage_right_flag()
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
 //y_carriage_left();
-//y_carriage_right();
+y_carriage_right();
 //y_carriage_right_flag();

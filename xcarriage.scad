@@ -214,9 +214,12 @@ module xcarriage_blower_cut()
 */
 module x_cube(dim)
 {
+	//echo (dim);
 	//#cube (dim);
 	
 	cut1=[26.4,22];
+	fan_fix=[0.5,1,2];
+	fan_fix_up=2;
 	
 	translate ([dim.x,0,0])
 	rotate ([0,-90,0])
@@ -227,9 +230,15 @@ module x_cube(dim)
 			,[cut1[0],cut1[1],3.5]
 			,[dim.z,cut1[1],10]
 			,[dim.z,dim.y,2]
-			,[0,dim.y,1]
+			//,[0,dim.y,1]
+			,[fan_fix_up,dim.y,1]
+			,[fan_fix_up,dim.y+fan_fix.y,0]
+			,[-fan_fix.x,dim.y+fan_fix.y,0]
+			,[-fan_fix.x,dim.y,0]
+			,[0,dim.y,0]
 		],1));
 }
+//translate_rotate (xcarriage_tr()) x_cube([28, 60, 51.7]);
 
 module x_carriage_belt_fixer(op=0,report=false)
 {
@@ -413,11 +422,10 @@ module x_carriage(part="front",report=false)
 			translate_rotate (xcarriage_tr())
 			rotate ([90,0,0])
 			{
-				m3_screw(h=screw2[z]);
-				//m3_washer(out=40);
-				
 				if (z==0)
 				{
+					rotate ([0,0,-90])
+						m3_screw(h=screw2[z],cap_side_out=10);
 					report_m3_washer_hexnut(screw2[z]);
 					
 					translate ([0,-0.2,screw2[z]-3])
@@ -431,6 +439,7 @@ module x_carriage(part="front",report=false)
 				}
 				else
 				{
+					m3_screw(h=screw2[z]);
 					report_m3_washer_squarenut(screw2[z]);
 					
 					translate ([0,0,screw2[z]-3])
@@ -638,9 +647,9 @@ xposition=55;
 {
 	//x_carriage_main();
 	//x_carriage_fans();
-	x_carriage_front();
+	//x_carriage_front();
 	
-	//x_carriage_back();
+	x_carriage_back();
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }
