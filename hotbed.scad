@@ -130,8 +130,8 @@ module hotbed_knob()
 	h=knob_height;
 	rays=10;
 	angle=360/rays;
-	out=12;
-	knob_d=5;
+	out=12-3;
+	knob_d=5-1;
 	color ("silver")
 	difference()
 	{
@@ -156,7 +156,7 @@ module hotbed_knob()
 			report_m3_hexnut();
 			translate ([0,0,-20+0.01])
 				m3_nut(h=20);
-			m3_nut_inner();
+			m3_nut_inner(diff=0.2);
 			cylinder (d=3.6,h=20,$fn=20);
 		}
 	}
@@ -203,10 +203,11 @@ z=0;
 //proto_heatbed(z);
 //left_front_hotbed_support(z);
 //right_front_hotbed_support(z);
-left_back_hotbed_support(z);
+//left_back_hotbed_support(z);
 /*
 right_back_hotbed_support(z);
 hotbed_knobs(z);
 */
 
 //spring_spacer(height=12+10);
+hotbed_knob();

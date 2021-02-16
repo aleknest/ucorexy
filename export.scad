@@ -16,8 +16,9 @@ use <feeder_stand.scad>
 use <xt90.scad>
 use <wago.scad>
 use <slot_cover.scad>
+use <legs.scad>
 
-cmd="y_carriage/mgn9_y_stopper";
+cmd="slot_cover/slot_cover_10mm";
 
 module list(s)
 {
@@ -57,7 +58,7 @@ if (cmd=="list")
 	list("hotbed/support_frontright");
 	list("hotbed/support_frontleft");
 	list("hotbed/knob");
-	list("hotbed/spring_spacer_15mm");
+	list("hotbed/spring_spacer_12mm_half_spring");
 	
 	list("enclosure/enclosure_floor");
 	list("enclosure/enclosure_floor_fix");
@@ -67,8 +68,9 @@ if (cmd=="list")
 	list("feeder_stand/feeder_stand");
 	
 	list("xt90/xt90");
-	
 	list("wago/wago");
+	list("legs/leg");
+	list("slot_cover/slot_cover_10mm");
 		
 	list("x_carriage/x_carriage_main");
 	list("x_carriage/x_carriage_fans");
@@ -87,6 +89,7 @@ if (cmd=="x_endstop/x_endstop")
 }
 if (cmd=="x_endstop/x_endstop_lock")
 {
+	rotate ([-90,0,0])
 	x_endstop_lock();
 }
 if (cmd=="z_carriage/z_endstop")
@@ -188,9 +191,9 @@ if (cmd=="hotbed/knob")
 {
 	hotbed_knob();
 }
-if (cmd=="hotbed/spring_spacer_15mm")
+if (cmd=="hotbed/spring_spacer_12mm_half_spring")
 {
-	spring_spacer(height=15);
+	spring_spacer(height=12);
 }
 
 //////////////////////////////////////////////////////////////
@@ -212,7 +215,7 @@ if (cmd=="y_carriage/y_carriage_right_flag")
 }
 if (cmd=="y_carriage/mgn9_y_stopper")
 {
-	rotate ([90,0,0])
+	rotate ([0,0,0])
 	mgn9_y_stopper();
 }
 	
@@ -248,6 +251,14 @@ if (cmd=="feeder_stand/feeder_stand")
 
 //////////////////////////////////////////////////////////////
 
+if (cmd=="legs/leg")
+{
+	rotate ([0,180,0])
+	leg();
+}
+
+//////////////////////////////////////////////////////////////
+
 if (cmd=="xt90/xt90")
 {
 	rotate ([0,90,0])
@@ -259,6 +270,14 @@ if (cmd=="xt90/xt90")
 if (cmd=="wago/wago")
 {
 	wago();
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="slot_cover/slot_cover_10mm")
+{
+	rotate ([90,0,0])
+		slot_cover(h=10,down=1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -296,16 +315,3 @@ if (cmd=="x_carriage/x_carriage_belt_fixer_right")
 
 //////////////////////////////////////////////////////////////
 
-/*
-deb("Other:");
-
-translate ([xposition,y_rail_y()+yposition,0])
-{
-	x_carriage_back();
-	x_carriage_front();
-	x_carriage_belt_fixer_left();
-	x_carriage_belt_fixer_right();
-	x_carriage_fans();
-}
-
-*/

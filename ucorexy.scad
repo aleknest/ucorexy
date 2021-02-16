@@ -25,9 +25,11 @@ use <enclosure.scad>
 use <feeder_stand.scad>
 use <xt90.scad>
 use <wago.scad>
+use <slot_cover.scad>
+use <legs.scad>
 
 xposition=0;//-55..55
-yposition=0;//-55..55
+yposition=55;//-55..55
 zposition=45;//0..90
 
 deb(str("#Dimension: x=",front_back_slot()+20*2,", y=",y_slot()+20*2, ", z=",z_slot()));
@@ -104,6 +106,8 @@ translate ([0,yposition,0])
 	y_carriage_right();
 	y_carriage_right_flag();
 }
+translate_rotate(mgn9_y_stopper_tr())
+	mgn9_y_stopper();
 
 //////////////////////////////////////////////////////////////
 
@@ -186,6 +190,22 @@ deb("*WAGO:");
 wago();
 
 //////////////////////////////////////////////////////////////
+
+deb("*Legs:");
+translate ([0,0,-z_slot()/2])
+{
+	translate_rotate (z_slot_leftfront_tr())
+		leg();
+	translate_rotate (z_slot_rightfront_tr())
+		leg();
+	translate_rotate (z_slot_leftback_tr())
+		leg();
+	translate_rotate (z_slot_rightback_tr())
+		leg();
+}
+
+//////////////////////////////////////////////////////////////
+
 
 deb("*Other:");
 deb("Power supply 12V");

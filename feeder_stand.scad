@@ -39,14 +39,14 @@ module border(w,h,th,bcut)
 				linear_extrude (th+2,$fn=400)
 					circle (r=hi);
 				
-				rays=30;
+				rays=60;
 				angle=360/rays;
-				start_angle=3;
+				start_angle=3+1;
 				scale ([1,wi/hi,1])
 				for (a=[0:angle:360])
 					rotate ([0,0,a+start_angle])
 					translate ([0,-bcut/4,-1])
-						cube ([ho+10,bcut/2,th+2]);
+						cube ([ho+20,bcut/2,th+2]);
 			}
 			translate ([-cut.x-bcut/2,-cut.y-bcut/2,-1])
 				cube (cut);

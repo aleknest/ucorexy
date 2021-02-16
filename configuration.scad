@@ -286,6 +286,7 @@ function x_endstop_block_tr()=[[rightfront_motorblock_tr()[0].x-rightfront_motor
 function x_endstop_tr()=[vec_add(x_endstop_block_tr()[0],[11,20,4])
 						,[0,90,180]];
 function x_SS443A_cut()=[[30,10,40],[-26,0,-20]];
+function x_magnet_out()=2;
 function x_magnet_d()=2;
 function x_magnet_h()=2;
 
@@ -320,7 +321,7 @@ function enclosure_tr()=[[
 	,y_slot_bottomleft_tr()[0].z+enclosure_offsets().z-10
 ],[0,0,0]];
 
-function feeder_up()=80;
+function feeder_up()=80+90;
 function feeder_stand_tr()=[vec_add(z_slot_topfront_tr()[0],[0,0,10]),[0,0,0]];
 function feeder_center_point_tr() = [[e3d_tr(0)[0].x
 									 ,e3d_tr(0)[0].y
@@ -336,3 +337,6 @@ function xt90_dim()=[60,17.65,17.4];
 function xt90_tr()=[vec_add(y_slot_bottomright_tr()[0],[-10,y_slot()/2-xt90_dim().x/2-40,10]),[0,0,-90]];
 
 function wago_tr()=[vec_add(enclosure_tr()[0],[41.5,19.5,enclosure_dim().z]),[0,0,0]];
+
+function mgn9_y_stopper_h()=5.0;
+function mgn9_y_stopper_tr()=[vec_add(y_slot_left_tr()[0],[0,-y_rail()/2+y_rail_y()-mgn9_y_stopper_h(),10]),[-90,0,0]];

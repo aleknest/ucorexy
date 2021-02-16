@@ -219,15 +219,17 @@ module endstop_block(tr,etr,bdim,m3_screw_height,ss443_out,report=false)
 
 module magnet_cut(magnet_d,magnet_h)
 {
-	offs=0.2;
-	cylinder(d=magnet_d,h=magnet_h+offs,$fn=40);
-	cc=[0.6,0.2];
-	rays=8;
+	offs=[0.1,0.2];
+	cc=[0.2,0.1];
+	cylinder(d=magnet_d-cc[1]*2+offs.x*2,h=magnet_h+offs.y,$fn=40);
+	cylinder(d1=magnet_d+offs.x*2,d2=0.1,h=magnet_h+offs.y,$fn=40);
+	rays=20;
 	for (a=[0:360/rays:360])
 		rotate ([0,0,a])
 		translate ([-cc.x/2,0,0])
-			cube ([cc.x,magnet_d/2+cc.y,magnet_h+offs]);
+			cube ([cc.x,magnet_d/2+offs.x,magnet_h+offs.y]);
 }
+magnet_cut(2,2);
 
 module nema17_cut(add=false
 				,shaft=true
@@ -357,7 +359,6 @@ module slot_groove(height,smooth=false,big=false,enabled=false)
 			],20));
 	}
 }
-slot_groove(height=100,big=false,enabled=true);
 
 module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],report=false)
 {
@@ -459,4 +460,4 @@ module belt (length,smooth=false,width_add=[0,0])
 }
 
 
-slot_groove(height=100,smooth=false);
+//slot_groove(height=100,smooth=false);

@@ -25,9 +25,8 @@ module slot_cover_side(h,up,down)
 	]);
 }
 
-module slot_cover(h,up=0)
+module slot_cover(h,up=0,down=0)
 {
-	down=2;
 	slot_cover_side(h,up,down);
 	mirror([1,0,0])
 		slot_cover_side(h,up,down);
@@ -35,8 +34,18 @@ module slot_cover(h,up=0)
 
 module mgn9_y_stopper()
 {
-	slot_cover(h=7.5,up=10);
+	slot_cover(h=mgn9_y_stopper_h(),up=10,down=2);
 }
 
-mgn9_y_stopper();
-//slot_cover(h=7);
+//mgn9_y_stopper();
+
+//slot_cover(h=150,down=1);//1 pcs
+//slot_cover(h=155,down=1);//8pcs outer
+//slot_cover(h=230,down=1);
+slot_cover(h=180,down=1);
+
+/*
+proto_y_left();
+translate_rotate(mgn9_y_stopper_tr())
+	mgn9_y_stopper();
+*/

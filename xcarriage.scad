@@ -218,7 +218,7 @@ module x_cube(dim)
 	//#cube (dim);
 	
 	cut1=[26.4,22];
-	fan_fix=[0.5,1,2];
+	fan_fix=[2.5,1,2];
 	fan_fix_up=2;
 	
 	translate ([dim.x,0,0])
@@ -226,7 +226,7 @@ module x_cube(dim)
 	linear_extrude(dim.x)
 		polygon (polyRound([
 			 [0,0,1]
-			,[cut1[0],0,5]
+			,[cut1[0],0,3]
 			,[cut1[0],cut1[1],3.5]
 			,[dim.z,cut1[1],10]
 			,[dim.z,dim.y,2]
@@ -351,13 +351,25 @@ module x_carriage(part="front",report=false)
 	iz1=len(e3d_v6_dim)-3;
 	z1=e3d_v6_seq(iz1)+e3d_v6_up+e3d_v6_dim[iz1].y/2-1;
 	screw_y=-6;
+	mtr=[[xcarriage_tr()[0].x+xcarriage_dim().x/2-2
+		,xcarriage_tr()[0].y-x_magnet_out()
+		,x_endstop_tr()[0].z]
+		,[-90,0,0]];
 	
 	difference()
 	{
 		union()
 		{
-			translate_rotate (xcarriage_tr())
-				x_cube(xcarriage_dim());
+			fillet(r=0.6,steps=16)
+			{
+				translate_rotate (xcarriage_tr())
+					x_cube(xcarriage_dim());
+			
+				translate_rotate(mtr)
+					cylinder(d=x_magnet_d()+4,h=10);
+			}
+
+			
 			for (x=[-1,1])
 				translate ([10.5*x,screw_y,z1])
 				translate_rotate (e3d_tr(0))
@@ -455,10 +467,7 @@ module x_carriage(part="front",report=false)
 				x_carriage_belt_fixer(op=2);
 			}
 			
-		mtr=[[xcarriage_tr()[0].x+xcarriage_dim().x/2-2
-			,xcarriage_tr()[0].y-0.01
-			,x_endstop_tr()[0].z]
-			,[-90,0,0]];
+		translate ([0,-0.01,0])
 		translate_rotate(mtr)
 			magnet_cut(magnet_d=x_magnet_d(),magnet_h=x_magnet_h());
 	}
@@ -474,8 +483,9 @@ module xcarriage_cut(offs=0)
 
 module xcarriage_back_cut(offs=0)
 {
-	dim=[70,xcarriage_thickness()[2]-0.1+1,xcarriage_thickness()[3]+1+20+7-offs];
-	translate([-dim.x/2,xcarriage_dim().y-dim.y+offs+1,-1])
+	down=6;
+	dim=[70,xcarriage_thickness()[2]-0.1+1,xcarriage_thickness()[3]+28+down-offs];
+	translate([-dim.x/2,xcarriage_dim().y-dim.y+offs+1,-1-down])
 	translate_rotate (xcarriage_tr())
 		cube (dim);
 }
@@ -647,9 +657,9 @@ xposition=55;
 {
 	//x_carriage_main();
 	//x_carriage_fans();
-	//x_carriage_front();
+	x_carriage_front();
 	
-	x_carriage_back();
+	//x_carriage_back();
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }

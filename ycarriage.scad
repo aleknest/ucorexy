@@ -11,7 +11,7 @@ include <../_utils_v2/NopSCADlib/core.scad>
 include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 include <../_utils_v2/NopSCADlib/vitamins/pulleys.scad>
 
-module y_carriage_flag(part="",y_magnet_out=7.5)
+module y_carriage_flag(part="",y_magnet_out=5.5)
 {
 	offs=0.2;
 	y_magnet_outd=4;
@@ -47,7 +47,10 @@ module y_carriage_flag(part="",y_magnet_out=7.5)
 			report_magnet(y_magnet_d(),y_magnet_h());
 			translate ([0,0,y_magnet_out+0.02])
 			rotate ([180,0,0])
+			{
 				magnet_cut(magnet_d=y_magnet_d(),magnet_h=y_magnet_h());
+				cylinder (d=1.6,h=100,$fn=20);
+			}
 			y_carriage_flag(part="fix");
 		}
 	}
@@ -87,6 +90,7 @@ module y_carriage(part)
 	etr=[[y_endstop_tr()[0].x,ttr[0].y-dim_plate.x/2,y_endstop_tr()[0].z],[0,90,ttr[1].z]];
 	
 	screw=10;
+	screw2=part=="left"?6:screw;
 	screw_in=3;
 	
 	pulleys=part=="left"?
@@ -167,14 +171,19 @@ module y_carriage(part)
 						,carriage_height(rail_carriage(y_rail_type()))+screw-screw_in])
 					rotate ([180,0,0])
 					{
-						report_m3_washer(screw);
-						m3_screw(h=screw);
-						hull()
+						scr=y==-1?screw2:screw;
+						down=screw-scr;
+						translate ([0,0,down])
 						{
-							m3_washer(out=60);
-							if (y==1)
-								translate ([0,-20,0])
-									m3_washer(out=60);
+							report_m3_washer(scr);
+							m3_screw(h=scr);
+							hull()
+							{
+								m3_washer(out=60);
+								if (y==1)
+									translate ([0,-20,0])
+										m3_washer(out=60);
+							}
 						}
 					}
 					
@@ -234,5 +243,5 @@ module y_carriage_right_flag()
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
 //y_carriage_left();
-y_carriage_right();
-//y_carriage_right_flag();
+//y_carriage_right();
+y_carriage_right_flag();

@@ -145,7 +145,6 @@ module front_motorblock(part,report=false)
 			if (report) report_SS443a();
 			translate_rotate (y_endstop_tr())
 				SS443A(SS443A_out=4,SS443A_yout=8,SS443A_yout_addthickness=8);
-				//SS443A(SS443A_out=ss443_out-3,SS443A_yout=8,SS443A_yout_addthickness=4.17-1,wire_cut=[0.6+0.4,8]);
 			
 			yy=7;
 			screws_tr=[
