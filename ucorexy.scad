@@ -34,6 +34,7 @@ yposition=55;//-55..55
 zposition=10;//0..90
 
 deb(str("#Dimension: x=",front_back_slot()+20*2,", y=",y_slot()+20*2, ", z=",z_slot()));
+//echo ($vpt,$vpr,$vpd);
 
 //////////////////////////////////////////////////////////////
 
