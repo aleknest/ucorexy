@@ -27,10 +27,11 @@ use <xt90.scad>
 use <wago.scad>
 use <slot_cover.scad>
 use <legs.scad>
+use <case.scad>
 
 xposition=0;//-55..55
 yposition=55;//-55..55
-zposition=45;//0..90
+zposition=10;//0..90
 
 deb(str("#Dimension: x=",front_back_slot()+20*2,", y=",y_slot()+20*2, ", z=",z_slot()));
 
@@ -206,7 +207,17 @@ translate ([0,0,-z_slot()/2])
 
 //////////////////////////////////////////////////////////////
 
+deb("*Case:");
 
+case_front();
+case_right();
+case_left();
+case_backleft();
+case_backright();
+
+case_top();
+
+//////////////////////////////////////////////////////////////
 deb("*Other:");
 deb("Power supply 12V");
 deb("GT2 belts");

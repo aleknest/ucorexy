@@ -186,12 +186,17 @@ module proto_xybelts(xposition=0,yposition=55)
 		belt(type=xybelt_type(),points=path_bottom,gap=xcarriage_dim().x,gap_pos=[xposition,yposition,90]);
 }
 
+module proto_z_belt_motor()
+{
+	translate_rotate (zmotor_tr())
+		NEMA(zmotor_type(), shaft_angle = 0, jst_connector = false);
+}
+
 module proto_z_belt(zposition=0)
 {
 	translate_rotate (zmotor_pulley_tr())
 		pulley_assembly(zmotor_pulley_type());
-	translate_rotate (zmotor_tr())
-		NEMA(zmotor_type(), shaft_angle = 0, jst_connector = false);
+	proto_z_belt_motor();
 	
 	for (i=[1:z_pulley_count()-1])
 		translate_rotate (zbottom_pulley_tr(i))
@@ -255,41 +260,8 @@ module proto_z_rails(zposition=0)
 
 module proto_slot_brackets(zposition=0)
 {
-	brackets_tr=[
-		 [vec_add(z_slot_bottomfront_tr()[0],[-front_back_slot()/2,0,10]),[90,0,0]]
-	
-		,[vec_add(z_slot_bottomfront_tr()[0],[front_back_slot()/2,0,10]),[90,0,180]]
-		,[vec_add(z_slot_topfront_tr()[0],[-front_back_slot()/2,0,-10]),[-90,0,0]]
-		,[vec_add(z_slot_topfront_tr()[0],[front_back_slot()/2,0,-10]),[-90,0,180]]
-	
-		,[vec_add(z_slot_bottomback_tr()[0],[-front_back_slot()/2,0,10]),[90,0,0]]
-		,[vec_add(z_slot_bottomback_tr()[0],[front_back_slot()/2,0,10]),[90,0,180]]
-		,[vec_add(z_slot_topback_tr()[0],[-front_back_slot()/2,0,-10]),[-90,0,0]]
-		,[vec_add(z_slot_topback_tr()[0],[front_back_slot()/2,0,-10]),[-90,0,180]]
-	
-		/*
-		,[vec_add(z_slot_bottomfront_tr()[0],[-front_back_slot()/2,10,0]),[0,0,0]]
-		,[vec_add(z_slot_bottomfront_tr()[0],[front_back_slot()/2,10,0]),[0,0,90]]
-		,[vec_add(z_slot_bottomback_tr()[0],[-front_back_slot()/2,-10,0]),[180,0,0]]
-		,[vec_add(z_slot_bottomback_tr()[0],[front_back_slot()/2,-10,0]),[0,0,180]]
-		*/
-	
-		,[vec_add(y_slot_left_tr()[0],[0,y_slot()/2,-10]),[0,90,180]]
-		,[vec_add(y_slot_left_tr()[0],[0,-y_slot()/2,-10]),[0,90,0]]
-		,[vec_add(y_slot_right_tr()[0],[0,y_slot()/2,-10]),[0,90,180]]
-		,[vec_add(y_slot_right_tr()[0],[0,-y_slot()/2,-10]),[0,90,0]]
-	
-		,[vec_add(y_slot_bottomleft_tr()[0],[0,y_slot()/2,10]),[0,-90,180]]
-		,[vec_add(y_slot_bottomleft_tr()[0],[0,-y_slot()/2,10]),[0,-90,0]]
-		,[vec_add(y_slot_bottomright_tr()[0],[0,y_slot()/2,10]),[0,-90,180]]
-		,[vec_add(y_slot_bottomright_tr()[0],[0,-y_slot()/2,10]),[0,-90,0]]
-		
-		,[vec_add(backheatbed_slot_tr()[0],[backheatbed_slot()/2,10,zposition]),[0,0,90]]
-		,[vec_add(backheatbed_slot_tr()[0],[-backheatbed_slot()/2,10,zposition]),[0,0,0]]
-	];
-	cb20 = [ "E20_corner_bracket", [28, 28, 20], 2, 3, 19.5];
 	color ("gray")
-	for (tr=brackets_tr)
+	for (tr=brackets_tr(zposition))
 	{
 		report_corner_bracket();
 		
@@ -344,14 +316,14 @@ z=0;
 //proto_xymotors();
 //proto_z_belt(z);
 
-proto_back_slots();
+//proto_front_slots();
+//proto_back_slots();
 //proto_heatbed_slots(z);
 //proto_heatbed(z);
 
 //proto_z_rails(z);
 
-//proto_slot_brackets();
-//proto_back_slots();
+proto_slot_brackets(0);
 
 // fysetc s6
 //translate ([-0,-68,-220])

@@ -334,9 +334,61 @@ function feeder_stand_width()=50;
 function feeder_nema_plate_thickness()=2;
 
 function xt90_dim()=[60,17.65,17.4];
-function xt90_tr()=[vec_add(y_slot_bottomright_tr()[0],[-10,y_slot()/2-xt90_dim().x/2-40,10]),[0,0,-90]];
+//function xt90_tr()=[vec_add(y_slot_bottomright_tr()[0],[-10,y_slot()/2-xt90_dim().x/2-40,10]),[0,0,-90]];
+function xt90_tr()=[vec_add(y_slot_bottomleft_tr()[0],[10,0,10]),[0,0,90]];
 
 function wago_tr()=[vec_add(enclosure_tr()[0],[41.5,19.5,enclosure_dim().z]),[0,0,0]];
 
-function mgn9_y_stopper_h()=5.0;
+function mgn9_y_stopper_h()=7.5;
 function mgn9_y_stopper_tr()=[vec_add(y_slot_left_tr()[0],[0,-y_rail()/2+y_rail_y()-mgn9_y_stopper_h(),10]),[-90,0,0]];
+
+function brackets_tr(zposition)=[
+		 [vec_add(z_slot_bottomfront_tr()[0],[-front_back_slot()/2,0,10]),[90,0,0]]
+	
+		,[vec_add(z_slot_bottomfront_tr()[0],[front_back_slot()/2,0,10]),[90,0,180]]
+		,[vec_add(z_slot_topfront_tr()[0],[-front_back_slot()/2,0,-10]),[-90,0,0]]
+		,[vec_add(z_slot_topfront_tr()[0],[front_back_slot()/2,0,-10]),[-90,0,180]]
+	
+		,[vec_add(z_slot_bottomback_tr()[0],[-front_back_slot()/2,0,10]),[90,0,0]]
+		,[vec_add(z_slot_bottomback_tr()[0],[front_back_slot()/2,0,10]),[90,0,180]]
+		,[vec_add(z_slot_topback_tr()[0],[-front_back_slot()/2,0,-10]),[-90,0,0]]
+		,[vec_add(z_slot_topback_tr()[0],[front_back_slot()/2,0,-10]),[-90,0,180]]
+	
+		,[vec_add(y_slot_left_tr()[0],[0,y_slot()/2,-10]),[0,90,180]]
+		,[vec_add(y_slot_left_tr()[0],[0,-y_slot()/2,-10]),[0,90,0]]
+		,[vec_add(y_slot_right_tr()[0],[0,y_slot()/2,-10]),[0,90,180]]
+		,[vec_add(y_slot_right_tr()[0],[0,-y_slot()/2,-10]),[0,90,0]]
+	
+		,[vec_add(y_slot_bottomleft_tr()[0],[0,y_slot()/2,10]),[0,-90,180]]
+		,[vec_add(y_slot_bottomleft_tr()[0],[0,-y_slot()/2,10]),[0,-90,0]]
+		,[vec_add(y_slot_bottomright_tr()[0],[0,y_slot()/2,10]),[0,-90,180]]
+		,[vec_add(y_slot_bottomright_tr()[0],[0,-y_slot()/2,10]),[0,-90,0]]
+		
+		,[vec_add(backheatbed_slot_tr()[0],[backheatbed_slot()/2,10,zposition]),[0,0,90]]
+		,[vec_add(backheatbed_slot_tr()[0],[-backheatbed_slot()/2,10,zposition]),[0,0,0]]
+	];
+
+function case_height()=33;
+function case_thickness()=[2,3,5];
+function case_up()=8;
+function case_offset()=0.4;
+function case_screws_offset()=44;
+function case_top_thickness()=2;
+function case_top_offset()=case_offset();
+function case_top_tr()=[-front_back_slot()/2+case_top_offset(),-y_slot()/2+case_top_offset(),z_slot_bottomfront_tr()[0].z+10+case_height()];
+function case_top_dim()=[front_back_slot()-case_top_offset()*2,y_slot()-case_top_offset()*2,case_top_thickness()];
+function case_top_screws_offset()=4;
+function case_top_screws()=[
+	 [[20,case_top_screws_offset()],[0,0,90]]
+	,[[front_back_slot()-20,case_top_screws_offset()],[0,0,90]]
+	
+	,[[front_back_slot()-case_top_screws_offset(),20],[0,0,180]]
+	,[[front_back_slot()-case_top_screws_offset(),y_slot()-20],[0,0,180]]
+	
+	,[[case_top_screws_offset(),20],[0,0,0]]
+	,[[case_top_screws_offset(),y_slot()-20],[0,0,0]]
+	
+	,[[15,y_slot()-case_top_screws_offset()],[0,0,-90]]
+	,[[front_back_slot()-15,y_slot()-case_top_screws_offset()],[0,0,-90]]
+];
+

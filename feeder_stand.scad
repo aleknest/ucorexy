@@ -155,13 +155,21 @@ module feeder_stand()
 	}
 }
 
-/*
 proto_front_slots();
+
+translate ([-50,-110,10])
+cube ([40,20,10]);
+/*
 proto_back_slots();
 proto_y_right(slot_only=true);
 proto_y_left(slot_only=true);
 
 */
+
+use <xymotorblock.scad>
+leftfront_motorblock();
+
+
 /*
 yposition=0;
 xposition=0;

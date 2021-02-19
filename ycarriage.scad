@@ -60,6 +60,8 @@ module y_carriage_flag(part="",y_magnet_out=5.5)
 			translate([0,x,0])
 			rotate ([0,180,0])
 			{
+				report_m3_washer_squarenut(screw);
+				
 				m3_screw(h=screw,cap_out=20);
 				translate ([0,0,screw-3])
 				rotate ([0,0,90])
@@ -243,5 +245,5 @@ module y_carriage_right_flag()
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
 //y_carriage_left();
-//y_carriage_right();
-y_carriage_right_flag();
+y_carriage_right();
+//y_carriage_right_flag();

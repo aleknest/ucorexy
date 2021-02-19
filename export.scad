@@ -17,8 +17,9 @@ use <xt90.scad>
 use <wago.scad>
 use <slot_cover.scad>
 use <legs.scad>
+use <case.scad>
 
-cmd="slot_cover/slot_cover_10mm";
+cmd="case/case_front";
 
 module list(s)
 {
@@ -70,7 +71,14 @@ if (cmd=="list")
 	list("xt90/xt90");
 	list("wago/wago");
 	list("legs/leg");
-	list("slot_cover/slot_cover_10mm");
+	list("slot_cover/slot_cover_1mm");
+
+	list("case/case_top");
+	list("case/case_front");
+	list("case/case_right");
+	list("case/case_left");
+	list("case/case_backleft");
+	list("case/case_backright");
 		
 	list("x_carriage/x_carriage_main");
 	list("x_carriage/x_carriage_fans");
@@ -274,10 +282,10 @@ if (cmd=="wago/wago")
 
 //////////////////////////////////////////////////////////////
 
-if (cmd=="slot_cover/slot_cover_10mm")
+if (cmd=="slot_cover/slot_cover_1mm")
 {
 	rotate ([90,0,0])
-		slot_cover(h=10,down=1);
+		slot_cover(h=1,down=1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -315,3 +323,29 @@ if (cmd=="x_carriage/x_carriage_belt_fixer_right")
 
 //////////////////////////////////////////////////////////////
 
+if (cmd=="case/case_top")
+{
+	case_top();
+}
+if (cmd=="case/case_front")
+{
+	case_front();
+}
+if (cmd=="case/case_right")
+{
+	case_right();
+}
+if (cmd=="case/case_left")
+{
+	case_left();
+}
+if (cmd=="case/case_backleft")
+{
+	case_backleft();
+}
+if (cmd=="case/case_backright")
+{
+	case_backright();
+}
+
+//////////////////////////////////////////////////////////////
