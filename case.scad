@@ -244,7 +244,7 @@ module case_backright()
 	}
 }
 
-module case_top_screws_cut(report=false)
+module case_top_screws_cut(report=false,offs=[0,0])
 {
 	translate(case_top_tr())
 		for (s=case_top_screws())
@@ -256,6 +256,14 @@ module case_top_screws_cut(report=false)
 				if (report)
 					report_m3_washer_squarenut(case_top_screw);
 				m3_screw(h=case_top_screw+1,cap_out=20);
+				if (offs!=[0,0])
+					translate ([0,0,-0.01])
+					hull()
+					{
+						cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
+						translate ([-offs[1],0,0])
+							cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
+					}
 				translate ([0,0,case_top_screw-3])
 				rotate ([0,0,90])
 					m3_square_nut();
@@ -278,7 +286,7 @@ module case_top_screws_add()
 
 module case_top()
 {
-	dd=10;
+	dd=12;
 	dim=vec_add(case_top_dim(),[-case_top_in*2,-case_top_in*2,0]);
 	tr=vec_add(case_top_tr(),[case_top_in,case_top_in,0]);
 	difference()
@@ -286,7 +294,7 @@ module case_top()
 		union()
 		{	
 			for (s=case_top_screws())
-			fillet(r=dd/4,steps=4)
+			fillet(r=4,steps=4)
 			{
 				translate(case_top_tr())
 				translate (s[0])
@@ -309,7 +317,11 @@ module case_top()
 				}
 			}
 		}
-		case_top_screws_cut(report=true);
+		case_top_screws_cut(report=true,offs=[0.4,2]);
+		translate(case_top_tr())
+		translate([20,20,case_top_thickness()/2])
+		linear_extrude(4)
+			text (text="ucorexy",size=14,font="Free Sans:style=Bold");
 	}
 }
 
@@ -325,7 +337,7 @@ module case_top()
 
 //xt90();
 
-case_front();
+//case_front();
 //case_right();
 //case_left();
 //case_backleft();
