@@ -19,6 +19,7 @@ module leg()
 			cube ([20,20,h]);
 		translate([0,0,-th])
 			m6n_screw_washer(thickness=th,diff=2, washer_out=20);
+		report_m6_washer(10);
 	}
 }
 
