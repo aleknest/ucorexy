@@ -11,6 +11,31 @@ include <../_utils_v2/NopSCADlib/core.scad>
 include <../_utils_v2/NopSCADlib/vitamins/pulleys.scad>
 include <../_utils_v2/NopSCADlib/vitamins/stepper_motors.scad>
 
+module belt (l,smooth=false,width_add=[0,0])
+{
+	belt_h=0.83;
+	belt_h_m=belt_h+0.3;
+	belt_width=7+width_add[0]+width_add[1];
+
+	translate ([-belt_h_m,-belt_width/2-width_add[0]/2+width_add[1]/2,0])	
+	{
+		cube ([belt_h_m,belt_width,l]);
+		if (smooth)
+		{
+			hull()
+			for (z=[0,l])
+				translate ([0,0,z])
+				rotate ([-90,0,0])
+					cylinder (d=1.1,h=belt_width,$fn=6);
+		}
+		else
+		for (z=[0:2:l])
+			translate ([0,0,z])
+			rotate ([-90,0,0])
+				cylinder (d=1.1,h=belt_width,$fn=6);
+	}
+}
+
 module zpulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",report=false)
 {
 	if (report) report_pulley(screw);
@@ -86,7 +111,7 @@ module zmotion_bottom_lockcut(op=1,offs=[0,0])
 		translate ([-0.1,zbottom_pulleyblock_dim().y/2+1,-0.01])
 		rotate ([0,90,0])
 		{
-			belt (length=20,smooth=false,width_add=[0,0]);
+			belt (l=20,smooth=false,width_add=[0,0]);
 		}
 }
 
@@ -320,7 +345,7 @@ module zmotion_top_lockcut(op=1,offs=[0,0])
 		translate ([20-0.1,ztop_pulleyblock_dim().y/2+1,dim.z+0.01])
 		rotate ([0,-90,0])
 		{
-			belt (length=20,smooth=false,width_add=[0,0]);
+			belt (l=20,smooth=false,width_add=[0,0]);
 		}
 }
 
@@ -478,10 +503,10 @@ z=70;
 //proto_z_belt(z);
 //proto_heatbed(z);
 
-//zmotion_bottom_lock();
+zmotion_bottom_lock();
 		
 //zmotion_top_lock();
 
 //zmotion_bottom();
 //zmotion_top();
-zmotion_middle_main(z);
+//zmotion_middle_main(z);

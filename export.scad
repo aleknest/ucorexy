@@ -19,7 +19,7 @@ use <slot_cover.scad>
 use <legs.scad>
 use <case.scad>
 
-cmd="case/case_front";
+cmd="feeder_stand/feeder_stand_bottom";
 
 module list(s)
 {
@@ -66,7 +66,9 @@ if (cmd=="list")
 	list("enclosure/enclosure_spacer_raspberrypi");
 	list("enclosure/enclosure_spacer_ramps");
 	
-	list("feeder_stand/feeder_stand");
+	list("feeder_stand/feeder_stand_top");
+	list("feeder_stand/feeder_stand_middle");
+	list("feeder_stand/feeder_stand_bottom");
 	
 	list("xt90/xt90");
 	list("wago/wago");
@@ -251,10 +253,20 @@ if (cmd=="enclosure/enclosure_spacer_ramps")
 
 //////////////////////////////////////////////////////////////
 
-if (cmd=="feeder_stand/feeder_stand")
+if (cmd=="feeder_stand/feeder_stand_top")
 {
 	rotate ([0,-90,0])
-		feeder_stand();
+		feeder_stand_top();
+}
+if (cmd=="feeder_stand/feeder_stand_middle")
+{
+	rotate ([90,0,0])
+		feeder_stand_middle();
+}
+if (cmd=="feeder_stand/feeder_stand_bottom")
+{
+	rotate ([90,0,0])
+		feeder_stand_bottom();
 }
 
 //////////////////////////////////////////////////////////////

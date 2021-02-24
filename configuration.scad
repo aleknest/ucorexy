@@ -327,9 +327,8 @@ function feeder_center_point_tr() = [[e3d_tr(0)[0].x
 									 ,e3d_tr(0)[0].y
 									 ,feeder_stand_tr()[0].z+feeder_up()]
 									 ,[0,90,0]];
-function feeder_thickness()=6;
+function feeder_thickness()=10;//6;
 function feeder_base_thickness()=6;
-function feeder_border_cut()=10; 
 function feeder_stand_width()=50;
 function feeder_nema_plate_thickness()=2;
 

@@ -13,7 +13,7 @@ use <xt90.scad>
 use <slot_cover.scad>
 
 case_top_screw=8;
-case_top_in=case_top_screws_offset()+2;
+case_top_in=case_top_screws_offset()-4;
 slot_cover_offs=0.6;
 
 module case_side(tr,length,screws,c45)
@@ -253,17 +253,22 @@ module case_top_screws_cut(report=false,offs=[0,0])
 			translate ([0,0,case_top_thickness()])
 			rotate ([0,180,0])
 			{
-				if (report)
-					report_m3_washer_squarenut(case_top_screw);
-				m3_screw(h=case_top_screw+1,cap_out=20);
 				if (offs!=[0,0])
+				{
 					translate ([0,0,-0.01])
 					hull()
 					{
-						cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
-						translate ([-offs[1],0,0])
+						translate ([offs[1],0,0])
 							cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
+						cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
 					}
+				}
+				else
+				{
+					if (report)
+						report_m3_washer_squarenut(case_top_screw);
+					m3_screw(h=case_top_screw+1,cap_out=20);
+				}
 				translate ([0,0,case_top_screw-3])
 				rotate ([0,0,90])
 					m3_square_nut();
@@ -293,35 +298,22 @@ module case_top()
 	{
 		union()
 		{	
-			for (s=case_top_screws())
-			fillet(r=4,steps=4)
+			translate(tr)
 			{
-				translate(case_top_tr())
-				translate (s[0])
-				rotate (s[1])
-				translate ([0,0,case_top_thickness()])
-				rotate ([0,180,0])
-				{
-					cylinder(d=dd,h=case_top_thickness(),$fn=80);
-				}
-				
-				translate(tr)
-				{
-					linear_extrude(dim.z)
-						polygon(polyRound([
-							 [0,0,dd/2]
-							,[dim.x,0,dd/2]
-							,[dim.x,dim.y,dd/2]
-							,[0,dim.y,dd/2]
-						],20));
-				}
+				linear_extrude(dim.z)
+					polygon(polyRound([
+						 [0,0,dd/2]
+						,[dim.x,0,dd/2]
+						,[dim.x,dim.y,dd/2]
+						,[0,dim.y,dd/2]
+					],20));
 			}
+			translate(case_top_tr())
+			translate([16,12,0])
+			linear_extrude(case_top_thickness()+0.4)
+				text (text="ucorexy",size=10,font="Free Sans:style=Bold");
 		}
-		case_top_screws_cut(report=true,offs=[0.4,2]);
-		translate(case_top_tr())
-		translate([20,20,case_top_thickness()/2])
-		linear_extrude(4)
-			text (text="ucorexy",size=14,font="Free Sans:style=Bold");
+		case_top_screws_cut(report=true,offs=[0.6,10]);
 	}
 }
 
@@ -338,8 +330,8 @@ module case_top()
 //xt90();
 
 //case_front();
-//case_right();
-//case_left();
+case_right();
+case_left();
 //case_backleft();
 //case_backright();
 

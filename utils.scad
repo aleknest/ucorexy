@@ -87,10 +87,20 @@ module report_magnet(d,h)
 	deb(str("Magnet: diameter=",d,"mm, length=",h,"mm"));
 }
 
+module report_m5_hexnut()
+{
+	deb(str("M5 nut (hex)"));
+}
+
+module report_m5_screw(screw)
+{
+	deb(str("M5x",screw," DIN912"));
+	deb(str("M5 washer"));
+}
+
 module report_m5_point()
 {
-	deb(str("M5x10 DIN912"));
-	deb(str("M5 washer"));
+	report_m5_screw(10);
 	deb(str("M5 t-slot nut"));
 }
 
@@ -217,19 +227,20 @@ module endstop_block(tr,etr,bdim,m3_screw_height,ss443_out,report=false)
 	}
 }
 
-module magnet_cut(magnet_d,magnet_h)
+module magnet_cut(magnet_d,magnet_h,getter=0)
 {
 	offs=[0.1,0.2];
 	cc=[0.2,0.1];
 	cylinder(d=magnet_d-cc[1]*2+offs.x*2,h=magnet_h+offs.y,$fn=40);
 	cylinder(d1=magnet_d+offs.x*2,d2=0.1,h=magnet_h+offs.y,$fn=40);
+	cylinder (d=magnet_d/2,h=magnet_h+getter,$fn=40);
 	rays=20;
 	for (a=[0:360/rays:360])
 		rotate ([0,0,a])
 		translate ([-cc.x/2,0,0])
 			cube ([cc.x,magnet_d/2+offs.x,magnet_h+offs.y]);
 }
-magnet_cut(2,2);
+magnet_cut(2,2,20);
 
 module nema17_cut(add=false
 				,shaft=true
@@ -246,6 +257,7 @@ module nema17_cut(add=false
 				,hull_body=[[0,0,0]]
 				,nema17_cut=true
 				,report=false
+				,report_pulley=true
 	)
 {
 	nema17_dim=42.3+0.2;
@@ -264,7 +276,8 @@ module nema17_cut(add=false
 		if (report)
 		{
 			deb(str("Nema 17 motor"));
-			deb(str("GT2 motor pulley 16 teeth"));
+			if (report_pulley)
+				deb(str("GT2 motor pulley 16 teeth"));
 		}
 
 		if (main)
@@ -433,31 +446,5 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 		}
 	}
 }
-
-module belt (length,smooth=false,width_add=[0,0])
-{
-	belt_h=0.83;
-	belt_h_m=belt_h+0.3;
-	belt_width=7+width_add[0]+width_add[1];
-
-	translate ([-belt_h_m,-belt_width/2-width_add[0]/2+width_add[1]/2,0])	
-	{
-		cube ([belt_h_m,belt_width,length]);
-		if (smooth)
-		{
-			hull()
-			for (z=[0,length])
-				translate ([0,0,z])
-				rotate ([-90,0,0])
-					cylinder (d=1.1,h=belt_width,$fn=6);
-		}
-		else
-		for (z=[0:2:length])
-			translate ([0,0,z])
-			rotate ([-90,0,0])
-				cylinder (d=1.1,h=belt_width,$fn=6);
-	}
-}
-
 
 //slot_groove(height=100,smooth=false);
