@@ -83,7 +83,8 @@ if (cmd=="list")
 	list("case/case_backright");
 		
 	list("x_carriage/x_carriage_main");
-	list("x_carriage/x_carriage_fans");
+	list("x_carriage/x_carriage_fans_m3");
+	list("x_carriage/x_carriage_fans_m2p5");
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
 	list("x_carriage/x_carriage_belt_fixer_left");
@@ -312,10 +313,15 @@ if (cmd=="x_carriage/x_carriage_fans")
 	rotate ([-90,0,0])
 	x_carriage_fans();
 }
-if (cmd=="x_carriage/x_carriage_front")
+if (cmd=="x_carriage/x_carriage_fans_m3")
+{
+	rotate ([-90,0,0])
+	x_carriage_fans(blower_screw_diameter=2.9);
+}
+if (cmd=="x_carriage/x_carriage_front_m2p5")
 {
 	rotate ([0,0,0])
-	x_carriage_front();
+	x_carriage_front(blower_screw_diameter=2.4);
 }
 if (cmd=="x_carriage/x_carriage_back")
 {

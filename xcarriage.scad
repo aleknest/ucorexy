@@ -560,12 +560,29 @@ module x_carriage_front()
 	}
 }
 
-module x_carriage_fans(blower_screw_diameter)
+module x_carriage_fans(blower_screw_diameter=2.9)
 {
 	hh=20;
 	sdiff=17.3*2;
 	bsh=blower_screw_holes(e3d_blower_type());
-	//echo (bsh);
+	blower_corner_coords=[
+		 [[0,0,-1],[0,0,0]]
+		,[[40,0,-1],[0,0,90]]
+		,[[40,40,-1],[0,0,180]]
+		,[[0,40,-1],[0,0,-90]]
+	];
+	
+	
+	dim=5-0.2;
+	dimcut=0.95;
+	offs=0.46;
+	points=polyRound([
+		 [-offs+dimcut,-offs+dimcut,0]
+		,[dim,-offs+dimcut,0]
+		,[dim,dim,1.6]
+		,[-offs+dimcut,dim,0]
+	],20);
+	
 	difference()
 	{
 		union()
@@ -583,27 +600,25 @@ module x_carriage_fans(blower_screw_diameter)
 					hull()
 					{
 						down=22.8;
-						out1=8;
-						out2=5;
+						out=4;
 						dd=blower_outer_fix_diameter;
 						cylinder (d=dd,h=hh);
 						
-						if ((cc+i)%2 == 0)
-						{
-							for (z=[0,down])
-							translate ([-out2*(i*2-1),-z,0])
-								cylinder (d=dd,h=hh);
-						}
-						
-						translate ([out1*(i*2-1),0,0])
+						xx=-out*((cc%2)*2-1);
+						translate ([xx,0,0])
 							cylinder (d=dd,h=hh);
 						translate ([0,-down,0])
 							cylinder (d=dd,h=hh);
-						translate ([out1*(i*2-1),-down,0])
+						translate ([xx,-down,0])
 							cylinder (d=dd,h=hh);
 						translate ([-dd/2,dd/2-0.1,0])
-							cube ([dd,0.1,hh]);
+							cube ([dd,0.1,hh]);					
 					}
+					translate_rotate (t)
+					translate (blower_corner_coords[cc][0])
+					rotate (blower_corner_coords[cc][1])
+					linear_extrude(3)
+						polygon(points);
 				}
 			}
 		}
@@ -625,7 +640,7 @@ module x_carriage_fans(blower_screw_diameter)
 				translate ([c.x,c.y,-hh-1])
 				{
 					report_m2p5_screw(8);
-					cylinder (d=2.4,h=hh+2);
+					cylinder (d=blower_screw_diameter,h=hh+20);
 				}
 			}
 		}

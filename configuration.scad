@@ -37,7 +37,7 @@ BL40x10m =["BL40x10","Square radial 4010",40,40,9.5,27,M2_cap_screw,16,[24,20], 
 	, [[2+0.7,2+0.7],[2+36-0.7,2+0.7],[2+0.7,38-0.7],[2+36-0.7,38-0.7]], 30  , 9.5, 1.5, 1.5, 1.1, 1.5];
 	//, [[2,2],[38,2],[2,38],[38,38]], 30  , 9.5, 1.5, 1.5, 1.1, 1.5];
 function e3d_blower_type()=BL40x10m;
-function e3d_blower_offset()=[18,-11.5-0.7,-52+0.7];
+function e3d_blower_offset()=[18+4,-11.5-0.7,-52+0.7];
 function e3d_blower_left_tr(position)=[
 	vec_add(e3d_tr(position)[0],[-e3d_blower_offset().x,40+e3d_blower_offset().y,e3d_blower_offset().z])
 	,[90,0,-90]];
