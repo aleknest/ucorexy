@@ -28,6 +28,10 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("feeder_stand/feeder_stand_top");
+	list("feeder_stand/feeder_stand_middle");
+	list("feeder_stand/feeder_stand_bottom");
+	
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
 	
@@ -65,10 +69,6 @@ if (cmd=="list")
 	list("enclosure/enclosure_floor_fix");
 	list("enclosure/enclosure_spacer_raspberrypi");
 	list("enclosure/enclosure_spacer_ramps");
-	
-	list("feeder_stand/feeder_stand_top");
-	list("feeder_stand/feeder_stand_middle");
-	list("feeder_stand/feeder_stand_bottom");
 	
 	list("xt90/xt90");
 	list("wago/wago");

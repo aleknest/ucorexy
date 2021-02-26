@@ -91,7 +91,7 @@ module feeder_stand(report=false)
 						,bighole=true
 						,shaft_length=60
 						,main_cyl=true
-						,main_cyl_length=3
+						,main_cyl_length=100
 						,report=report
 						,report_pulley=false);
 			}			
@@ -192,12 +192,12 @@ module cut(zz,diff,op="cut",offs=0,report=false)
 			{
 				if (report)
 				{
-					report_m5_screw(feeder_thickness());
+					report_m5_screw(12);
 					report_m5_hexnut();
 				}
 				m5n_screw_washer(thickness=feeder_thickness(),washer_out=10);
 				translate ([0,0,feeder_thickness()/4*3])
-					nut(m8_nut_G(),m8_nut_H());
+					nut(m5_nut_G(),m5_nut_H());
 			}
 		}
 		if (op=="add")
@@ -308,6 +308,6 @@ proto_y_left(slot_only=true);
 
 
 //feeder_stand();
-feeder_stand_bottom();
-feeder_stand_middle();
+//feeder_stand_bottom();
+//feeder_stand_middle();
 feeder_stand_top();

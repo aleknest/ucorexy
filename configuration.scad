@@ -33,8 +33,11 @@ function e3d_tr(position=0)=[vec_add([
 function e3d_fan_type()=fan40x11;
 function e3d_fan_tr(position)=[vec_add(e3d_tr(position)[0],[0,42.5,-31.8]),[-90,0,0]];
 
-function e3d_blower_type()=BL40x10;
-function e3d_blower_offset()=[18,-11.5,-52];
+BL40x10m =["BL40x10","Square radial 4010",40,40,9.5,27,M2_cap_screw,16,[24,20], 2.4
+	, [[2+0.7,2+0.7],[2+36-0.7,2+0.7],[2+0.7,38-0.7],[2+36-0.7,38-0.7]], 30  , 9.5, 1.5, 1.5, 1.1, 1.5];
+	//, [[2,2],[38,2],[2,38],[38,38]], 30  , 9.5, 1.5, 1.5, 1.1, 1.5];
+function e3d_blower_type()=BL40x10m;
+function e3d_blower_offset()=[18,-11.5-0.7,-52+0.7];
 function e3d_blower_left_tr(position)=[
 	vec_add(e3d_tr(position)[0],[-e3d_blower_offset().x,40+e3d_blower_offset().y,e3d_blower_offset().z])
 	,[90,0,-90]];
@@ -330,7 +333,7 @@ function feeder_center_point_tr() = [[e3d_tr(0)[0].x
 function feeder_thickness()=10;//6;
 function feeder_base_thickness()=6;
 function feeder_stand_width()=50;
-function feeder_nema_plate_thickness()=2;
+function feeder_nema_plate_thickness()=4;
 
 function xt90_dim()=[60,17.65,17.4];
 //function xt90_tr()=[vec_add(y_slot_bottomright_tr()[0],[-10,y_slot()/2-xt90_dim().x/2-40,10]),[0,0,-90]];

@@ -560,10 +560,12 @@ module x_carriage_front()
 	}
 }
 
-module x_carriage_fans()
+module x_carriage_fans(blower_screw_diameter)
 {
 	hh=20;
+	sdiff=17.3*2;
 	bsh=blower_screw_holes(e3d_blower_type());
+	//echo (bsh);
 	difference()
 	{
 		union()
@@ -690,6 +692,7 @@ xposition=55;
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
 //proto_x_blowers();
+x_carriage_fans();
 //proto_front_slots();
 
 //use <xymotorblock.scad>
@@ -697,14 +700,13 @@ xposition=55;
 
 //translate ([xposition,y_rail_y()+yposition,0])
 {
-	x_carriage_main();
-	x_carriage_fans();
-	x_carriage_front();
+	//x_carriage_main();
+	//x_carriage_front();
 	
-	x_carriage_back();
-	x_carriage_belt_fixer_left();
-	x_carriage_belt_fixer_right();
+	//x_carriage_back();
+	//x_carriage_belt_fixer_left();
+	//x_carriage_belt_fixer_right();
 }
-x_endstop();
-x_endstop_lock();
+//x_endstop();
+//x_endstop_lock();
 
