@@ -317,11 +317,16 @@ if (cmd=="x_carriage/x_carriage_fans_m3")
 {
 	rotate ([-90,0,0])
 	x_carriage_fans(blower_screw_diameter=2.9);
-}
-if (cmd=="x_carriage/x_carriage_front_m2p5")
+}                    
+if (cmd=="x_carriage/x_carriage_fans_m2p5")
+{
+	rotate ([-90,0,0])
+	x_carriage_fans(blower_screw_diameter=2.4);
+}                    
+if (cmd=="x_carriage/x_carriage_front")
 {
 	rotate ([0,0,0])
-	x_carriage_front(blower_screw_diameter=2.4);
+	x_carriage_front();
 }
 if (cmd=="x_carriage/x_carriage_back")
 {

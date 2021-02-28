@@ -249,7 +249,7 @@ module x_cube(dim)
 	//echo (dim);
 	//#cube (dim);
 	
-	fan_fix=[2.5,1,2];
+	fan_fix=[2.5,1,1];
 	fan_fix_up=2;
 	
 	translate ([dim.x,0,0])
@@ -262,10 +262,10 @@ module x_cube(dim)
 			,[dim.z,x_cube_cut[1],10]
 			,[dim.z,dim.y,2]
 			,[fan_fix_up,dim.y,1]
-			,[fan_fix_up,dim.y+fan_fix.y,0]
-			,[-fan_fix.x,dim.y+fan_fix.y,0]
-			,[-fan_fix.x,dim.y,0]
-			,[0,dim.y,0]
+			,[fan_fix_up,dim.y+fan_fix[1],0]
+			,[-fan_fix[0],dim.y+fan_fix[1],0]
+			,[-fan_fix[0],dim.y-fan_fix[2],0]
+			,[0,dim.y-fan_fix[2],0]
 		],1));
 }
 //translate_rotate (xcarriage_tr()) x_cube([28, 60, 51.7]);
@@ -477,8 +477,9 @@ module x_carriage(part="front",report=false)
 			{
 				if (z==0)
 				{
+					cso=0;//10;
 					rotate ([0,0,-90])
-						m3_screw(h=screw2[z],cap_side_out=10);
+						m3_screw(h=screw2[z],cap_side_out=cso);
 					report_m3_washer_hexnut(screw2[z]);
 					
 					translate ([0,-0.2,screw2[z]-3])
@@ -707,7 +708,7 @@ xposition=55;
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
 //proto_x_blowers();
-x_carriage_fans();
+//x_carriage_fans();
 //proto_front_slots();
 
 //use <xymotorblock.scad>
@@ -718,7 +719,7 @@ x_carriage_fans();
 	//x_carriage_main();
 	//x_carriage_front();
 	
-	//x_carriage_back();
+	x_carriage_back();
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }
