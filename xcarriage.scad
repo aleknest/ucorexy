@@ -413,17 +413,23 @@ module x_carriage(part="front",report=false)
 				}
 		}
 		
-		dd=10;
+		dd=9;
 		sdim=[2,3];
+		wire_fix_corr=[0,6];
+		coord=[0,xcarriage_dim().x];
 		translate_rotate (xcarriage_tr())
-		for (x=[0,xcarriage_dim().x])
-			translate ([x,0,x_cube_cut[0]-sdim.y-6])
+		for (i=[0,1])
+		{
+			x=coord[i];
+			xx=wire_fix_corr.x*(i*2-1);
+			translate ([x+xx,wire_fix_corr.y,x_cube_cut[0]-sdim.y-6])
 			difference()
 			{
 				cylinder (d=dd,h=sdim.y,$fn=80);
 				translate ([0,0,-0.1])
 					cylinder (d=dd-sdim.x*2,h=sdim.y+0.2,$fn=80);
 			}
+		}
 		
 		e3d_v6_cut();
 		xcarriage_rail_cut();
@@ -717,9 +723,9 @@ xposition=55;
 //translate ([xposition,y_rail_y()+yposition,0])
 {
 	//x_carriage_main();
-	//x_carriage_front();
+	x_carriage_front();
 	
-	x_carriage_back();
+	//x_carriage_back();
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }

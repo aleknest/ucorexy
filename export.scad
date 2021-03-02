@@ -18,8 +18,10 @@ use <wago.scad>
 use <slot_cover.scad>
 use <legs.scad>
 use <case.scad>
+use <wire_fix.scad>
+use <nozzles.scad>
 
-cmd="feeder_stand/feeder_stand_bottom";
+cmd="feeder_stand/feeder_test_case";
 
 module list(s)
 {
@@ -31,6 +33,7 @@ if (cmd=="list")
 	list("feeder_stand/feeder_stand_top");
 	list("feeder_stand/feeder_stand_middle");
 	list("feeder_stand/feeder_stand_bottom");
+	list("feeder_stand/feeder_test_case");
 	
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
@@ -89,6 +92,13 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_back");
 	list("x_carriage/x_carriage_belt_fixer_left");
 	list("x_carriage/x_carriage_belt_fixer_right");
+	
+	list("nozzles/blower_nozzle_left");
+	list("nozzles/blower_nozzle_right");
+		
+	list("wire_fix/wire_fix_lefttop_corner");
+	list("wire_fix/wire_fix_righttop_corner");
+	list("wire_fix/wire_fix_front");
 }
 
 //////////////////////////////////////////////////////////////
@@ -269,6 +279,11 @@ if (cmd=="feeder_stand/feeder_stand_bottom")
 	rotate ([90,0,0])
 		feeder_stand_bottom();
 }
+if (cmd=="feeder_stand/feeder_test_case")
+{
+	rotate ([0,-90,0])
+		feeder_plate();
+}
 
 //////////////////////////////////////////////////////////////
 
@@ -369,6 +384,37 @@ if (cmd=="case/case_backleft")
 if (cmd=="case/case_backright")
 {
 	case_backright();
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="wire_fix/wire_fix_lefttop_corner")
+{
+	rotate ([0,90,0])
+	wire_fix_lefttop_corner();
+}
+if (cmd=="wire_fix/wire_fix_righttop_corner")
+{
+	rotate ([0,-90,0])
+	wire_fix_righttop_corner();
+}
+if (cmd=="wire_fix/wire_fix_front")
+{
+	rotate ([0,-90,0])
+	wire_fix_front();
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="nozzles/blower_nozzle_left")
+{
+	rotate ([0,-90,0])
+	blower_nozzle_left();
+}
+if (cmd=="nozzles/blower_nozzle_right")
+{
+	rotate ([0,90,0])
+	blower_nozzle_right();
 }
 
 //////////////////////////////////////////////////////////////

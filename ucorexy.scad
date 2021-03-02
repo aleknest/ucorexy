@@ -28,6 +28,8 @@ use <wago.scad>
 use <slot_cover.scad>
 use <legs.scad>
 use <case.scad>
+use <wire_fix.scad>
+use <nozzles.scad>
 
 xposition=0;//-55..55
 yposition=55;//-55..55
@@ -75,6 +77,16 @@ translate ([xposition,y_rail_y()+yposition,0])
 	x_carriage_front();
 	x_carriage_belt_fixer_left();
 	x_carriage_belt_fixer_right();
+}
+
+//////////////////////////////////////////////////////////////
+
+deb("*Fan nozzles:");
+
+translate ([xposition,y_rail_y()+yposition,0])
+{
+	blower_nozzle_left();
+	blower_nozzle_right();
 }
 
 //////////////////////////////////////////////////////////////
@@ -221,6 +233,14 @@ case_backright();
 case_top();
 
 //////////////////////////////////////////////////////////////
+
+deb("*Wire fix:");
+wire_fix_lefttop_corner();
+wire_fix_righttop_corner();
+wire_fix_front();
+
+//////////////////////////////////////////////////////////////
+
 deb("*Other:");
 deb("Power supply 12V");
 deb("GT2 belts");
