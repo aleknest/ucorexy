@@ -1,5 +1,5 @@
 # ucorexy
-Ukrainian small corexy printer
+Small corexy printer
 
 ![](./render.png)
 
