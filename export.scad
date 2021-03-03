@@ -21,7 +21,7 @@ use <case.scad>
 use <wire_fix.scad>
 use <nozzles.scad>
 
-cmd="feeder_stand/feeder_test_case";
+cmd="slot_cover/slot_bigcover_1mm";
 
 module list(s)
 {
@@ -77,6 +77,7 @@ if (cmd=="list")
 	list("wago/wago");
 	list("legs/leg");
 	list("slot_cover/slot_cover_1mm");
+	list("slot_cover/slot_bigcover_1mm");
 
 	list("case/case_top");
 	list("case/case_front");
@@ -314,6 +315,11 @@ if (cmd=="slot_cover/slot_cover_1mm")
 {
 	rotate ([90,0,0])
 		slot_cover(h=1,down=1);
+}
+if (cmd=="slot_cover/slot_bigcover_1mm")
+{
+	rotate ([90,0,0])
+		slot_cover(h=1,down=1,up=2,cut_up=2,rounded=true);
 }
 
 //////////////////////////////////////////////////////////////

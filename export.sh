@@ -1,3 +1,2 @@
-./bom.sh &
-./stls.sh &
+./bom.sh & ./stls.sh
 
