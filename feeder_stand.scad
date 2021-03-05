@@ -13,7 +13,7 @@ z=feeder_center_point_tr()[0].z-feeder_stand_tr()[0].z;
 cut=40;
 c=cut+10;
 g=sqrt(c*c*2);
-corner=1/(180/60);
+corner=1/(180/90);
 
 dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
 
@@ -348,9 +348,9 @@ proto_y_left(slot_only=true);
 
 
 
-//feeder_stand();
+feeder_stand();
 //feeder_stand_bottom();
 //feeder_stand_middle();
-feeder_stand_top();
+//feeder_stand_top();
 
 //feeder_plate();

@@ -318,8 +318,8 @@ if (cmd=="slot_cover/slot_cover_1mm")
 }
 if (cmd=="slot_cover/slot_bigcover_1mm")
 {
-	rotate ([90,0,0])
-		slot_cover(h=1,down=1,up=2,cut_up=2,rounded=true);
+	rotate ([-90,0,0])
+		slot_cover(h=1,down=1,up=5,cut_up=4,rounded=[3.5,2]);
 }
 
 //////////////////////////////////////////////////////////////
