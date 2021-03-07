@@ -119,11 +119,11 @@ module front_motorblock(part,report=false)
 			{
 				linear_extrude(dim.z)
 					polygon(polyRound([
-						 [0,0,20.2]
+						 [0,0,10]
 						,[dim.x,0,0]
 						,[dim.x,dim.y,0]
 						,[0,dim.y,0]
-					],1));
+					],20));
 			}
 		}
 		if (part=="right")
@@ -138,8 +138,8 @@ module front_motorblock(part,report=false)
 						 [0,0,0]
 						,[dim.x,0,0]
 						,[dim.x,dim.y,0]
-						,[0,dim.y,20.2]
-					],1));
+						,[0,dim.y,10]
+					],20));
 			}
 			
 			if (report) report_SS443a();
@@ -230,7 +230,7 @@ xposition=55;
 //proto_front_slots();
 //proto_xymotors();
 
-//leftfront_motorblock();
+leftfront_motorblock();
 //rightfront_motorblock();
 //y_endstop_lock();
 
@@ -250,4 +250,4 @@ translate ([xposition,y_rail_y()+yposition,0])
 //	x_carriage_main();
 	//x_carriage_front();
 }
-m6_screw_driver();
+//m6_screw_driver();
