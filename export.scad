@@ -20,8 +20,9 @@ use <legs.scad>
 use <case.scad>
 use <wire_fix.scad>
 use <nozzles.scad>
+use <e3dv6_ptfe_fix.scad>
 
-cmd="slot_cover/slot_bigcover_1mm";
+cmd="x_carriage/ptfe_fix_nut";
 
 module list(s)
 {
@@ -30,6 +31,9 @@ module list(s)
 
 if (cmd=="list")
 {
+	//list("x_carriage/ptfe_fix");
+	//list("x_carriage/ptfe_fix_nut");
+	
 	list("feeder_stand/feeder_stand_top");
 	list("feeder_stand/feeder_stand_middle");
 	list("feeder_stand/feeder_stand_bottom");
@@ -38,6 +42,14 @@ if (cmd=="list")
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
 	
+	list("x_carriage/x_carriage_main");
+	list("x_carriage/x_carriage_fans_m3");
+	list("x_carriage/x_carriage_fans_m2p5");
+	list("x_carriage/x_carriage_front");
+	list("x_carriage/x_carriage_back");
+	list("x_carriage/x_carriage_belt_fixer_left");
+	list("x_carriage/x_carriage_belt_fixer_right");	
+
 	list("y_carriage/y_carriage_left");
 	list("y_carriage/y_carriage_right");
 	list("y_carriage/y_carriage_right_flag");
@@ -86,14 +98,6 @@ if (cmd=="list")
 	list("case/case_backleft");
 	list("case/case_backright");
 		
-	list("x_carriage/x_carriage_main");
-	list("x_carriage/x_carriage_fans_m3");
-	list("x_carriage/x_carriage_fans_m2p5");
-	list("x_carriage/x_carriage_front");
-	list("x_carriage/x_carriage_back");
-	list("x_carriage/x_carriage_belt_fixer_left");
-	list("x_carriage/x_carriage_belt_fixer_right");
-	
 	list("nozzles/blower_nozzle_left");
 	list("nozzles/blower_nozzle_right");
 		
@@ -114,6 +118,9 @@ if (cmd=="x_endstop/x_endstop_lock")
 	rotate ([-90,0,0])
 	x_endstop_lock();
 }
+
+//////////////////////////////////////////////////////////////
+
 if (cmd=="z_carriage/z_endstop")
 {
 	rotate ([0,180,0])
@@ -318,8 +325,20 @@ if (cmd=="slot_cover/slot_cover_1mm")
 }
 if (cmd=="slot_cover/slot_bigcover_1mm")
 {
-	rotate ([-90,0,0])
-		slot_cover(h=1,down=1,up=5,cut_up=4,rounded=[3.5,2]);
+	rotate ([0,0,0])
+		slot_cover(h=1,down=1,up=5,cut_up=4.8,rounded=[2,1],fit_to_slot=true);
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="x_carriage/ptfe_fix")
+{
+	e3d_fitting();
+}
+if (cmd=="x_carriage/ptfe_fix_nut")
+{
+	rotate ([0,180,0])
+		e3d_fitting_nut();
 }
 
 //////////////////////////////////////////////////////////////

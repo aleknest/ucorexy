@@ -44,15 +44,15 @@ module front_motorblock(part,report=false)
 		union()
 		{
 			translate_rotate(tr)
-			translate ([0,dim.y,0])
-			rotate ([90,0,0])
-			linear_extrude (dim.y)
-				polygon(polyRound([
-					 [0,0,0]
-					,[0,dim.z,0]
-					,[dim.x,dim.z,0]
-					,[dim.x,0,0]
-				],1));
+			{
+				linear_extrude (dim.z)
+					polygon(polyRound([
+						 [0,0,0]
+						,[0,dim.y,0]
+						,[dim.x,dim.y,part=="left"?3:0]
+						,[dim.x,0,,part=="right"?3:0]
+					],1));
+			}
 		
 			if (part=="left")
 			{
@@ -80,15 +80,16 @@ module front_motorblock(part,report=false)
 		}
 		
 		translate_rotate(tr)
-		translate ([0,dim.y+1,0])
-		rotate ([90,0,0])
-		linear_extrude (dim.y+2)
-			polygon(polyRound([
-				 [thickness[1],thickness[0],4]
-				,[thickness[1],dim.z-thickness[2],4]
-				,[dim.x-thickness[3],dim.z-thickness[2],4]
-				,[dim.x-thickness[3],thickness[0],4]
-			],1));
+			translate ([0,dim.y+1,0])
+			rotate ([90,0,0])
+			linear_extrude (dim.y+2)
+				polygon(polyRound([
+					 [thickness[1],thickness[0],4]
+					,[thickness[1],dim.z-thickness[2],4]
+					,[dim.x-thickness[3],dim.z-thickness[2],4]
+					,[dim.x-thickness[3],thickness[0],4]
+				],1));
+		
 		for (f=fixes)
 		{
 			translate(f[0])
@@ -114,16 +115,32 @@ module front_motorblock(part,report=false)
 		{
 			translate_rotate(tr_replace(tr,0,z_slot_leftfront_tr()[0].x))
 			translate ([10,20,0])
-			rotate ([0,90,0])
-			translate ([-dim.z+thickness[2],0,0])
 			{
-				linear_extrude(dim.z)
-					polygon(polyRound([
-						 [0,0,10]
-						,[dim.x,0,0]
-						,[dim.x,dim.y,0]
-						,[0,dim.y,0]
-					],20));
+				rotate ([0,90,0])
+				translate ([-dim.z+thickness[2],0,0])
+				{
+					linear_extrude(dim.z)
+						polygon(polyRound([
+							 [0,0,10]
+							,[dim.x,0,0]
+							,[dim.x,dim.y,0]
+							,[0,dim.y,0]
+						],20));
+				}
+				
+				ww=9;
+				hh=10;
+				translate ([0,-ww,14])
+				{
+					translate ([0,ww-3-1,0])
+					{
+						translate ([0,0,-2-1])
+							cube ([40,3,2]);
+						translate ([0,0,hh+1])
+							cube ([40,3,2]);
+					}
+					cube ([40,20,hh]);
+				}
 			}
 		}
 		if (part=="right")

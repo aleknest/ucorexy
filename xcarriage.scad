@@ -390,13 +390,12 @@ module x_carriage(part="front",report=false)
 		coord=[
 			 [0,6,x_cube_cut[0]-sdim.y-6]
 			,[xcarriage_dim().x,6,x_cube_cut[0]-sdim.y-6]
-			,[6,x_cube_cut[1],xcarriage_dim().z-19]
-			,[6,x_cube_cut[1],xcarriage_dim().z-11]
+			//,[6,x_cube_cut[1],xcarriage_dim().z-19]
+			//,[6,x_cube_cut[1],xcarriage_dim().z-11]
 			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-19]
 			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-11]
 		];
 		
-		//8888
 		translate_rotate (xcarriage_tr())
 		for (i=[0:len(coord)-1])
 		{
@@ -412,8 +411,12 @@ module x_carriage(part="front",report=false)
 		e3d_v6_cut();
 		xcarriage_rail_cut();
 		
+		add=1.4;
 		translate_rotate (x_slot_tr())
-			cube ([20.6,20.6,200],true);
+		{
+			translate ([0,add/2,0])
+				cube ([20.6,20.6+add,200],true);
+		}
 		translate_rotate (x_rail_tr())
 		{
 			dim=[carriage_length(rail_carriage(x_rail_type()))+0.4
@@ -701,7 +704,7 @@ xposition=55;
 //translate ([xposition,y_rail_y()+yposition,0])
 {
 	x_carriage_main();
-	x_carriage_front();
+	//x_carriage_front();
 	
 	//x_carriage_back();
 	//x_carriage_belt_fixer_left();
