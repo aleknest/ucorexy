@@ -124,7 +124,7 @@ module e3d_fitting()
 		translate ([0,0,-1])
 		{
 			cylinder (d=tube_diameter,h=per[0],$fn=50);
-			translate ([0,0,per[0]+0.2])
+			translate ([0,0,per[0]-0.2])
 				cylinder (d=3.2,h=per[0]+per[1],$fn=50);
 			translate ([0,0,per[0]+per[1]])
 				cylinder (d=tube_diameter,h=50,$fn=50);
@@ -132,7 +132,7 @@ module e3d_fitting()
 	}
 }
 
-e3d_fitting();
+//e3d_fitting();
 //e3d_fitting_nut();
 
 //ptfe 51
