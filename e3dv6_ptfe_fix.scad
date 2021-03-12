@@ -23,14 +23,6 @@ module e3d_fitting_nut()
 		dd=17.33;//-2.6;
 		hh=8;
 		cylinder (d=dd,h=hh,$fn=6);
-		/*
-		rays=40;
-		angle=360/rays;
-		for (a=[0:rays-1])
-			rotate ([0,0,a*angle])
-			translate ([dd/2,0,-0.1])
-				cylinder(d=0.4,h=hh+0.2,$fn=20);
-		*/
 		translate ([0,0,-0.5])
 		metric_thread (diameter=base_diameter, pitch=1.6, length=screw_length, internal=true, n_starts=1,
 							  thread_size=2.0, groove=false, square=false, rectangle=0,
@@ -128,10 +120,19 @@ module e3d_fitting()
 				pc4_sub_filament();
 			}
 		}
+		per=[screw_height,20];
 		translate ([0,0,-1])
-			cylinder (d=tube_diameter,h=50,$fn=50);
+		{
+			cylinder (d=tube_diameter,h=per[0],$fn=50);
+			translate ([0,0,per[0]+0.2])
+				cylinder (d=3.2,h=per[0]+per[1],$fn=50);
+			translate ([0,0,per[0]+per[1]])
+				cylinder (d=tube_diameter,h=50,$fn=50);
+		}
 	}
 }
 
 e3d_fitting();
 //e3d_fitting_nut();
+
+//ptfe 51

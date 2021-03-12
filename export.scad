@@ -22,7 +22,7 @@ use <wire_fix.scad>
 use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
 
-cmd="x_carriage/ptfe_fix_nut";
+cmd="";
 
 module list(s)
 {
@@ -31,8 +31,8 @@ module list(s)
 
 if (cmd=="list")
 {
-	//list("x_carriage/ptfe_fix");
-	//list("x_carriage/ptfe_fix_nut");
+	list("x_carriage/e3dv6_throat_bore4p1_ptfefix");
+	list("x_carriage/e3dv6_throat_bore4p1_ptfefixnut");
 	
 	list("feeder_stand/feeder_stand_top");
 	list("feeder_stand/feeder_stand_middle");
@@ -331,11 +331,11 @@ if (cmd=="slot_cover/slot_bigcover_1mm")
 
 //////////////////////////////////////////////////////////////
 
-if (cmd=="x_carriage/ptfe_fix")
+if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefix")
 {
 	e3d_fitting();
 }
-if (cmd=="x_carriage/ptfe_fix_nut")
+if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefixnut")
 {
 	rotate ([0,180,0])
 		e3d_fitting_nut();
