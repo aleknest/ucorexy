@@ -1,13 +1,3 @@
-/*
-Вентиляторы обдува пластика (2шт)3
-Вентилятор обдува радиатора 2
-Вентилятор обдува электроники 2
-Мотор NEMA17 (4 шт) 50 (37 c 3-мя коротышами и одним полноценным)
-Электроника 30
-Нагревательный стол 60
-Керамический нагреватель хотэнда 40
-*/
-
 use <../_utils_v2/_round/polyround.scad>
 use <../_utils_v2/sequental_hull.scad>
 use <../_utils_v2/deb.scad>
@@ -30,6 +20,7 @@ use <legs.scad>
 use <case.scad>
 use <wire_fix.scad>
 use <nozzles.scad>
+use <oled_encoder.scad>
 
 xposition=0;//-55..55
 yposition=55;//-55..55
@@ -238,6 +229,12 @@ deb("*Wire fix:");
 wire_fix_lefttop_corner();
 wire_fix_righttop_corner();
 wire_fix_front();
+
+//////////////////////////////////////////////////////////////
+
+deb("*oled screen and encoder:");
+oled_encoder_top();
+oled_encoder_bottom();
 
 //////////////////////////////////////////////////////////////
 

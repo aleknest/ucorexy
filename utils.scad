@@ -153,6 +153,16 @@ module report_m2p5_screw(screw)
 	deb(str("M2.5x",screw));
 }
 
+module report_m2p5_screw(screw,din)
+{
+	deb(str("M2.5x",screw," ",din));
+}
+module report_m2p5_hexnut(screw)
+{
+	deb(str("M2.5 nut (hex)"));
+}
+
+
 module report_pulley(screw)
 {
 	deb(str("GT2 pulley 16 teeth"));

@@ -394,3 +394,5 @@ function case_top_screws()=[
 	,[[front_back_slot()-15,y_slot()-case_top_screws_offset()],[0,0,-90]]
 ];
 
+function oled_encoder_dim()=[65,40,37];
+function oled_encoder_tr()=tr_add(z_slot_rightfront_tr(),[-oled_encoder_dim().x+10,-oled_encoder_dim().y-10,-z_slot()/2+oled_encoder_dim().z+30]);

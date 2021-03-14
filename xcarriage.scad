@@ -220,7 +220,7 @@ module xcarriage_rail_cut()
 
 module x_cube(dim)
 {
-	fan_fix=[2.5,1,1];
+	fan_fix=[2.5+2,1,1];
 	fan_fix_up=2;
 	
 	translate ([dim.x,0,0])
@@ -703,10 +703,10 @@ xposition=55;
 
 //translate ([xposition,y_rail_y()+yposition,0])
 {
-	x_carriage_main();
+	//x_carriage_main();
 	//x_carriage_front();
 	
-	//x_carriage_back();
+	x_carriage_back();
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }

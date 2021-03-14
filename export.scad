@@ -21,6 +21,7 @@ use <case.scad>
 use <wire_fix.scad>
 use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
+use <oled_encoder.scad>
 
 cmd="";
 
@@ -104,6 +105,10 @@ if (cmd=="list")
 	list("wire_fix/wire_fix_lefttop_corner");
 	list("wire_fix/wire_fix_righttop_corner");
 	list("wire_fix/wire_fix_front");
+	
+	list("oled_encoder/oled_encoder_top");
+	list("oled_encoder/oled_encoder_bottom");
+	list("oled_encoder/encoder_knob");
 }
 
 //////////////////////////////////////////////////////////////
@@ -440,6 +445,21 @@ if (cmd=="nozzles/blower_nozzle_right")
 {
 	rotate ([0,90,0])
 	blower_nozzle_right();
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="oled_encoder/oled_encoder_top")
+{
+	oled_encoder_top();
+}
+if (cmd=="oled_encoder/oled_encoder_bottom")
+{
+	oled_encoder_bottom();
+}
+if (cmd=="oled_encoder/encoder_knob")
+{
+	encoder_knob();
 }
 
 //////////////////////////////////////////////////////////////
