@@ -265,35 +265,55 @@ module x_carriage_belt_fixer(op=0,report=false)
 		difference()
 		{
 			union()
-			fillet(r=2,steps=8)
 			{
-				//#translate (tr) cube(dim);
-				translate (tr)
-				intersection()
+				fillet(r=2,steps=8)
 				{
-					translate([0,dim.y,0])
-					rotate([90,0,0])
-					linear_extrude(dim.y)
-					polygon(polyRound([
-						 [0,0,0]
-						,[dim.x,0,1]
-						,[dim.x,dim.z,1]
-						,[0,dim.z,0]
-					],20));
-					linear_extrude(dim.z)
-					polygon(polyRound([
-						 [0,0,0]
-						,[dim.x,0,1]
-						,[dim.x,dim.y,1]
-						,[0,dim.y,0]
-					],20));
-				}
-				hull()
-				{
-					translate (tr2)
-						cube(dim2);
+					//#translate (tr) cube(dim);
 					translate (tr)
-						cube([dim2.x,dim.y,dim.z]);
+					intersection()
+					{
+						translate([0,dim.y,0])
+						rotate([90,0,0])
+						linear_extrude(dim.y)
+						polygon(polyRound([
+							 [0,0,0]
+							,[dim.x,0,1]
+							,[dim.x,dim.z,1]
+							,[0,dim.z,0]
+						],20));
+						linear_extrude(dim.z)
+						polygon(polyRound([
+							 [0,0,0]
+							,[dim.x,0,1]
+							,[dim.x,dim.y,1]
+							,[0,dim.y,0]
+						],20));
+					}
+					hull()
+					{
+						translate (tr2)
+							cube(dim2);
+						translate (tr)
+							cube([dim2.x,dim.y,dim.z]);
+					}
+				}
+				if (op==0)
+				{
+					out_fix=[0.2,4,1,1.6];
+					translate (tr)
+					{
+						for (z=[0,dim.z-out_fix[1]])
+						translate ([0,0,z])
+						linear_extrude(out_fix[1])
+						polygon(polyRound([
+							 [dim.x-out_fix[2]-out_fix[3]*2,0,0]
+							,[dim.x-out_fix[2]-out_fix[3],-out_fix[0],0]
+							,[dim.x-out_fix[2],0,0]
+							,[dim.x-out_fix[2],dim.y,0]
+							,[dim.x-out_fix[2]-out_fix[3],dim.y+out_fix[0],0]
+							,[dim.x-out_fix[2]-out_fix[3]*2,dim.y,0]
+						],20));					
+					}
 				}
 			}
 			if (op==0)
@@ -706,8 +726,8 @@ xposition=55;
 	//x_carriage_main();
 	//x_carriage_front();
 	
-	x_carriage_back();
-	//x_carriage_belt_fixer_left();
+	//x_carriage_back();
+	x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }
 //x_endstop();
