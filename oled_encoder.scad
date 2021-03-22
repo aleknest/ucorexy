@@ -145,7 +145,7 @@ module oled_encoder(report=false,wire=false)
 	{
 		for (i=[0:3])
 		{
-			report_m2p5_screw (8,"DIN965");
+			report_m2p5_screw_din (8,"DIN965");
 			report_m2p5_hexnut ();
 		}
 		for (i=[0:3])
@@ -270,10 +270,12 @@ module encoder_knob_body(d,h)
 
 module encoder_knob()
 {
+	down_knob=2.5;
 	difference ()
 	{
 		dd=22;
-		encoder_knob_body(d=dd,h=14);
+		translate ([0,0,-down_knob])
+		encoder_knob_body(d=dd,h=14+down_knob);
 		rays=32;
 		angle=360/rays;
 		for (a=[0:rays-1])
@@ -284,14 +286,15 @@ module encoder_knob()
 		translate ([0,0,-0.01])
 		difference ()
 		{
-			cylinder (d=6.2,h=13,$fn=100);
+			translate ([0,0,-down_knob])
+				cylinder (d=6.2,h=13+down_knob,$fn=100);
 			translate ([-10,1.7,-0.01])
 				cube ([20,20,20]);
 		}
 	}
 }
 
-proto_front_slots();
-oled_encoder_top();
-oled_encoder_bottom();
+//proto_front_slots();
+//oled_encoder_top();
+//oled_encoder_bottom();
 encoder_knob();

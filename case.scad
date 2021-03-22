@@ -90,6 +90,7 @@ module case_side(tr,length,screws,c45)
 				}
 			}
 		}
+		
 		for (screw=screws)
 		{
 			report_m5_point();
@@ -144,10 +145,11 @@ module case_front()
 		translate ([0,-10-1,-z_slot()/2])
 			slot_cover_cut(h=z_slot(),down=1,offs=slot_cover_offs);
 		
+		up=6;
 		translate_rotate(z_slot_leftfront_tr())
 		rotate([0,0,90])
 		translate ([0,-10-1,-z_slot()/2])
-			slot_cover_cut(h=z_slot(),down=1,offs=slot_cover_offs);
+			slot_cover_cut(h=z_slot(),up=up,down=1,offs=slot_cover_offs);
 	}
 }
 module case_right()
@@ -329,10 +331,10 @@ module case_top()
 
 //xt90();
 
-//case_front();
-case_right();
-case_left();
+case_front();
+//case_right();
+//case_left();
 //case_backleft();
 //case_backright();
 
-case_top();
+//case_top();

@@ -23,7 +23,7 @@ use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
 use <oled_encoder.scad>
 
-cmd="";
+cmd="x_carriage/x_carriage_front";
 
 module list(s)
 {
@@ -32,6 +32,14 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("x_carriage/x_carriage_front");
+	list("x_carriage/x_carriage_back");
+	list("x_carriage/x_carriage_main");
+	list("x_carriage/x_carriage_fans_m3");
+	list("x_carriage/x_carriage_fans_m2p5");
+	list("x_carriage/x_carriage_belt_fixer_left");
+	list("x_carriage/x_carriage_belt_fixer_right");	
+
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefix");
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefixnut");
 	
@@ -43,14 +51,6 @@ if (cmd=="list")
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
 	
-	list("x_carriage/x_carriage_main");
-	list("x_carriage/x_carriage_fans_m3");
-	list("x_carriage/x_carriage_fans_m2p5");
-	list("x_carriage/x_carriage_front");
-	list("x_carriage/x_carriage_back");
-	list("x_carriage/x_carriage_belt_fixer_left");
-	list("x_carriage/x_carriage_belt_fixer_right");	
-
 	list("y_carriage/y_carriage_left");
 	list("y_carriage/y_carriage_right");
 	list("y_carriage/y_carriage_right_flag");
@@ -370,7 +370,7 @@ if (cmd=="x_carriage/x_carriage_fans_m2p5")
 }                    
 if (cmd=="x_carriage/x_carriage_front")
 {
-	rotate ([0,0,0])
+	rotate ([0,180,0])
 	x_carriage_front();
 }
 if (cmd=="x_carriage/x_carriage_back")

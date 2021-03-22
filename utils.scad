@@ -153,7 +153,7 @@ module report_m2p5_screw(screw)
 	deb(str("M2.5x",screw));
 }
 
-module report_m2p5_screw(screw,din)
+module report_m2p5_screw_din(screw,din)
 {
 	deb(str("M2.5x",screw," ",din));
 }
@@ -243,7 +243,7 @@ module magnet_cut(magnet_d,magnet_h,getter=0)
 	cc=[0.2,0.1];
 	cylinder(d=magnet_d-cc[1]*2+offs.x*2,h=magnet_h+offs.y,$fn=40);
 	cylinder(d1=magnet_d+offs.x*2,d2=0.1,h=magnet_h+offs.y,$fn=40);
-	cylinder (d=magnet_d/2,h=magnet_h+getter,$fn=40);
+	cylinder (d=magnet_d-0.3*2,h=magnet_h+getter,$fn=40);
 	rays=20;
 	for (a=[0:360/rays:360])
 		rotate ([0,0,a])
