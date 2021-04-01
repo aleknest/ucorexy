@@ -270,7 +270,7 @@ module encoder_knob_body(d,h)
 
 module encoder_knob()
 {
-	down_knob=2.5;
+	down_knob=2.5+1;
 	difference ()
 	{
 		dd=22;
@@ -280,7 +280,7 @@ module encoder_knob()
 		angle=360/rays;
 		for (a=[0:rays-1])
 			rotate ([0,0,a*angle])
-			translate ([dd/2,0,-1])
+			translate ([dd/2,0,-20])
 				cylinder(d=1,h=50,$fn=40);
 		
 		translate ([0,0,-0.01])

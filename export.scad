@@ -22,8 +22,9 @@ use <wire_fix.scad>
 use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
 use <oled_encoder.scad>
+use <klipper_head_mcu.scad>
 
-cmd="x_carriage/x_carriage_front";
+cmd="klipper_front_mcu/nano_bottom";
 
 module list(s)
 {
@@ -32,6 +33,9 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("klipper_front_mcu/nano_bottom");
+	list("klipper_front_mcu/nano_top");
+	
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
 	list("x_carriage/x_carriage_main");
@@ -109,6 +113,17 @@ if (cmd=="list")
 	list("oled_encoder/oled_encoder_top");
 	list("oled_encoder/oled_encoder_bottom");
 	list("oled_encoder/encoder_knob");
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="klipper_front_mcu/nano_top")
+{
+	k_oled_encoder_top();
+}
+if (cmd=="klipper_front_mcu/nano_bottom")
+{
+	k_oled_encoder_bottom();
 }
 
 //////////////////////////////////////////////////////////////

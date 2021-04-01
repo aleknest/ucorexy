@@ -397,10 +397,13 @@ function case_top_screws()=[
 function oled_encoder_dim()=[65,40,37];
 function oled_encoder_tr()=tr_add(z_slot_rightfront_tr(),[-oled_encoder_dim().x+10,-oled_encoder_dim().y-10,-z_slot()/2+oled_encoder_dim().z+30]);
 
-function k_oled_encoder_dim()=[70,60,37+27];
-function k_oled_encoder_cut()=6.5;
+function k_oled_encoder_thickness()=2.4;
+function k_oled_encoder_dim()=[78+2,55+2,67];
+function k_oled_encoder_angle()=60;
+function k_oled_encoder_cut()=8;
+function k_oled_encoder_wire_cut()=[k_oled_encoder_dim().x-20,6];
 function k_oled_encoder_tr()=[vec_add(z_slot_topfront_tr()[0],[
 	 -k_oled_encoder_dim().x/2
 	,-10-k_oled_encoder_dim().y
-	,10-k_oled_encoder_dim().z+k_oled_encoder_cut()
+	,10-k_oled_encoder_dim().z+k_oled_encoder_cut()+k_oled_encoder_wire_cut().y+k_oled_encoder_thickness()
 	]),[0,0,0]];

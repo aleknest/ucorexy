@@ -250,7 +250,6 @@ module magnet_cut(magnet_d,magnet_h,getter=0)
 		translate ([-cc.x/2,0,0])
 			cube ([cc.x,magnet_d/2+offs.x,magnet_h+offs.y]);
 }
-magnet_cut(2,2,20);
 
 module nema17_cut(add=false
 				,shaft=true
