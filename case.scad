@@ -250,9 +250,10 @@ module case_top_screws_cut(report=false,offs=[0,0])
 {
 	translate(case_top_tr())
 		for (s=case_top_screws())
+		{
 			translate (s[0])
 			rotate (s[1])
-			translate ([0,0,case_top_thickness()])
+			translate ([0,0,case_top_thickness()-s[2]])
 			rotate ([0,180,0])
 			{
 				if (offs!=[0,0])
@@ -275,20 +276,24 @@ module case_top_screws_cut(report=false,offs=[0,0])
 				rotate ([0,0,90])
 					m3_square_nut();
 			}
+		}
 }
 
 module case_top_screws_add()
 {
 	cadd=[2,1];
-	dim=[case_top_screws_offset()*2+cadd.x*2,case_top_screws_offset()*2+cadd.y*2,8];
 	translate(case_top_tr())
 		for (s=case_top_screws())
+		{
+			dim=[case_top_screws_offset()*2+cadd.x*2,case_top_screws_offset()*2+cadd.y*2,8+s[2]];
+			
 			translate (s[0])
 			rotate ([0,180,0])
 			translate ([-dim.x/2,-dim.y/2,0])
 			{
 				cube (dim);
 			}
+		}
 }
 
 module case_top()
@@ -331,10 +336,10 @@ module case_top()
 
 //xt90();
 
-case_front();
+//case_front();
 //case_right();
 //case_left();
 //case_backleft();
 //case_backright();
 
-//case_top();
+case_top();

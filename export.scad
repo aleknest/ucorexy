@@ -23,6 +23,7 @@ use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
 use <oled_encoder.scad>
 use <klipper_head_mcu.scad>
+use <filament_runout_sensor.scad>
 
 cmd="klipper_front_mcu/nano_bottom";
 
@@ -33,6 +34,10 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("filament_runout_sensor/filament_runout_sensor_top");
+	list("filament_runout_sensor/filament_runout_sensor_bottom");
+	list("filament_runout_sensor/filament_runout_sensor_fix");
+	
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
 	
@@ -113,6 +118,21 @@ if (cmd=="list")
 	list("oled_encoder/oled_encoder_top");
 	list("oled_encoder/oled_encoder_bottom");
 	list("oled_encoder/encoder_knob");
+}
+
+//////////////////////////////////////////////////////////////
+
+if (cmd=="filament_runout_sensor/filament_runout_sensor_top")
+{
+	filament_runout_body(op=2);
+}
+if (cmd=="filament_runout_sensor/filament_runout_sensor_bottom")
+{
+	filament_runout_body(op=1);
+}
+if (cmd=="filament_runout_sensor/filament_runout_sensor_fix")
+{
+	filament_runout_fix();
 }
 
 //////////////////////////////////////////////////////////////

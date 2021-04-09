@@ -381,17 +381,17 @@ function case_top_tr()=[-front_back_slot()/2+case_top_offset(),-y_slot()/2+case_
 function case_top_dim()=[front_back_slot()-case_top_offset()*2,y_slot()-case_top_offset()*2,case_top_thickness()];
 function case_top_screws_offset()=4;
 function case_top_screws()=[
-	 [[20,case_top_screws_offset()],[0,0,90]]
-	,[[front_back_slot()-20,case_top_screws_offset()],[0,0,90]]
+	 [[20,case_top_screws_offset()],[0,0,90],0]
+	,[[front_back_slot()-20,case_top_screws_offset()],[0,0,90],0]
 	
-	,[[front_back_slot()-case_top_screws_offset(),20],[0,0,180]]
-	,[[front_back_slot()-case_top_screws_offset(),y_slot()-20],[0,0,180]]
+	,[[front_back_slot()-case_top_screws_offset(),20],[0,0,180],0]
+	,[[front_back_slot()-case_top_screws_offset(),y_slot()-20],[0,0,180],0]
 	
-	,[[case_top_screws_offset(),20],[0,0,0]]
-	,[[case_top_screws_offset(),y_slot()-20],[0,0,0]]
+	,[[case_top_screws_offset(),20],[0,0,0],0]
+	,[[case_top_screws_offset(),y_slot()-20],[0,0,0],0]
 	
-	,[[15,y_slot()-case_top_screws_offset()],[0,0,-90]]
-	,[[front_back_slot()-15,y_slot()-case_top_screws_offset()],[0,0,-90]]
+	,[[15+16,y_slot()-case_top_screws_offset()],[0,0,-90],0]
+	,[[front_back_slot()-15-12,y_slot()-case_top_screws_offset()],[0,0,-90],0]
 ];
 
 function oled_encoder_dim()=[65,40,37];
@@ -401,7 +401,7 @@ function k_oled_encoder_thickness()=2.4;
 function k_oled_encoder_dim()=[78+2,55+2,67];
 function k_oled_encoder_angle()=60;
 function k_oled_encoder_cut()=8;
-function k_oled_encoder_wire_cut()=[k_oled_encoder_dim().x-20,6];
+function k_oled_encoder_wire_cut()=[k_oled_encoder_dim().x-20,6,0];
 function k_oled_encoder_tr()=[vec_add(z_slot_topfront_tr()[0],[
 	 -k_oled_encoder_dim().x/2
 	,-10-k_oled_encoder_dim().y

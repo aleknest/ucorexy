@@ -252,9 +252,11 @@ module oled_encoder(report=false,bottom=false)
 			encoder(op=2);
 		
 		translate ([(k_oled_encoder_dim().x-k_oled_encoder_wire_cut().x)/2
-					,k_oled_encoder_dim().y-k_oled_encoder_thickness()-0.1
-					,zreal-k_oled_encoder_thickness()-k_oled_encoder_wire_cut().y])	
-			cube ([k_oled_encoder_wire_cut().x,k_oled_encoder_thickness()+0.2,k_oled_encoder_wire_cut().y]);
+					,k_oled_encoder_dim().y-k_oled_encoder_thickness()-1-0.1
+					,zreal-k_oled_encoder_thickness()-k_oled_encoder_wire_cut().y-k_oled_encoder_wire_cut().z])	
+			cube ([k_oled_encoder_wire_cut().x
+					,k_oled_encoder_thickness()+0.2
+					,k_oled_encoder_wire_cut().y+k_oled_encoder_wire_cut().z]);
 		nano(op=2);
 		if (bottom)
 			nano(op=4);
