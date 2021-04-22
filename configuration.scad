@@ -16,6 +16,8 @@ function MGN9C() = [ "MGN9",  9,  6,   7.5, 20, 6.0, 3.5, 3.5, M3_cap_screw, MGN
 MGN9H_carriage  = [ 39.9, 29.9, 20, 10, 2,   16, 15, M3_cap_screw ];
 function MGN9H() = [ "MGN9H",  9,  6,   7.5, 20, 6.0, 3.5, 3.5, M3_cap_screw,    MGN9H_carriage, M3_cs_cap_screw ];
 
+function e3d_tr_ycorr()=3;
+
 function x_slot()=184-6;
 function x_slot_tr()=[[0,0,carriage_height(rail_carriage(y_rail_type()))],[0,90,0]];
 
@@ -27,11 +29,11 @@ function e3d_type()=E3Dv6;
 function e3d_tr(position=0)=[vec_add([
 	 position
 	,-10-hot_end_insulator_diameter(e3d_type())/2-carriage_height(rail_carriage(x_rail_type()))
-	,x_rail_tr()[0].z],[0,-6,-4])
+	,x_rail_tr()[0].z],[0,-6-e3d_tr_ycorr(),-4])
 	,[0,0,0]];
 
 function e3d_fan_type()=fan40x11;
-function e3d_fan_tr(position)=[vec_add(e3d_tr(position)[0],[0,42.5,-31.8]),[-90,0,0]];
+function e3d_fan_tr(position)=[vec_add(e3d_tr(position)[0],[0,42.5+e3d_tr_ycorr(),-31.8]),[-90,0,0]];
 
 BL40x10m =["BL40x10","Square radial 4010",40,40,9.5,27,M2_cap_screw,16,[24,20], 2.4
 	, [[2+0.7,2+0.7],[2+36-0.7,2+0.7],[2+0.7,38-0.7],[2+36-0.7,38-0.7]], 30  , 9.5, 1.5, 1.5, 1.1, 1.5];
@@ -45,7 +47,7 @@ function e3d_blower_right_tr(position)=[
 	vec_add(e3d_tr(position)[0],[e3d_blower_offset().x,e3d_blower_offset().y,e3d_blower_offset().z])
 	,[90,0,90]];
 	
-function xcarriage_thickness()=[36,26,4,4.9+0.8];
+function xcarriage_thickness()=[36,26+2,4,4.9+0.8];
 function xcarriage_dim()=[28,20+xcarriage_thickness()[0]+xcarriage_thickness()[2],20+xcarriage_thickness()[1]+xcarriage_thickness()[3]];	
 function xcarriage_tr() = [vec_add(x_slot_tr()[0]
 	,[-xcarriage_dim().x/2,-10-xcarriage_thickness()[0],x_slot_tr()[0].z-20-xcarriage_thickness()[3]])
@@ -330,9 +332,9 @@ function feeder_center_point_tr() = [[e3d_tr(0)[0].x
 									 ,e3d_tr(0)[0].y
 									 ,feeder_stand_tr()[0].z+feeder_up()]
 									 ,[0,90,0]];
-function feeder_thickness()=10;//6;
+function feeder_thickness()=10+12;
 function feeder_base_thickness()=6;
-function feeder_stand_width()=50;
+function feeder_stand_width()=feeder_thickness()+30;
 function feeder_nema_plate_thickness()=4;
 
 function xt90_dim()=[60,17.65,17.4];
@@ -398,7 +400,7 @@ function oled_encoder_dim()=[65,40,37];
 function oled_encoder_tr()=tr_add(z_slot_rightfront_tr(),[-oled_encoder_dim().x+10,-oled_encoder_dim().y-10,-z_slot()/2+oled_encoder_dim().z+30]);
 
 function k_oled_encoder_thickness()=2.4;
-function k_oled_encoder_dim()=[78+2,55+2,67];
+function k_oled_encoder_dim()=[80,57,67+8];
 function k_oled_encoder_angle()=60;
 function k_oled_encoder_cut()=8;
 function k_oled_encoder_wire_cut()=[k_oled_encoder_dim().x-20,6,0];

@@ -11,7 +11,7 @@ include <../_utils_v2/NopSCADlib/core.scad>
 include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 include <../_utils_v2/NopSCADlib/vitamins/pulleys.scad>
 
-module y_carriage_flag(part="",y_magnet_out=5.5)
+module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
 {
 	offs=0.2;
 	y_magnet_outd=4;
@@ -49,7 +49,7 @@ module y_carriage_flag(part="",y_magnet_out=5.5)
 			rotate ([180,0,0])
 			{
 				magnet_cut(magnet_d=y_magnet_d(),magnet_h=y_magnet_h());
-				cylinder (d=1.6,h=100,$fn=20);
+				cylinder (d=2.0,h=100,$fn=60);
 			}
 			y_carriage_flag(part="fix");
 		}
@@ -244,6 +244,6 @@ module y_carriage_right_flag()
 //proto_y_left(yposition=0);
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
-y_carriage_left();
+//y_carriage_left();
 //y_carriage_right();
-//y_carriage_right_flag();
+y_carriage_right_flag();

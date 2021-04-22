@@ -8,24 +8,29 @@ use <proto.scad>
 use <configuration.scad>
 include <../_utils_v2/NopSCADlib/vitamins/stepper_motors.scad>
 
-y=feeder_center_point_tr()[0].y-feeder_stand_tr()[0].y;
-z=feeder_center_point_tr()[0].z-feeder_stand_tr()[0].z;
-cut=40;
+center_tr=[vec_add(feeder_center_point_tr()[0],[0,0,0]),feeder_center_point_tr()[1]];
+y=center_tr[0].y-feeder_stand_tr()[0].y;
+z=center_tr[0].z-feeder_stand_tr()[0].z;
+cut=40-20;
 c=cut+10;
 g=sqrt(c*c*2);
 corner=1/(180/90);
 
 dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
 
+is_motor_plate_add=false;
+
+function feeder_stand_middle_cut()=37;
+
 module feeder_plate(report=false)
 {
-	add=7;
+	add=is_motor_plate_add?7:0;
 	dim=dim_nema;
 	difference()
 	{
 		fillet (r=8,steps=$preview?2:16)
 		{
-			translate_rotate(feeder_center_point_tr())
+			translate_rotate(center_tr)
 			translate([0,-0.01,-feeder_thickness()/2])
 			translate ([0,dim.y/2,0])
 			linear_extrude(dim.z)
@@ -37,16 +42,17 @@ module feeder_plate(report=false)
 				],1));
 			
 			translate ([-feeder_thickness()/2,-y+cut,-10])
-			translate(feeder_center_point_tr()[0])
+			translate(center_tr[0])
 				cube ([feeder_nema_plate_thickness(),y-cut,20]);		
 		}
-		for (y=[-2:2])
-			translate_rotate(feeder_center_point_tr())
-			translate ([dim.x/2+add-4,dim.y/2+y*7.5,-feeder_thickness()/2-0.01])
-			translate ([0,-1.5,0])
-				cube ([2,3,feeder_thickness()+0.02]);
+		if (is_motor_plate_add)
+			for (y=[-2:2])
+				translate_rotate(center_tr)
+				translate ([dim.x/2+add-4,dim.y/2+y*7.5,-feeder_thickness()/2-0.01])
+				translate ([0,-1.5,0])
+					cube ([2,3,feeder_thickness()+0.02]);
 		
-		translate_rotate(feeder_center_point_tr())
+		translate_rotate(center_tr)
 		translate([0,-0.01,-feeder_thickness()/2])
 		translate ([0,dim.y/2,0])
 		nema17_cut(washers=true
@@ -67,7 +73,7 @@ module feeder_stand(report=false)
 		union()
 		{
 			translate ([-feeder_thickness()/2,-y+cut,-10])
-			translate(feeder_center_point_tr()[0])
+			translate(center_tr[0])
 			{
 				dim=[feeder_thickness(),y-cut,20];
 				//#cube (dim);
@@ -83,14 +89,14 @@ module feeder_stand(report=false)
 			}
 			
 			translate ([-feeder_thickness()/2,-y-10,-cut])
-			translate(feeder_center_point_tr()[0])
-				rotate ([-45,0,0])
+			translate(center_tr[0])
+			rotate ([-45,0,0])
 				cube ([feeder_thickness(),20,g]);
 			
 			fillet(r=12,steps=$preview?4:32)
 			{
 				translate ([-feeder_thickness()/2,-y-10,-z])
-				translate(feeder_center_point_tr()[0])
+				translate(center_tr[0])
 					cube ([feeder_thickness(),20,z-cut]);
 				
 				translate_rotate(feeder_stand_tr())
@@ -113,7 +119,8 @@ module feeder_stand(report=false)
 				slot_groove(height=feeder_stand_width(),enabled=true,big=true);
 		}
 			
-		for (xx=[-15,15])
+		diff=16;
+		for (xx=[-(feeder_stand_width()-diff)/2,(feeder_stand_width()-diff)/2])
 			translate_rotate(feeder_stand_tr())
 			translate ([xx,0,5])
 			rotate ([180,0,0])
@@ -123,47 +130,69 @@ module feeder_stand(report=false)
 				m5n_screw_washer(thickness=5, diff=2, washer_out=40,tnut=true);
 			}
 			
+		st_dim=[3,4];
+		
+		/*	
 		translate ([-feeder_thickness()/2,-y+cut,-10])
-		translate(feeder_center_point_tr()[0])
+		translate(center_tr[0])
 		{
 			for (iy = [-1,1])
-			for (iz = [0:1])
-				translate ([-feeder_thickness(),8+iz*11,10-1+7*iy])
-					cube ([40,3,2]);
-		}
-		
-		translate ([-20,-y,-z+feeder_base_thickness()])
-		translate(feeder_center_point_tr()[0])
-			for (iy = [-1,1])
-			for (iz = [0:4])
+			for (iz = [0:0])
 			{
-				if (iz!=1)
-					translate ([0,-1+7*iy,12+iz*16])
-						cube ([40,2,3]);
+				z=7*iy-st_dim[0]/2+10;
+				translate ([-feeder_thickness(),12+iz*11,z])
+					cube ([40,st_dim[1],st_dim[0]]);
+			}
+		}
+		*/
+		
+			
+		translate ([-20,-y,-z+feeder_base_thickness()])
+		translate(center_tr[0])
+			for (iy = [-1,1])
+			for (iz = [0:0])
+			{
+				y=7*iy-st_dim[0]/2;
+				translate ([0,y,12+iz*16])
+					cube ([40,st_dim[0],st_dim[1]]);
+			}
+		translate ([-20,-y,-z+feeder_base_thickness()])
+		translate(center_tr[0])
+			for (iy = [-1,1])
+			for (iz = [3:3])
+			{
+				y=7*iy-st_dim[0]/2;
+				translate ([0,y,-2+iz*16])
+					cube ([40,st_dim[0],st_dim[1]]);
 			}
 		translate ([-feeder_thickness()/2,-y-10,-cut])
-		translate(feeder_center_point_tr()[0])
+		translate(center_tr[0])
 			rotate ([-45,0,0])
 			difference()
 			{
 				for (iy = [-1,1])
-				for (iz = [0:2])
-					translate ([-1,10-1+7*iy,18+iz*16])
-						cube ([40,2,3]);
+				for (iz = [0:0
+					])
+				{
+					y=7*iy-st_dim[0]/2+10;
+					translate ([-1,y,18+4+iz*16])
+						cube ([40,st_dim[0],st_dim[1]]);
+				}
 			}
 	}
 }
 
 
-module cut(zz,diff,op="cut",offs=0,report=false)
+module cut(zz,diff,op="cut",offs=0,rot=[0,0,0],report=false)
 {
 	translate ([-feeder_thickness()/2,-y-10-1,-z])
-	translate(feeder_center_point_tr()[0])
+	translate(center_tr[0])
 	{
 		if (op=="cut")
 		{
 			translate ([offs,0,0])
 			{
+				rotate(rot)
 				translate ([-10,0,0])
 				{
 					dim=[feeder_thickness()/2+10,22,zz+diff+offs];
@@ -179,6 +208,7 @@ module cut(zz,diff,op="cut",offs=0,report=false)
 							,[0,dim.y,0]
 						],1));
 				}
+				rotate(rot)
 				translate ([-50,0,-10])
 				{
 					dim=[100,22,zz-diff+10+offs];
@@ -198,35 +228,29 @@ module cut(zz,diff,op="cut",offs=0,report=false)
 		}
 		if (op=="diff")
 		{
-			translate ([0,11,zz])
+			screw=16;
+			rotate(rot)
+			translate ([(20-screw+m5_washer_height()+m5_nut_H())/2,10+1,zz])
 			rotate ([0,90,0])
 			{
 				if (report)
 				{
-					report_m5_screw(12);
+					report_m5_screw(screw);
 					report_m5_hexnut();
 				}
-				m5n_screw_washer(thickness=feeder_thickness()+10,washer_out=10);
-				translate ([0,0,feeder_thickness()/4*3])
+				m5n_screw_washer(thickness=screw,washer_out=10);
+				translate ([0,0,screw-m5_nut_H()])
 					nut(m5_nut_G(),20);
 			}
 		}
 		if (op=="add")
 		{
+			rotate(rot)
 			translate ([0,11,zz])
 			rotate ([0,90,0])
 			{
 				translate ([0,0,feeder_thickness()/4*3-0.2])
 					nut(m8_nut_G()+0.4,0.2);
-			}
-		}
-		if (op=="model")
-		{
-			translate ([0,11,zz])
-			rotate ([0,90,0])
-			{
-				translate ([0,0,feeder_thickness()-0.01])
-					nut(m5_nut_G()+6,5);
 			}
 		}
 	}
@@ -244,6 +268,28 @@ module cut_top(op="cut",offs=0, report=false)
 	diff=6;	
 	zz=z-60;
 	cut(zz=zz,diff=diff,op=op,offs=offs,report=report);
+}
+
+module cut_middle(op="cut",offs=0, report=false)
+{
+	diff=6;	
+	zz=z-60-feeder_stand_middle_cut();
+	cut(zz=zz,diff=diff,op=op,offs=offs,report=report);
+}
+
+module cut_plate(op="cut",offs=0, report=false)
+{
+	diff=6;	
+	zz=86;
+	translate([0,0,2])
+	translate(center_tr[0])
+		cut(zz=zz,diff=diff,op=op,offs=offs,rot=[-90,0,0],report=report);
+	if (op=="cut")
+	{
+		dim=[100,80,200];
+		translate ([center_tr[0].x-dim.x/2,-y-dim.y,center_tr[0].z-dim.z-10])
+			cube (dim);
+	}
 }
 
 module feeder_stand_bottom()
@@ -267,14 +313,7 @@ module feeder_stand_nobottom()
 	{
 		difference()
 		{
-			st=$preview?4:16;
-			union()
-			fillet (r=3.4,steps=st)
-			{
-				feeder_stand();
-				mirror([1,0,0])
-					cut_bottom(op="model",offs=0.1);
-			}
+			feeder_stand();
 			mirror([1,0,0])
 				cut_bottom(op="cut",offs=0.1);
 		}
@@ -291,10 +330,10 @@ module feeder_stand_middle()
 		{
 			feeder_stand_nobottom();
 			mirror([1,0,0])
-				cut_top(op="cut",offs=-0.1);
+				cut_middle(op="cut",offs=-0.1);
 		}
 		mirror([1,0,0])
-			cut_top(op="diff");
+			cut_middle(op="diff");
 	}
 }
 
@@ -302,21 +341,51 @@ module feeder_stand_top()
 {
 	union()
 	{
-		difference()
+		intersection()
 		{
 			difference()
 			{
-				feeder_stand_nobottom();
+				difference()
+				{
+					feeder_stand_nobottom();
+					mirror([1,0,0])
+						cut_top(op="cut",offs=0.1);
+				}
 				mirror([1,0,0])
-					cut_top(op="cut",offs=0.1);
+					cut_top(op="diff",report=true);
+				
+				translate ([0,0,-1])
+				mirror([1,0,0])
+					cut_plate(op="diff",report=true);
 			}
 			mirror([1,0,0])
-				cut_top(op="diff",report=true);
+				cut_plate(op="cut");
 		}
 		mirror([1,0,0])
 			cut_top(op="add");
 	}
 }
+
+module feeder_stand_plate()
+{
+	union()
+	{
+		difference()
+		{
+			feeder_stand_nobottom();
+				
+			translate ([0,0,-1])
+			mirror([1,0,0])
+				cut_plate(op="diff",report=false);
+			mirror([1,0,0])
+				cut_plate(op="cut",offs=0.1);
+		}
+		translate ([0,0,-1])
+		mirror([1,0,0])
+			cut_plate(op="add");
+	}
+}
+
 
 //proto_front_slots();
 
@@ -334,9 +403,10 @@ proto_y_left(slot_only=true);
 
 
 
-//feeder_stand();
-//feeder_stand_bottom();
-//feeder_stand_middle();
+feeder_stand_bottom();
+feeder_stand_middle();
+translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();
 feeder_stand_top();
+feeder_stand_plate();
 
 //feeder_plate();

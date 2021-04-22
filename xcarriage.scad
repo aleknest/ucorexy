@@ -31,7 +31,7 @@ function e3d_v6_seq(i) = i==0?0:e3d_v6_seq_(i-1);
 
 blower_outer_fix_diameter=4.4;
 
-x_cube_cut=[26.4,22];
+x_cube_cut=[31.4,22];
 
 module belt (l,smooth=false,width_add=[0,0])
 {
@@ -231,14 +231,15 @@ module x_cube(dim)
 	rotate ([0,-90,0])
 	linear_extrude(dim.x)
 		polygon (polyRound([
-			 [0,-front_fan_fix[2],0]
-			,[-front_fan_fix[1],-front_fan_fix[2],0]
-			,[-front_fan_fix[1],-front_fan_fix[0],1]
-			,[front_fan_fix_up,-front_fan_fix[0],0]
-			,[front_fan_fix_up,0,10]
-			,[x_cube_cut[0],0,2]
+			 [0,-front_fan_fix[2]-e3d_tr_ycorr(),0]
+			,[-front_fan_fix[1],-front_fan_fix[2]-e3d_tr_ycorr(),0]
+			,[-front_fan_fix[1],-front_fan_fix[0]-e3d_tr_ycorr(),1]
+			,[front_fan_fix_up,-front_fan_fix[0]-e3d_tr_ycorr(),0]
+			,[front_fan_fix_up,-e3d_tr_ycorr(),10]
+			,[x_cube_cut[0],-e3d_tr_ycorr(),2+2]
+	
 			,[x_cube_cut[0],x_cube_cut[1],3.5]
-			,[dim.z,x_cube_cut[1],6]
+			,[dim.z,x_cube_cut[1],6+5]
 			,[dim.z,dim.y,2]
 			,[back_fan_fix_up,dim.y,1]
 			,[back_fan_fix_up,dim.y+back_fan_fix[1],0]
@@ -297,12 +298,14 @@ module x_carriage_belt_fixer(op=0,report=false)
 							,[0,dim.y,0]
 						],20));
 					}
+					
+					ioffs=op==0?0:0.1;
 					hull()
 					{
-						translate (tr2)
-							cube(dim2);
-						translate (tr)
-							cube([dim2.x,dim.y,dim.z]);
+						translate (vec_sub(tr2,[0,ioffs,0]))
+							cube(vec_add(dim2,[0,ioffs*2,0]));
+						translate (vec_sub(tr,[0,0,ioffs]))
+							cube([dim2.x,dim.y,dim.z+ioffs*2]);
 					}
 				}
 				if (op==0)
@@ -375,13 +378,16 @@ module x_carriage_belt_fixer_right(report=true)
 
 module x_carriage(part="front",report=false)
 {
-	screw1=16;
+	screw1=16+4;
 	screw2=[16,8];
 	iz1=len(e3d_v6_dim)-3;
-	z1=e3d_v6_seq(iz1)+e3d_v6_up+e3d_v6_dim[iz1].y/2-1;
+	zz1=[
+		 e3d_v6_seq(iz1)+e3d_v6_up+e3d_v6_dim[iz1].y/2-1
+		,e3d_v6_seq(iz1+2)+e3d_v6_up+e3d_v6_dim[iz1].y/2-1
+	];
 	screw_y=-6;
 	mtr=[[xcarriage_tr()[0].x+xcarriage_dim().x/2-2
-		,xcarriage_tr()[0].y-x_magnet_out()
+		,xcarriage_tr()[0].y-x_magnet_out()-e3d_tr_ycorr()
 		,x_endstop_tr()[0].z]
 		,[-90,0,0]];
 	
@@ -398,6 +404,7 @@ module x_carriage(part="front",report=false)
 					cylinder(d=x_magnet_d()+4,h=10);
 			}
 		
+			for (z1=zz1)
 			for (x=[-1,1])
 				translate ([10.5*x,screw_y,z1])
 				translate_rotate (e3d_tr(0))
@@ -414,14 +421,10 @@ module x_carriage(part="front",report=false)
 		
 		dd=9;
 		sdim=[2,3];
-		wire_fix_corr=[6];
 		coord=[
-			 [0,6,x_cube_cut[0]-sdim.y-6]
-			,[xcarriage_dim().x,6,x_cube_cut[0]-sdim.y-6]
-			//,[6,x_cube_cut[1],xcarriage_dim().z-19]
-			//,[6,x_cube_cut[1],xcarriage_dim().z-11]
-			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-19]
-			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-11]
+			 [0,6+12.5,x_cube_cut[0]-sdim.y-6]
+			,[xcarriage_dim().x,6+12.5,x_cube_cut[0]-sdim.y-6]
+			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-19+2]
 		];
 		
 		translate_rotate (xcarriage_tr())
@@ -454,8 +457,8 @@ module x_carriage(part="front",report=false)
 				cube(dim);
 			if (part=="main")
 			{
-				screw=6;
-				screw_in=3;
+				screw=6+2+2;
+				screw_in=3+2;
 				for (x=[-1,1])
 				for (y=[-1,1])
 					translate ([carriage_pitch_x(rail_carriage(x_rail_type()))/2*x
@@ -465,9 +468,12 @@ module x_carriage(part="front",report=false)
 					{
 						report_m3_washer(screw);
 						m3_screw(h=screw,cap_out=100);
+						rotate ([180,0,0])
+							cylinder (d=7+0.1*2,h=20,$fn=60);
 					}
 			}
 		}
+		for (z1=zz1)
 		for (x=[-1,1])
 			translate ([10.5*x,screw_y,z1])
 			translate_rotate (e3d_tr(0))
@@ -477,7 +483,7 @@ module x_carriage(part="front",report=false)
 				m3_screw(h=screw1);
 				m3_washer(out=40);
 				
-				translate ([0,0,screw1-2])
+				translate ([0,0,screw1-2-4])
 				rotate ([0,0,-90*x])
 					m3_square_nut();
 			}
@@ -576,6 +582,39 @@ module x_carriage_front()
 	}
 }
 
+module x_carriage_fan_spacer(blower_screw_diameter=2.9)
+{
+	dim=5-0.2;
+	dimcut=0.95;
+	offs=0.46;
+	fan_points=polyRound([
+		 [-offs+dimcut,-offs+dimcut,0]
+		,[dim,-offs+dimcut,0]
+		,[dim,dim,1.6]
+		,[-offs+dimcut,dim,0]
+	],20);
+	bsh=blower_screw_holes(e3d_blower_type());
+	blower_corner_coords=[
+		 [[0,0,-1],[0,0,0]]
+		,[[40,0,-1],[0,0,90]]
+		,[[40,40,-1],[0,0,180]]
+		,[[0,40,-1],[0,0,-90]]
+	];
+
+	cc=0;
+	c=bsh[cc];
+	
+	difference()
+	{
+		translate (blower_corner_coords[cc][0])
+		rotate (blower_corner_coords[cc][1])
+		linear_extrude(3)
+			polygon(fan_points);
+		translate ([c.x,c.y,-10])
+			cylinder (d=blower_screw_diameter+0.4,h=20);
+	}
+}
+
 module x_carriage_fans(blower_screw_diameter=2.9)
 {
 	hh=20;
@@ -592,7 +631,7 @@ module x_carriage_fans(blower_screw_diameter=2.9)
 	dim=5-0.2;
 	dimcut=0.95;
 	offs=0.46;
-	points=polyRound([
+	fan_points=polyRound([
 		 [-offs+dimcut,-offs+dimcut,0]
 		,[dim,-offs+dimcut,0]
 		,[dim,dim,1.6]
@@ -634,12 +673,12 @@ module x_carriage_fans(blower_screw_diameter=2.9)
 					translate (blower_corner_coords[cc][0])
 					rotate (blower_corner_coords[cc][1])
 					linear_extrude(3)
-						polygon(points);
+						polygon(fan_points);
 				}
 			}
 		}
 		e3d_v6_fan_cut(screws=true);
-		e3d_v6_cut(maxc=1,maxc_diameter=11,out=50);
+		e3d_v6_cut(maxc=1,maxc_diameter=11+1,out=50);
 		hull()
 		{
 			e3d_v6_cut(maxc=0);
@@ -723,7 +762,8 @@ xposition=55;
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
 //proto_x_blowers();
-x_carriage_fans();
+//x_carriage_fans();
+//x_carriage_fan_spacer();
 //proto_front_slots();
 
 //use <xymotorblock.scad>
@@ -731,10 +771,10 @@ x_carriage_fans();
 
 //translate ([xposition,y_rail_y()+yposition,0])
 {
-	//x_carriage_main();
+	x_carriage_main();
 	//x_carriage_front();
-	
 	//x_carriage_back();
+	
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }

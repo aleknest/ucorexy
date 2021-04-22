@@ -24,8 +24,9 @@ use <e3dv6_ptfe_fix.scad>
 use <oled_encoder.scad>
 use <klipper_head_mcu.scad>
 use <filament_runout_sensor.scad>
+use <rpi_camera.scad>
 
-cmd="klipper_front_mcu/nano_bottom";
+cmd="y_carriage/y_carriage_right_flag";
 
 module list(s)
 {
@@ -34,6 +35,9 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("rpi_camera/rpi_camera_bottom");
+	list("rpi_camera/rpi_camera_top");
+		
 	list("filament_runout_sensor/filament_runout_sensor_top");
 	list("filament_runout_sensor/filament_runout_sensor_bottom");
 	list("filament_runout_sensor/filament_runout_sensor_fix");
@@ -46,6 +50,9 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_main");
 	list("x_carriage/x_carriage_fans_m3");
 	list("x_carriage/x_carriage_fans_m2p5");
+	list("x_carriage/x_carriage_fan_spacer_m3");
+	list("x_carriage/x_carriage_fan_spacer_m2p5");
+	
 	list("x_carriage/x_carriage_belt_fixer_left");
 	list("x_carriage/x_carriage_belt_fixer_right");	
 
@@ -55,7 +62,7 @@ if (cmd=="list")
 	list("feeder_stand/feeder_stand_top");
 	list("feeder_stand/feeder_stand_middle");
 	list("feeder_stand/feeder_stand_bottom");
-	list("feeder_stand/feeder_test_case");
+	list("feeder_stand/feeder_stand_plate");
 	
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
@@ -118,6 +125,17 @@ if (cmd=="list")
 	list("oled_encoder/oled_encoder_top");
 	list("oled_encoder/oled_encoder_bottom");
 	list("oled_encoder/encoder_knob");
+}
+
+//////////////////////////////////////////////////////////////
+if (cmd=="rpi_camera/rpi_camera_bottom")
+{
+	rpi_camera_bottom();
+}
+if (cmd=="rpi_camera/rpi_camera_top")
+{
+	rotate ([0,180,0])
+	rpi_camera_top();
 }
 
 //////////////////////////////////////////////////////////////
@@ -314,7 +332,7 @@ if (cmd=="enclosure/enclosure_spacer_ramps")
 
 if (cmd=="feeder_stand/feeder_stand_top")
 {
-	rotate ([0,-90,0])
+	rotate ([90+45,0,0])
 		feeder_stand_top();
 }
 if (cmd=="feeder_stand/feeder_stand_middle")
@@ -327,10 +345,10 @@ if (cmd=="feeder_stand/feeder_stand_bottom")
 	rotate ([90,0,0])
 		feeder_stand_bottom();
 }
-if (cmd=="feeder_stand/feeder_test_case")
+if (cmd=="feeder_stand/feeder_stand_plate")
 {
 	rotate ([0,-90,0])
-		feeder_plate();
+		feeder_stand_plate();
 }
 
 //////////////////////////////////////////////////////////////
@@ -403,6 +421,15 @@ if (cmd=="x_carriage/x_carriage_fans_m2p5")
 	rotate ([-90,0,0])
 	x_carriage_fans(blower_screw_diameter=2.4);
 }                    
+if (cmd=="x_carriage/x_carriage_fan_spacer_m3")
+{
+	x_carriage_fan_spacer(blower_screw_diameter=2.9);
+}                    
+if (cmd=="x_carriage/x_carriage_fan_spacer_m2p5")
+{
+	x_carriage_fan_spacer(blower_screw_diameter=2.4);
+}                    
+
 if (cmd=="x_carriage/x_carriage_front")
 {
 	rotate ([0,180,0])

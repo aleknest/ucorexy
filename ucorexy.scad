@@ -186,6 +186,8 @@ deb("*Feeder stand:");
 feeder_stand_top();
 feeder_stand_bottom();
 feeder_stand_middle();
+translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();
+feeder_stand_plate();
 
 //////////////////////////////////////////////////////////////
 
