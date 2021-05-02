@@ -10,6 +10,8 @@ switchLength = 13;
 switchHeight = 5.8;
 switchWidth = 7.5;
 
+add_z=20;
+
 switch_tr=[7,-switchWidth,bottomHeight];
 length=40;
 width=15;
@@ -17,7 +19,7 @@ box=[switchLength+8,10.8,switchHeight];
 height=switchHeight/2+bottomHeight;
 filament_y=-10;
 filament_z=bottomHeight+switchHeight/2;
-filament_cut=[2,3];
+filament_cut=[2.5+0.5,3];
 fitting=[6-0.2,7,8];
 
 module filament_cut()
@@ -37,6 +39,9 @@ module fitting_add(offs=0)
 	}
 }
 
+hh1=bottomHeight+switchHeight-0.01;
+hh2=bottomHeight;
+
 module filament_runout_body(op=1)
 {	
 	mirror([op==1?0:1,0,0])
@@ -44,47 +49,62 @@ module filament_runout_body(op=1)
 	{
 		difference() 
 		{
-			hh=op==1?bottomHeight+switchHeight-0.01:bottomHeight;
+			out=14;
+			hh=op==1?hh1+add_z:hh2;
+			zz=add_z;
+			dim=[length,width,hh];
 			union()
 			{
-				translate ([0,-width,0])
+				translate ([0,-width,-zz])
 				{
-					dim=[length,width,hh];
-					//cube (dim);
-					linear_extrude(dim.z)
-						polygon(polyRound([
+					points1=[
 							 [0,0,2]
 							,[dim.x,0,2]
 							,[dim.x,dim.y,2]
 							,[0,dim.y,2]
-						],20));
-				}
-				
-				ww=1.4;
-				for (mm=[0:1])
-				for (xx=[0:5])
-					translate ([3.4+6*xx,0,0])
-					translate ([0,-width/2,0])
+						];
+					points2=[
+							 [0,0,2]
+							,[dim.x-20,0,2]
+							,[dim.x-20,-out,4]
+							,[dim.x,-out,4]
+							,[dim.x,dim.y+out,4]
+							,[dim.x-20,dim.y+out,4]
+							,[dim.x-20,dim.y,2]
+							,[0,dim.y,2]
+						];
+					
+					if (op==2)
 					{
-						mirror([0,mm,0])
-						translate ([0,-width/2-ww,0])
-						{
-							dim=[3,ww,hh];
-							linear_extrude(dim.z)
-								polygon(polyRound([
-									 [0,0,1]
-									,[dim.x,0,1]
-									,[dim.x,dim.y,0]
-									,[0,dim.y,0]
-								],20));
-						}
+						linear_extrude(dim.z)
+							polygon(polyRound(points1,1));
 					}
-				
+					else
+					{
+						linear_extrude(5)
+							polygon(polyRound(points2,1));
+						translate ([0,0,5])
+						linear_extrude(dim.z-5)
+							polygon(polyRound(points1,1));
+					}
+				}
+					
 				if (op==1)
 					fitting_add();
 			}
 			if (op==2)
 				fitting_add(offs=0.2);
+			if (op==1)
+			{
+				cc=[out-7,-dim.y-out+7];
+				for (c=cc)
+				{
+					report_m5_point();
+					translate ([dim.x-10,c,5-zz])
+					rotate ([180,0,0])
+						m5n_screw_washer(thickness=5, diff=2, washer_out=40,tnut=true);
+				}
+			}
 		
 			//switch cutout
 			translate (switch_tr)
@@ -124,13 +144,24 @@ module filament_runout_body(op=1)
 					cylinder (d=fitting[0],h=fitting[1]+0.1,$fn=60);
 			}
 			
-			for (xx=[3.5,length-7])
-			translate ([xx,-4,-0.1])
+			xa=[3.5,length-7];
+			for (i=[0:1])
 			{
-				cylinder(d=m3_screw_diameter(),h=40,$fn=40);
-				if (op==1)
-					rotate ([0,0,90])
-						m3_nut_inner();
+				xx=xa[i];
+				translate ([xx,-4,-0.1-4])
+				{
+					translate ([0,0,-40])
+						cylinder(d=m3_screw_diameter(),h=80,$fn=40);
+					if (op==1)
+						hull()
+						{
+							rotate ([0,0,90])
+								m3_nut();
+							translate ([0,20,0])
+							rotate ([0,0,90])
+								m3_nut();
+						}
+				}
 			}
 		}
 		
@@ -230,6 +261,8 @@ module filament_runout_fix()
 	}
 }
 
-//filament_runout_body(op=1);
-filament_runout_body(op=2);
+translate([0,0,hh1+hh2])
+rotate ([0,-180,0])
+	filament_runout_body(op=1);
+//filament_runout_body(op=2);
 //filament_runout_fix();

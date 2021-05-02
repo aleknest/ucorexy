@@ -26,7 +26,7 @@ use <klipper_head_mcu.scad>
 use <filament_runout_sensor.scad>
 use <rpi_camera.scad>
 
-cmd="y_carriage/y_carriage_right_flag";
+cmd="filament_runout_sensor/filament_runout_sensor_bottom";
 
 module list(s)
 {
@@ -37,10 +37,10 @@ if (cmd=="list")
 {
 	list("rpi_camera/rpi_camera_bottom");
 	list("rpi_camera/rpi_camera_top");
+	list("rpi_camera/rpi_cable_fix");
 		
 	list("filament_runout_sensor/filament_runout_sensor_top");
 	list("filament_runout_sensor/filament_runout_sensor_bottom");
-	list("filament_runout_sensor/filament_runout_sensor_fix");
 	
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
@@ -48,9 +48,6 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
 	list("x_carriage/x_carriage_main");
-	list("x_carriage/x_carriage_fans_m3");
-	list("x_carriage/x_carriage_fans_m2p5");
-	list("x_carriage/x_carriage_fan_spacer_m3");
 	list("x_carriage/x_carriage_fan_spacer_m2p5");
 	
 	list("x_carriage/x_carriage_belt_fixer_left");
@@ -128,6 +125,7 @@ if (cmd=="list")
 }
 
 //////////////////////////////////////////////////////////////
+
 if (cmd=="rpi_camera/rpi_camera_bottom")
 {
 	rpi_camera_bottom();
@@ -137,20 +135,23 @@ if (cmd=="rpi_camera/rpi_camera_top")
 	rotate ([0,180,0])
 	rpi_camera_top();
 }
+if (cmd=="rpi_camera/rpi_cable_fix")
+{
+	rotate ([90,0,0])
+		rpi_cable_fix();
+}
 
 //////////////////////////////////////////////////////////////
 
 if (cmd=="filament_runout_sensor/filament_runout_sensor_top")
 {
-	filament_runout_body(op=2);
+	mirror([0,1,0])
+		filament_runout_body(op=2);
 }
 if (cmd=="filament_runout_sensor/filament_runout_sensor_bottom")
 {
-	filament_runout_body(op=1);
-}
-if (cmd=="filament_runout_sensor/filament_runout_sensor_fix")
-{
-	filament_runout_fix();
+	mirror([0,1,0])
+		filament_runout_body(op=1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -406,25 +407,6 @@ if (cmd=="x_carriage/x_carriage_main")
 	rotate ([-90,0,0])
 	x_carriage_main();
 }
-if (cmd=="x_carriage/x_carriage_fans")
-{
-	rotate ([-90,0,0])
-	x_carriage_fans();
-}
-if (cmd=="x_carriage/x_carriage_fans_m3")
-{
-	rotate ([-90,0,0])
-	x_carriage_fans(blower_screw_diameter=2.9);
-}                    
-if (cmd=="x_carriage/x_carriage_fans_m2p5")
-{
-	rotate ([-90,0,0])
-	x_carriage_fans(blower_screw_diameter=2.4);
-}                    
-if (cmd=="x_carriage/x_carriage_fan_spacer_m3")
-{
-	x_carriage_fan_spacer(blower_screw_diameter=2.9);
-}                    
 if (cmd=="x_carriage/x_carriage_fan_spacer_m2p5")
 {
 	x_carriage_fan_spacer(blower_screw_diameter=2.4);
@@ -432,7 +414,7 @@ if (cmd=="x_carriage/x_carriage_fan_spacer_m2p5")
 
 if (cmd=="x_carriage/x_carriage_front")
 {
-	rotate ([0,180,0])
+	rotate ([0,0,0])
 	x_carriage_front();
 }
 if (cmd=="x_carriage/x_carriage_back")

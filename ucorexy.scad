@@ -89,11 +89,6 @@ translate ([0,y_rail_y()+yposition,0])
 	proto_x_blowers(xposition=xposition);
 }
 
-translate ([xposition,y_rail_y()+yposition,0])
-{
-	x_carriage_fans();
-}
-
 //////////////////////////////////////////////////////////////
 
 deb("*X endstop:");

@@ -12,7 +12,7 @@ lens=[6.1,[9.4,9.4,7+0.1]];
 lens_cable=2.2;
 box=[width+4,length+6+5,9+2];
 box_tr=[0,0.01,-4-2];
-plate=[box.x+24.5,5,20];
+plate=[box.x+24.5+20,5,20];
 
 screws=[
 	 [21.05/2,9.3]
@@ -176,6 +176,63 @@ module rpi_camera_top()
 	}
 }
 
-rpi_camera_bottom();
-rpi_camera_top();
+module rpi_cable_fix()
+{
+	thickness=1;
+	wire=[16+3+2,14,1];
+	
+	screw_add=6;
+	box_width=[wire.x+screw_add+thickness,wire.y,wire.z+thickness*2];
+	
+	difference()
+	{
+		translate ([-screw_add,0,0])
+		intersection()
+		{
+			linear_extrude(box_width.z)
+			polygon(polyRound([
+				 [0,0,box_width.y/2]
+				,[box_width.x,0,0]
+				,[box_width.x,box_width.y,0]
+				,[0,box_width.y,box_width.y/2]
+			],40));
+			
+			
+			dim=box_width;
+			
+			translate ([0,0,dim.z])
+			rotate ([-90,0,0])
+			linear_extrude(dim.y)
+			polygon(polyRound([
+				 [0,0,0]
+				,[dim.x,0,dim.z/2]
+				,[dim.x,dim.z,dim.z/2]
+				,[0,dim.z,0]
+			],20));
+		}
+	
+		translate ([-100,-1,thickness])
+		{
+			dim=vec_add(wire,[100,2,0]);
+			
+			translate ([0,0,dim.z])
+			rotate ([-90,0,0])
+			linear_extrude(dim.y)
+			polygon(polyRound([
+				 [0,0,0]
+				,[dim.x,0,dim.z/2]
+				,[dim.x,dim.z,dim.z/2]
+				,[0,dim.z,0]
+			],20));
+		}
+		
+		translate ([-screw_add+3.2,box_width.y/2,-50])
+			cylinder (d=3.4,h=100,$fn=40);
+	}
+}
+
+//rpi_camera_bottom();
+//rpi_camera_top();
 //rpi_camera_cut();
+
+rpi_cable_fix();
