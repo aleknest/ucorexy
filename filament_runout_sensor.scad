@@ -10,7 +10,7 @@ switchLength = 13;
 switchHeight = 5.8;
 switchWidth = 7.5;
 
-add_z=20;
+add_z=30;
 
 switch_tr=[7,-switchWidth,bottomHeight];
 length=40;
@@ -19,7 +19,7 @@ box=[switchLength+8,10.8,switchHeight];
 height=switchHeight/2+bottomHeight;
 filament_y=-10;
 filament_z=bottomHeight+switchHeight/2;
-filament_cut=[2.5+0.5,3];
+filament_cut=[2.5,3];
 fitting=[6-0.2,7,8];
 
 module filament_cut()
