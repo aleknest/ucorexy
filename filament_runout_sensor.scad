@@ -10,7 +10,7 @@ switchLength = 13;
 switchHeight = 5.8;
 switchWidth = 7.5;
 
-add_z=30;
+add_z=30+20;
 
 switch_tr=[7,-switchWidth,bottomHeight];
 length=40;
@@ -76,6 +76,7 @@ module filament_runout_body(op=1)
 					
 					if (op==2)
 					{
+						translate([0,0,add_z])
 						linear_extrude(dim.z)
 							polygon(polyRound(points1,1));
 					}
@@ -261,8 +262,45 @@ module filament_runout_fix()
 	}
 }
 
-translate([0,0,hh1+hh2])
-rotate ([0,-180,0])
-	filament_runout_body(op=1);
+module cut()
+{
+	translate ([-50,-50,-100])
+		cube ([100,100,100]);
+}
+
+module filament_runout_sensor_top()
+{
+	mirror([0,1,0])
+		filament_runout_body(op=2);
+}
+
+module filament_runout_sensor_bottom()
+{
+	mirror([0,1,0])
+	difference()
+	{
+		filament_runout_body(op=1);
+		cut();
+	}
+}
+
+module filament_runout_sensor_stand()
+{
+	mirror([0,1,0])
+	intersection()
+	{
+		filament_runout_body(op=1);
+		cut();
+	}
+}
+
+//cut();
+//translate([0,0,hh1+hh2])
+//rotate ([0,-180,0])
+//	filament_runout_body(op=1);
 //filament_runout_body(op=2);
 //filament_runout_fix();
+
+//filament_runout_sensor_top();
+//filament_runout_sensor_bottom();
+filament_runout_sensor_stand();

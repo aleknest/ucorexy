@@ -41,6 +41,7 @@ if (cmd=="list")
 		
 	list("filament_runout_sensor/filament_runout_sensor_top");
 	list("filament_runout_sensor/filament_runout_sensor_bottom");
+	list("filament_runout_sensor/filament_runout_sensor_stand");
 	
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
@@ -145,13 +146,15 @@ if (cmd=="rpi_camera/rpi_cable_fix")
 
 if (cmd=="filament_runout_sensor/filament_runout_sensor_top")
 {
-	mirror([0,1,0])
-		filament_runout_body(op=2);
+	filament_runout_sensor_top();
 }
 if (cmd=="filament_runout_sensor/filament_runout_sensor_bottom")
 {
-	mirror([0,1,0])
-		filament_runout_body(op=1);
+	filament_runout_sensor_bottom();
+}
+if (cmd=="filament_runout_sensor/filament_runout_sensor_stand")
+{
+	filament_runout_sensor_stand();
 }
 
 //////////////////////////////////////////////////////////////

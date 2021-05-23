@@ -22,29 +22,35 @@ function up2points(arg,upcounter)=[
 	for (i=[0:len(arg)-1]) i<upcounter?[arg[i].x,arg[i].y+1]:arg[i]
 ];
 	
-module blower_nozzle_cut(is_left,cut_nozzle,up_cut_nozzle,height)
+module blower_nozzle_cut(cut_nozzle,up_cut_nozzle,height,cut_nozzle_diff=0)
 {
 	hh=14;
-	up=1.4;
+	up=1.9;
 	dim=[20,hh,height+2];
-	gr1=is_left?up_cut_nozzle:dim.y-up;
-	gr2=!is_left?up_cut_nozzle:dim.y-up;
 	translate ([-10,-hh,-1])
 	{
-		rotate ([90,0,90])
-		linear_extrude(dim.x)
-			polygon(polyRound([
-				 [up_cut_nozzle,cut_nozzle,0]
-				,[gr1,0,0]
+		points=[
+				 [up_cut_nozzle,cut_nozzle+cut_nozzle_diff,0]
+				,[(dim.y-up)+cut_nozzle_diff,0,0]
 				,[dim.y+40,0,0]
 				,[dim.y+40,dim.z,0]
-				,[gr2,dim.z,0]
-				,[up_cut_nozzle,dim.z-cut_nozzle,0]
-			],1));
+				,[up_cut_nozzle,dim.z,0]
+			];
+		rotate ([90,0,90])
+		linear_extrude(dim.x)
+			polygon(polyRound(points,1));
 	}
 }
 
-module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutboxz=0,cutboxrot=0,upcounter=0)
+function blower_nozzle_fix_points(up=0,in=0,r=0)=
+			polyRound([
+				  [-1,-fix_out,1]
+				, [4.9+in,-fix_out,r]
+				, [4.9+in,4.9+up,1.5]
+				, [-1,4.9+up,1]
+			],20);
+
+module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutboxz=0,cutboxrot=0,upcounter=0)
 {
 	nozzle_points=[
 		 [5-nozzle_thickness-nozzle_offs.x,-nozzle_thickness-nozzle_offs.y-0.4]
@@ -56,17 +62,11 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 	ee=30+nozzle_thickness*2+nozzle_offs.x*2;
 	offs=0.5;
 			
+	nut_fix=[4,1,2,1.6];
 	difference()
 	{
 		union()
 		{
-			fix_points=polyRound([
-				  [-1,-fix_out,1]
-				, [4.9,-fix_out,0]
-				, [4.9,4.9,1.5]
-				, [-1,4.9,1]
-			],20);
-			
 			for (m=[0,1])
 				translate ([m==0?-offs:(40+offs)*m,0,0])
 				mirror([m,0,0])
@@ -74,8 +74,13 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 					out=4.8;
 					out2=5.4;
 					translate([0,0,3-out2])
-					linear_extrude(fix_thickness+out+out2)
-						polygon(fix_points);
+					{
+						linear_extrude(fix_thickness+out+out2)
+							polygon(blower_nozzle_fix_points());
+						translate ([0,0,-nut_fix[0]+nut_fix[1]])
+						linear_extrude(nut_fix[0])
+							polygon(blower_nozzle_fix_points(up=nut_fix[2],in=nut_fix[3],r=1.5));
+					}
 				}
 			
 			translate ([0,nozzle_in,0])
@@ -108,7 +113,10 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 				{
 					linear_extrude (ee)
 						polygon(up2points(arg=figure1,upcounter=upcounter));
-					blower_nozzle_cut(is_left,nozzle_cut,up_cut_nozzle,ee);
+					blower_nozzle_cut(
+						 cut_nozzle=nozzle_cut
+						,up_cut_nozzle=up_cut_nozzle
+						,height=ee);
 				}
 			
 				translate ([0,0,-2.4])
@@ -126,10 +134,12 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 		for (m=[0,1])
 			translate ([m==0?-offs:(40+offs)*m,0,0])
 			mirror([m,0,0])
-				translate([2.75,2.75,-3-0.2])
+				translate([2.75,2.75,-2.5-nut_fix[0]+nut_fix[1]])
 				{
-					cylinder(d=m2p5_screw_diameter(),h=20,$fn=30);
 					report_m2p5_screw(screw=16);
+					
+					cylinder(d=m2p5_screw_diameter(),h=20,$fn=30);
+					m2p5_nut();
 				}
 		
 		translate ([ee+5-nozzle_thickness*2-nozzle_offs.x,0,0])
@@ -139,7 +149,13 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 			linear_extrude (ee-nozzle_thickness*2)
 			offset(-nozzle_thickness)
 				polygon(figure2);
-			blower_nozzle_cut(is_left,nozzle_cut,up_cut_nozzle,ee-nozzle_thickness*2);
+			diff=1;
+			blower_nozzle_cut(
+				 cut_nozzle=nozzle_cut
+				,up_cut_nozzle=up_cut_nozzle
+				,height=ee-nozzle_thickness*2
+				,cut_nozzle_diff=diff
+			);
 		}
 		
 		translate ([14,nozzle_in,0.3])
@@ -155,8 +171,7 @@ module blower_nozzle(is_left,figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutbox
 }
 
 //888888
-function blower_nozzle_figure(corr=[0])=
-  let (add1=9+1)
+function blower_nozzle_figure(corr=[0],add1=10)=
 	polyRound([
 		  [-2,10+nozzle_thickness,0]
 		, [2,10+nozzle_thickness,0]
@@ -168,39 +183,38 @@ function blower_nozzle_figure(corr=[0])=
 		, [-2,-nozzle_thickness,0]
 	],20);
 
-module blower_nozzle_(is_left)
+module blower_nozzle_()
 {
-	figure1=blower_nozzle_figure();
-	figure2=blower_nozzle_figure([5]);
-	blower_nozzle(is_left=is_left
-				,figure1=figure1
-				,figure2=figure2
+	blower_nozzle(figure1=blower_nozzle_figure()
+				,figure2=blower_nozzle_figure([3])
 				,nozzle_cut=14
-				,up_cut_nozzle=0
+				,up_cut_nozzle=5
 				,txt=""
-				,cutboxy=-6
-				,cutboxz=-8
-				,cutboxrot=20
+				,cutboxy=-6+8
+				,cutboxz=-0
+				,cutboxrot=4
 				,upcounter=38);
 }
 module blower_nozzle_left()
 {
 	translate_rotate (e3d_blower_left_tr(0))
-		blower_nozzle_(true);
+	translate ([40,0,0])
+	mirror([1,0,0])
+		blower_nozzle_();
 }
 module blower_nozzle_right()
 {
 	translate_rotate (e3d_blower_right_tr(0))
-		blower_nozzle_(false);
+		blower_nozzle_();
 }
 
-proto_x();
+//proto_x();
 //proto_x_blowers();
 
 //use <xcarriage.scad>
 //x_carriage_fans();
 
-//blower_nozzle_left();
+blower_nozzle_left();
 blower_nozzle_right();
 
 //translate ([-34,0,-60])
