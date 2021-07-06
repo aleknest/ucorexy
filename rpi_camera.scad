@@ -10,7 +10,7 @@ height=1;
 height_add=[0.4,0.8];
 lens=[6.1,[9.4,9.4,7+0.1]];
 lens_cable=2.2;
-box=[width+4,length+6+5,9+2];
+box=[width+4,length+11+10,11];
 box_tr=[0,0.01,-4-2];
 plate=[box.x+24.5+20,5,20];
 
@@ -231,8 +231,8 @@ module rpi_cable_fix()
 	}
 }
 
-//rpi_camera_bottom();
-//rpi_camera_top();
+rpi_camera_bottom();
+rpi_camera_top();
 //rpi_camera_cut();
 
-rpi_cable_fix();
+//rpi_cable_fix();

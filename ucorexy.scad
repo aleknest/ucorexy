@@ -57,9 +57,9 @@ proto_slot_brackets(zposition=zposition);
 deb("*X carriage:");
 
 translate ([0,y_rail_y()+yposition,0])
-{
 	proto_x(xposition=xposition);
-}
+translate ([xposition,y_rail_y()+yposition,0])
+	proto_adxl345();
 
 translate ([xposition,y_rail_y()+yposition,0])
 {

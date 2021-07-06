@@ -144,7 +144,7 @@ module e3d_v6_fan_face(up=0)
 	],20));
 }
 
-module e3d_v6_fan_air_hull(addy=0)
+module e3d_v6_fan_air_hull(addy=0,addx=0)
 {
 	dim=e3d_v6_dim[0];
 	dd=dim.x+e3d_v6_cut_offset*2;
@@ -168,10 +168,10 @@ module e3d_v6_fan_air_hull(addy=0)
 		
 		translate ([0,-e3d_fan_gr_in,e3d_v6_up])
 		translate_rotate (e3d_tr(0))
-		translate ([-ddw/2,-dd/2-addy,0])
+		translate ([-ddw/2-addx,-dd/2-addy,0])
 		intersection()
 		{
-			dim=[ddw,dd+e3d_fan_gr+e3d_fan_gr_in+addy,dim.y+e3d_v6_cylinder_thickness+e3d_cyl_corr];
+			dim=[ddw+addx*2,dd+e3d_fan_gr+e3d_fan_gr_in+addy,dim.y+e3d_v6_cylinder_thickness+e3d_cyl_corr];
 			cube (dim);
 		}
 	}
@@ -217,13 +217,15 @@ module x_cube(dim)
 			,[x_cube_cut[0],-e3d_tr_ycorr(),2+2]
 	
 			,[x_cube_cut[0],x_cube_cut[1],3.5]
-			,[dim.z,x_cube_cut[1],6+5]
+			,[dim.z,x_cube_cut[1],4]//11
 			,[dim.z,dim.y,2]
-			,[back_fan_fix_up,dim.y,1]
-			,[back_fan_fix_up,dim.y+back_fan_fix[1],0]
-			,[-back_fan_fix[0],dim.y+back_fan_fix[1],0]
-			,[-back_fan_fix[0],dim.y-back_fan_fix[2],0]
-			,[0,dim.y-back_fan_fix[2],0]
+	
+			//,[back_fan_fix_up,dim.y,1]
+			//,[back_fan_fix_up,dim.y+back_fan_fix[1],0]
+			//,[-back_fan_fix[0],dim.y+back_fan_fix[1],0]
+			//,[-back_fan_fix[0],dim.y-back_fan_fix[2],0]
+			//,[0,dim.y-back_fan_fix[2],0]
+			,[0,dim.y,0]
 		],1));
 }
 //translate_rotate (xcarriage_tr()) x_cube([28, 60, 51.7]);
@@ -397,12 +399,12 @@ module x_carriage(part="front",report=false)
 				}
 		}
 		
-		dd=9;
-		sdim=[2,3];
+		dd=10;
+		sdim=[3,4];
 		coord=[
-			 [0,6+12.5,x_cube_cut[0]-sdim.y-6]
-			,[xcarriage_dim().x,6+12.5,x_cube_cut[0]-sdim.y-6]
-			,[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-19+2]
+			// [0,6+12.5,x_cube_cut[0]-sdim.y-6]
+			//,[xcarriage_dim().x,6+12.5,x_cube_cut[0]-sdim.y-6]
+			[xcarriage_dim().x-6,x_cube_cut[1],xcarriage_dim().z-19+2]
 		];
 		
 		translate_rotate (xcarriage_tr())
@@ -424,7 +426,7 @@ module x_carriage(part="front",report=false)
 		translate_rotate (x_slot_tr())
 		{
 			translate ([0,add/2,0])
-				cube ([20.6,20.6+add,200],true);
+				cube ([20+1.4,20.6+add,200],true);
 		}
 		translate_rotate (x_rail_tr())
 		{
@@ -435,8 +437,9 @@ module x_carriage(part="front",report=false)
 				cube(dim);
 			if (part=="main")
 			{
-				screw=6+2+2;
-				screw_in=3+2;
+				//screw=6+2;screw_in=3;
+				screw=6;screw_in=2;
+
 				for (x=[-1,1])
 				for (y=[-1,1])
 					translate ([carriage_pitch_x(rail_carriage(x_rail_type()))/2*x
@@ -539,6 +542,7 @@ module x_carriage_main_()
 		x_carriage(part="main",report=true);
 		xcarriage_cut();
 		xcarriage_back_cut();
+		adxl345(op=10+1);
 	}
 }
 
@@ -595,8 +599,8 @@ module x_carriage_fan_spacer(blower_screw_diameter=2.9)
 
 module x_carriage_fans(blower_screw_diameter=2.9)
 {
-	fix_th=2;
-	fix_offs=0.1;
+	fix_th=2-0;
+	fix_offs=0.1+0.1;
 	hh=20;
 	sdiff=17.3*2;
 	bsh=blower_screw_holes(e3d_blower_type());
@@ -622,7 +626,7 @@ module x_carriage_fans(blower_screw_diameter=2.9)
 	{
 		union()
 		{
-			e3d_v6_fan_air_hull(addy=fix_th);
+			e3d_v6_fan_air_hull(addy=fix_th,addx=1.2);
 			tt=[e3d_blower_left_tr(0),e3d_blower_right_tr(0)];
 			for (i=[0,1])
 			{
@@ -755,25 +759,89 @@ module x_carriage_main()
 }
 
 
+module adxl345(op=1)
+{
+	tr=[-24,-33+4,1.3];
+	if (op==0)
+	{
+		color ("red") import ("proto/adxl345.stl");
+	}
+	if (op==1)
+	{
+		translate (tr)
+		translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
+		translate_rotate (xcarriage_tr())
+			adxl345(op=0);
+	}
+
+	screw=10;	
+	if (op==10)
+	{
+		report_adxl345();
+		c1=1.65+0.5;
+		c2=19.8-c1;
+		coord=[
+			 [[c1,1.69,0],[0,0,0]]
+			,[[c2,1.69,0],[0,0,0]]
+			,[[c1+(c2-c1)/2,16.69+1-0.2-0.2,0],[0,0,180]]
+		];
+		for (c=coord)
+			translate_rotate(c)
+				rotate ([180,0,0])
+				{
+					report_m3_washer(screw);
+					report_m3_washer_squarenut(e3d_v6_fan_screw);
+					
+					m3_screw(h=screw+2);
+					translate ([0,0,screw-2])
+						m3_square_nut();
+				}
+		plate_h=1.25;
+		translate ([0,0,-plate_h])
+			cube ([20,15,plate_h]);
+		cut_h=3;
+		cut_w=2;
+		cut_y=0.5;
+		cut_x=0.0;
+		translate ([0+cut_x,15-cut_w-cut_y,-cut_h])
+			cube ([20-cut_x*2,cut_w,cut_h]);
+
+	}
+	if (op==11)
+	{
+		translate (tr)
+		translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
+		translate_rotate (xcarriage_tr())
+			adxl345(op=10);
+	}
+}
+
+module proto_adxl345()
+{
+	adxl345(op=0+1);
+}
+
 yposition=-55;
 xposition=55;
 
 //proto_x();
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
-
+//proto_x_slot();
 //proto_x_blowers();
 //x_carriage_fans();
 //x_carriage_fan_spacer();
 //proto_front_slots();
+//proto_adxl345();
 
 //use <xymotorblock.scad>
 //rightfront_motorblock();
 
 //translate ([xposition,y_rail_y()+yposition,0])
 {
-	x_carriage_main();
 	//x_carriage_front();
 	//x_carriage_back();
+	
+	x_carriage_main();
 	
 	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
@@ -781,5 +849,4 @@ xposition=55;
 //x_endstop();
 //x_endstop_lock();
 
-//translate ([-15.3-3,-16,-24]) rotate ([-90,180,90]) color ("red") import ("proto/adxl345.stl");
-//translate ([13,-10,47.4]) rotate ([0,0,90]) color ("red") import ("proto/adxl345.stl");
+//adxl345(op=10+1);

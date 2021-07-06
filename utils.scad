@@ -22,6 +22,10 @@ module translate_rotate(tr)
 			children(i);
 }
 
+module report_adxl345()
+{
+	deb(str("GY-291 ADXL345"));
+}
 module report_wago()
 {
 	deb(str("WAGO 222-415, 5 pins"));

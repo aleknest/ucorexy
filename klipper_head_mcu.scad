@@ -259,13 +259,13 @@ module oled_encoder(report=false,bottom=false)
 					,k_oled_encoder_wire_cut().y+k_oled_encoder_wire_cut().z]);
 		nano(op=2);
 		if (bottom)
-			nano(op=4);
+			nano(op=4);//88888
 	}
 }
-module oled_encoder_cut(offs)
+module oled_encoder_cut(offs,xoffs=1)
 {
-	translate ([-1,-1+0.01,-1+offs])
-		cube ([k_oled_encoder_dim().x+2
+	translate ([-xoffs,-1+0.01,-1+offs])
+		cube ([k_oled_encoder_dim().x+xoffs*2
 			,k_oled_encoder_dim().y+20+1
 			,zreal-k_oled_encoder_wire_cut().y-20-thickness_slot-k_oled_encoder_thickness()+1]);
 }
@@ -288,7 +288,7 @@ module k_oled_encoder_bottom()
 	}
 }
 
-module nano(op)
+module nano(op,offs=0)
 {
 	nano_dim=[71.8,58.2];
 	nano_tr=[0,10,0];
@@ -324,7 +324,7 @@ module nano(op)
 					nut(G=gg,H=hh);
 				}
 		}
-		if (op==4)
+		if (op==41)
 		{
 			translate (nano_tr)
 			translate ([(k_oled_encoder_dim().x-nano_dim.x)/2,(k_oled_encoder_dim().y-nano_dim.y)/2,0])
@@ -334,13 +334,62 @@ module nano(op)
 				translate ([0,-5,14])
 				rotate ([0,-90,0])
 					cylinder (d=14,h=100,$fn=80);
+		}
+		if (op==42)
+		{
 			translate (nano_tr)
 			translate ([(k_oled_encoder_dim().x-nano_dim.x)/2,(k_oled_encoder_dim().y-nano_dim.y)/2,0])
 			translate ([nano_dim.x,nano_dim.y,0])
 			rotate ([0,0,180])
 				translate (screw_coords_nano[0][0])
-				translate ([0,25,18])
-					cube ([20,16,100]);
+				translate ([0,25-offs,18-offs])
+					cube ([8+28,16+offs*2,100]);
+		}
+		if (op==4)
+		{
+			nano(op=41);
+			nano(op=42);
+		}
+	}
+}
+
+module k_oled_encoder_usbfix()
+{
+	side_offset=0.3;
+	translate_rotate(k_oled_encoder_tr())
+	{
+		union()
+		{
+			difference()
+			{
+				intersection()
+				{
+					nano(op=42,offs=-0.4);
+					oled_encoder_cut(offs=-0.05,xoffs=30);
+					oled_encoder_cut(offs=0,xoffs=1);
+				}
+				base(offs=k_oled_encoder_thickness()+1,down=0);
+			}
+			difference()
+			{
+				intersection()
+				{
+					nano(op=42,offs=1);
+					oled_encoder_cut(offs=-0.05,xoffs=30);
+					oled_encoder_cut(offs=0,xoffs=1);
+					base(offs=k_oled_encoder_thickness()+side_offset,down=0);
+				}
+				base(offs=k_oled_encoder_thickness()+1.2,down=0);
+			}
+			difference()
+			{
+				intersection()
+				{
+					nano(op=42,offs=1);
+					oled_encoder_cut(offs=-0.05,xoffs=30);
+				}
+				oled_encoder_cut(offs=0,xoffs=side_offset);
+			}
 		}
 	}
 }
@@ -353,5 +402,6 @@ module k_proto_nano()
 //proto_front_slots();
 //k_proto_nano();
 
-k_oled_encoder_top();
+//k_oled_encoder_top();
 k_oled_encoder_bottom();
+k_oled_encoder_usbfix();

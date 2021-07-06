@@ -1,4 +1,4 @@
-threads=4
+threads=12
 PROJ='export.scad'
 EX='openscad '$PROJ
 
