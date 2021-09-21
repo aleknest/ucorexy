@@ -196,12 +196,11 @@ module spring_spacer(height)
 
 z=0;
 
-
 //proto_heatbed_slots(z);
 //proto_slot_brackets();
 
 //proto_heatbed(z);
-//left_front_hotbed_support(z);
+left_front_hotbed_support(z);
 //right_front_hotbed_support(z);
 //left_back_hotbed_support(z);
 /*
@@ -210,4 +209,4 @@ hotbed_knobs(z);
 */
 
 //spring_spacer(height=12+10);
-hotbed_knob();
+//hotbed_knob();

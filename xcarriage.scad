@@ -13,6 +13,8 @@ include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 include <../_utils_v2/NopSCADlib/vitamins/blower.scad>
 include <../_utils_v2/NopSCADlib/vitamins/blowers.scad>
 
+include <../_utils_v2/NopSCADlib/vitamins/stepper_motors.scad>
+
 e3d_v6_fan_screw=16;
 e3d_v6_fan_border=5;
 e3d_v6_cut_offset=0.2;
@@ -195,15 +197,20 @@ module e3d_v6_fan_air()
 
 module xcarriage_rail_cut()
 {
+	offs=0.4;
 	translate_rotate (x_rail_tr())
 	{
-		offs=0.4;
+		translate ([-x_rail()/2,-x_rail_type()[1]/2-offs,0])
+			cube ([x_rail(),x_rail_type()[1]+offs*2,x_rail_type()[2]+offs]);
+	}
+	translate_rotate (x2_rail_tr())
+	{
 		translate ([-x_rail()/2,-x_rail_type()[1]/2-offs,0])
 			cube ([x_rail(),x_rail_type()[1]+offs*2,x_rail_type()[2]+offs]);
 	}
 }
 
-module x_cube(dim)
+module x_cube(dim,addy)
 {
 	back_fan_fix=[4.5,1,1];
 	back_fan_fix_up=2;
@@ -214,21 +221,15 @@ module x_cube(dim)
 	linear_extrude(dim.x)
 		polygon (polyRound([
 			[0,-e3d_tr_ycorr(),0]
-			,[x_cube_cut[0],-e3d_tr_ycorr(),2+2]
+			,[x_cube_cut[0],-e3d_tr_ycorr(),4]
 	
 			,[x_cube_cut[0],x_cube_cut[1],3.5]
-			,[dim.z,x_cube_cut[1],4]//11
-			,[dim.z,dim.y,2]
+			,[dim.z,x_cube_cut[1],4]
+			,[dim.z,dim.y+addy,is_x2_rail()?15:2]
 	
-			//,[back_fan_fix_up,dim.y,1]
-			//,[back_fan_fix_up,dim.y+back_fan_fix[1],0]
-			//,[-back_fan_fix[0],dim.y+back_fan_fix[1],0]
-			//,[-back_fan_fix[0],dim.y-back_fan_fix[2],0]
-			//,[0,dim.y-back_fan_fix[2],0]
-			,[0,dim.y,0]
+			,[0,dim.y+addy,0]
 		],1));
 }
-//translate_rotate (xcarriage_tr()) x_cube([28, 60, 51.7]);
 
 module x_carriage_belt_fixer(op=0,report=false)
 {
@@ -251,76 +252,124 @@ module x_carriage_belt_fixer(op=0,report=false)
 		,tr.z+dim.z/2-dim2.z/2];
 	if ((op==0)||(op==1))
 	{
-		difference()
+		union()
 		{
-			union()
+			difference()
 			{
-				fillet(r=2,steps=8)
+				union()
 				{
-					//#translate (tr) cube(dim);
-					translate (tr)
-					intersection()
+					fillet(r=2,steps=8)
 					{
-						translate([0,dim.y,0])
-						rotate([90,0,0])
-						linear_extrude(dim.y)
-						polygon(polyRound([
-							 [0,0,0]
-							,[dim.x,0,1]
-							,[dim.x,dim.z,1]
-							,[0,dim.z,0]
-						],20));
-						linear_extrude(dim.z)
-						polygon(polyRound([
-							 [0,0,0]
-							,[dim.x,0,1]
-							,[dim.x,dim.y,1]
-							,[0,dim.y,0]
-						],20));
+						ioffs2=op==0?0-0.1:0;
+	
+						translate (tr)
+						translate ([0,ioffs2,0])
+						intersection()
+						{
+							translate([0,dim.y,0])
+							rotate([90,0,0])
+							linear_extrude(dim.y+ioffs2*2)
+							polygon(polyRound([
+								 [0,0,0]
+								,[dim.x,0,1]
+								,[dim.x,dim.z,1]
+								,[0,dim.z,0]
+							],20));
+							linear_extrude(dim.z)
+							polygon(polyRound([
+								 [0,-ioffs2*2,0]
+								,[dim.x,-ioffs2*2,1]
+								,[dim.x,dim.y,1]
+								,[0,dim.y,0]
+							],20));
+						}
+						
+						//8888888888
+						ioffs=op==0?0:0.1;
+						hull()
+						{
+							translate (vec_sub(tr2,[0,ioffs,ioffs2]))
+								cube(vec_add(dim2,[0,ioffs*2,ioffs2*2]));
+							translate (vec_sub(tr,[0,ioffs2,ioffs]))
+								cube([dim2.x,dim.y+ioffs2*2,dim.z+ioffs*2]);
+						}
 					}
-					
-					ioffs=op==0?0:0.1;
-					hull()
+					if (op==0)
 					{
-						translate (vec_sub(tr2,[0,ioffs,0]))
-							cube(vec_add(dim2,[0,ioffs*2,0]));
-						translate (vec_sub(tr,[0,0,ioffs]))
-							cube([dim2.x,dim.y,dim.z+ioffs*2]);
+						out_fix=[0.2,4,1,1.6];
+						translate (tr)
+						{
+							for (z=[0,dim.z-out_fix[1]])
+							translate ([0,0,z])
+							linear_extrude(out_fix[1])
+							polygon(polyRound([
+								 [dim.x-out_fix[2]-out_fix[3]*2,0,0]
+								,[dim.x-out_fix[2]-out_fix[3],-out_fix[0],0]
+								,[dim.x-out_fix[2],0,0]
+								,[dim.x-out_fix[2],dim.y,0]
+								,[dim.x-out_fix[2]-out_fix[3],dim.y+out_fix[0],0]
+								,[dim.x-out_fix[2]-out_fix[3]*2,dim.y,0]
+							],20));					
+						}
 					}
 				}
 				if (op==0)
 				{
-					out_fix=[0.2,4,1,1.6];
-					translate (tr)
+					x_carriage_belt_fixer(op=2);
+					
+					trb=[-xcarriage_dim().x/2-offs,0,left_top_backpulley()[0].z];
+					trt=[-xcarriage_dim().x/2-offs,0,left_bottom_backpulley()[0].z];
+					//88888888
+					belt_teeth=1.3;	
+					
+					translate (trb)
+					translate ([-0.01,-0.5,0])
+					rotate ([-90,0,-90])
+					union()
 					{
-						for (z=[0,dim.z-out_fix[1]])
-						translate ([0,0,z])
-						linear_extrude(out_fix[1])
-						polygon(polyRound([
-							 [dim.x-out_fix[2]-out_fix[3]*2,0,0]
-							,[dim.x-out_fix[2]-out_fix[3],-out_fix[0],0]
-							,[dim.x-out_fix[2],0,0]
-							,[dim.x-out_fix[2],dim.y,0]
-							,[dim.x-out_fix[2]-out_fix[3],dim.y+out_fix[0],0]
-							,[dim.x-out_fix[2]-out_fix[3]*2,dim.y,0]
-						],20));					
+						difference()
+						{
+							belt(l=10,width_add=[0,10]);
+							translate ([belt_teeth,0,0])
+								belt(l=10,width_add=[0,10]);
+						}
+						
+						translate ([-5.85,3,-1])
+						{
+							linear_extrude(20)
+							polygon([
+								 [5,0]
+								,[10,6]
+								,[0,6]
+							]);
+						}
+					}
+					translate (trt)
+					translate ([-0.01,-0.5,0])
+					rotate ([-90,0,-90])
+					union()
+					{
+						difference()
+						{
+							belt(l=10,width_add=[10,0]);
+							translate ([belt_teeth,0,0])
+								belt(l=10,width_add=[10,0]);
+						}
+						translate ([-5.85,-3,-1])
+						{
+							linear_extrude(20)
+							polygon([
+								 [5,0]
+								,[10,-6]
+								,[0,-6]
+							]);
+						}
 					}
 				}
 			}
 			if (op==0)
 			{
-				x_carriage_belt_fixer(op=2);
-				
-				trb=[-xcarriage_dim().x/2-offs,0,left_top_backpulley()[0].z];
-				translate (trb)
-				translate ([-0.01,-0.5,0])
-				rotate ([-90,0,-90])
-					belt(l=10,width_add=[0,10]);
-				trt=[-xcarriage_dim().x/2-offs,0,left_bottom_backpulley()[0].z];
-				translate (trt)
-				translate ([-0.01,-0.5,0])
-				rotate ([-90,0,-90])
-					belt(l=10,width_add=[10,0]);
+				x_carriage_belt_fixer(op=3);
 			}
 		}
 	}
@@ -343,6 +392,20 @@ module x_carriage_belt_fixer(op=0,report=false)
 				}
 		}
 	}
+	if (op==3)
+	{
+		translate (tr2)
+		{
+			offs=7;
+			for (y=[-1,1])
+				translate ([0,dim2.y/2+offs*y,dim2.z/2])
+				rotate ([0,90,0])
+				{
+					translate ([0,0,m3_washer_thickness()])
+						cylinder (d=m3_washer_diameter(),h=0.2,$fn=40);
+				}
+		}
+	}
 }
 
 module x_carriage_belt_fixer_left()
@@ -359,7 +422,6 @@ module x_carriage_belt_fixer_right(report=true)
 module x_carriage(part="front",report=false)
 {
 	screw1=16+4;
-	screw2=[16,8];
 	iz1=len(e3d_v6_dim)-3;
 	zz1=[
 		 e3d_v6_seq(iz1)+e3d_v6_up+e3d_v6_dim[iz1].y/2-1
@@ -377,8 +439,9 @@ module x_carriage(part="front",report=false)
 		{
 			fillet(r=0.6,steps=16)
 			{
+				addy=part=="back"?xcarriage_thickness()[4]:xcarriage_thickness()[5];
 				translate_rotate (xcarriage_tr())
-					x_cube(xcarriage_dim());
+					x_cube(xcarriage_dim(),addy);
 			
 				translate_rotate(mtr)
 					cylinder(d=x_magnet_d()+4,h=10);
@@ -428,14 +491,16 @@ module x_carriage(part="front",report=false)
 			translate ([0,add/2,0])
 				cube ([20+1.4,20.6+add,200],true);
 		}
-		translate_rotate (x_rail_tr())
+		trs=[x_rail_tr(),x2_rail_tr()];
+		for (tr=trs)
+		translate_rotate (tr)
 		{
 			dim=[carriage_length(rail_carriage(x_rail_type()))+0.4
 				,carriage_width(rail_carriage(x_rail_type()))+0.4
 				,carriage_height(rail_carriage(x_rail_type()))+0.2];
 			translate ([-dim.x/2,-dim.y/2,0])
 				cube(dim);
-			if (part=="main")
+			if (part=="main" || part=="back")
 			{
 				//screw=6+2;screw_in=3;
 				screw=6;screw_in=2;
@@ -450,7 +515,7 @@ module x_carriage(part="front",report=false)
 						report_m3_washer(screw);
 						m3_screw(h=screw,cap_out=100);
 						rotate ([180,0,0])
-							cylinder (d=7+0.1*2,h=20,$fn=60);
+							cylinder (d=7+0.2*2,h=20,$fn=60);
 					}
 			}
 		}
@@ -469,22 +534,23 @@ module x_carriage(part="front",report=false)
 					m3_square_nut();
 			}
 		
-		zz=[xcarriage_thickness()[3]-2.5-0.3,xcarriage_thickness()[3]+20+3.4];
+		screw2=[[16,is_x2_rail()?9:0],[8,is_x2_rail()?8:0]];
+		zz=[xcarriage_thickness()[3]-2.8,xcarriage_thickness()[3]+23.4];
 		for (z=[0,1])
 		for (x=[-1,1])
-			translate ([(xcarriage_dim().x/2-5)*x,-0.2,0])
+			translate ([(xcarriage_dim().x/2-5)*x,-0.2+screw2[z][1],0])
 			translate ([xcarriage_dim().x/2,xcarriage_dim().y,zz[z]])
 			translate_rotate (xcarriage_tr())
 			rotate ([90,0,0])
 			{
 				if (z==0)
 				{
-					cso=0;//10;
+					cso=10;
 					rotate ([0,0,-90])
-						m3_screw(h=screw2[z],cap_side_out=cso);
-					report_m3_washer_hexnut(screw2[z]);
+						m3_screw(h=screw2[z][0]+screw2[z][1],cap_side_out=cso,cap_out=50);
+					report_m3_washer_hexnut(screw2[z][0]+screw2[z][1]);
 					
-					translate ([0,-0.2,screw2[z]-3])
+					translate ([0,-0.2,screw2[z][0]+screw2[z][1]-3])
 					rotate ([0,0,180*z])
 					hull()
 					{
@@ -495,10 +561,10 @@ module x_carriage(part="front",report=false)
 				}
 				else
 				{
-					m3_screw(h=screw2[z]);
-					report_m3_washer_squarenut(screw2[z]);
+					m3_screw(h=screw2[z][0]+screw2[z][1],cap_out=50);
+					report_m3_washer_squarenut(screw2[z][0]+screw2[z][1]);
 					
-					translate ([0,0,screw2[z]-3])
+					translate ([0,0,screw2[z][0]+screw2[z][1]-3])
 					rotate ([0,0,180*z])
 						m3_square_nut(out=10);
 				}
@@ -528,11 +594,26 @@ module xcarriage_cut(offs=0)
 
 module xcarriage_back_cut(offs=0)
 {
+	//888888
 	down=6;
-	dim=[70,xcarriage_thickness()[2]-0.1+1,xcarriage_thickness()[3]+28+down-offs];
-	translate([-dim.x/2,xcarriage_dim().y-dim.y+offs+1,-1-down])
+	back=is_x2_rail()?5-5:0;
+	dim=[70,xcarriage_thickness()[2]+xcarriage_thickness()[4]-0.1+1,xcarriage_thickness()[3]+28+down-offs];
+	translate([-dim.x/2,xcarriage_dim().y-dim.y+xcarriage_thickness()[4]+offs+1,-1-down])
 	translate_rotate (xcarriage_tr())
-		cube (dim);
+	{
+		//cube (dim);
+		translate ([0,0,dim.z])
+		rotate ([0,90,0])
+		linear_extrude(dim.x)
+		polygon([
+			 [0,back]
+			,[dim.z/2,back]
+			,[dim.z/2,0]
+			,[dim.z,0]
+			,[dim.z,dim.y]
+			,[0,dim.y]
+		]);
+	}
 }
 
 module x_carriage_main_()
@@ -550,7 +631,7 @@ module x_carriage_back()
 {
 	intersection()
 	{
-		x_carriage(part="main");
+		x_carriage(part="back");
 		xcarriage_back_cut(offs=0.2);
 	}
 }
@@ -758,6 +839,44 @@ module x_carriage_main()
 	}
 }
 
+module x_carriage_topbottomfix(report=false)
+{
+	screw=6;
+	for (c=[[0,-17],[-9,-25],[9,-25]])
+			translate ([c.x,c.y,20-1])
+			translate_rotate (e3d_fan_tr(0))
+			rotate ([90,0,0])
+			{
+				if (report)
+					report_m3_washer_hexnut(screw);
+				m3_screw(screw);
+				m3_washer();
+				translate ([0,0,screw-m3_nut_h()])
+				rotate([0,0,90])
+					m3_nut(h=m3_nut_h()+1);
+			}
+}
+
+module x_carriage_top()
+{
+	difference()
+	{
+		x_carriage_main_();
+		x_carriage_topbottomfix();
+	}
+}
+
+module x_carriage_bottom()
+{
+	translate ([0,0,0.1+0.01])
+	{
+		difference()
+		{
+			x_carriage_fans(blower_screw_diameter=2.4);
+			x_carriage_topbottomfix(report=true);
+		}
+	}
+}
 
 module adxl345(op=1)
 {
@@ -774,17 +893,33 @@ module adxl345(op=1)
 			adxl345(op=0);
 	}
 
+
 	screw=10;	
+	c1=1.65+0.5;
+	c2=19.8-c1;
+	coord=[
+		 [[c1,1.69,0],[0,0,0]]
+		,[[c2,1.69,0],[0,0,0]]
+		,[[c1+(c2-c1)/2,16.69+1-0.2-0.2,0],[0,0,0]]
+	];
+	
+	if (op==5)
+	{
+		translate (tr)
+		translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
+		translate_rotate (xcarriage_tr())
+		for (c=coord)
+			translate_rotate(c)
+				rotate ([180,0,0])
+				{
+					m3_screw(h=screw+2);
+					m3_washer(out=10);
+				}
+	}
+	
 	if (op==10)
 	{
 		report_adxl345();
-		c1=1.65+0.5;
-		c2=19.8-c1;
-		coord=[
-			 [[c1,1.69,0],[0,0,0]]
-			,[[c2,1.69,0],[0,0,0]]
-			,[[c1+(c2-c1)/2,16.69+1-0.2-0.2,0],[0,0,180]]
-		];
 		for (c=coord)
 			translate_rotate(c)
 				rotate ([180,0,0])
@@ -794,7 +929,7 @@ module adxl345(op=1)
 					
 					m3_screw(h=screw+2);
 					translate ([0,0,screw-2])
-						m3_square_nut();
+						m3_square_nut(out=50);
 				}
 		plate_h=1.25;
 		translate ([0,0,-plate_h])
@@ -821,29 +956,82 @@ module proto_adxl345()
 	adxl345(op=0+1);
 }
 
+ditan_motorplate_tr=[-10,-7.5,90-14.7];
+ditan_tr=[ditan_motorplate_tr.x,ditan_motorplate_tr.y-13.0,ditan_motorplate_tr.z];
+module ditan_plate()
+{
+	base_dim = [28,32,6];
+	dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
+	difference()
+	{
+		union()
+		//fillet(r=3,steps=8)
+		{
+			translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
+			translate_rotate (xcarriage_tr())
+			translate ([-base_dim.x,-base_dim.y-2,0])
+				cube(base_dim);
+			addy=ditan_motorplate_tr.z-69.15-4;
+			translate (ditan_motorplate_tr)
+			rotate ([-90,0,0])
+			linear_extrude(dim_nema.z)
+				polygon(polyRound([
+					 [dim_nema.x/2,dim_nema.y/2+addy,0]
+					,[-dim_nema.x/2,dim_nema.y/2+addy,3]
+					,[-dim_nema.x/2,-dim_nema.y/2,3]
+					,[dim_nema.x/2,-dim_nema.y/2,3]
+				],1));
+		}
+	
+		translate([0,0,1])
+			adxl345(op=5);
+		
+		translate (ditan_motorplate_tr)
+		translate ([0,dim_nema.z,0])
+		rotate ([90,0,0])
+			nema17_cut(washers=true
+					,shaft=false
+					,bighole=true
+					,shaft_length=60
+					,main_cyl=true
+					,main_cyl_length=100
+					,report=false
+					,report_pulley=false);
+	}	
+}
+
 yposition=-55;
 xposition=55;
 
+
 //proto_x();
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
-//proto_x_slot();
 //proto_x_blowers();
 //x_carriage_fans();
 //x_carriage_fan_spacer();
 //proto_front_slots();
 //proto_adxl345();
 
-//use <xymotorblock.scad>
-//rightfront_motorblock();
+//proto_x_slot();
 
 //translate ([xposition,y_rail_y()+yposition,0])
 {
+	//x_carriage_top();
+	//x_carriage_bottom();
+	//x_carriage_main();//obsolete
+
 	//x_carriage_front();
 	//x_carriage_back();
+
+	include <../ucorexy_feeder/ditan/assembled.scad>
+	translate (ditan_tr)
+	rotate ([90,0,0])
+	{
+		//ditan("/home/aleknest/clouds/Dropbox/aleknest/3DPrinter/Modelling/ucorexy_feeder/ditan/");
+	}
+	//ditan_plate();
 	
-	x_carriage_main();
-	
-	//x_carriage_belt_fixer_left();
+	x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }
 //x_endstop();

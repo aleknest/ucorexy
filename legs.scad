@@ -7,7 +7,6 @@ use <utils.scad>
 use <proto.scad>
 use <configuration.scad>
 
-report_m6_washer(12);
 h=12;
 th=h-m6_cap_h();
 

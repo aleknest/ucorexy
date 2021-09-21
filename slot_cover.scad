@@ -11,7 +11,7 @@ module slot_cover_side(h,up,down,cut_up,offs,rounded=[0,0],fit_to_slot=false)
 {
 	offs_=3.5;
 	dd=0.3;
-	echo (fit_to_slot);
+	//echo (fit_to_slot);
 	out=fit_to_slot?10:offs_+0.2;
 	out2=fit_to_slot?10-1.13:offs_-1.33;
 	out2_up=0.84-1;

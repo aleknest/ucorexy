@@ -1,7 +1,7 @@
+use <../_utils_v2/m3-m8.scad>
 use <../_utils_v2/_round/polyround.scad>
 use <../_utils_v2/sequental_hull.scad>
 use <../_utils_v2/fillet.scad>
-use <../_utils_v2/m3-m8.scad>
 use <../_utils_v2/deb.scad>
 use <utils.scad>
 use <proto.scad>
@@ -11,12 +11,16 @@ include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 use <zmotion.scad>
 use <xt90.scad>
 use <slot_cover.scad>
+include <../_utils_v2/NopSCADlib/vitamins/fan.scad>
+include <../_utils_v2/NopSCADlib/vitamins/fans.scad>
 
-case_top_screw=8;
+case_top_screw=10;
 case_top_in=case_top_screws_offset()-4;
 slot_cover_offs=0.6;
 
-module case_side(tr,length,screws,c45)
+is_m5_screw=true;
+
+module case_side(tr,length,screws,c45,report=false)
 {
 	r=8;
 	points1=polyRound([
@@ -56,7 +60,6 @@ module case_side(tr,length,screws,c45)
 				translate([-dim.z,0,0])
 				rotate ([0,90,0])
 				{
-					//#cube(dim);
 					cc1=(c45==1 || c45==3)?case_up()+0.2:0;
 					cc2=(c45==2 || c45==3)?case_up()+0.2:0;
 					linear_extrude(dim.z)
@@ -125,7 +128,7 @@ module case_side(tr,length,screws,c45)
 					,[-0.01,20+offs]
 				]);
 		}
-		case_top_screws_cut();
+		case_top_screws_cut(report=report);
 	}
 }
 
@@ -138,7 +141,7 @@ module case_front()
 	
 	difference()
 	{
-		case_side(tr,length,screws,c45);
+		case_side(tr,length,screws,c45,report=true);
 		
 		translate_rotate(z_slot_rightfront_tr())
 		rotate([0,0,-90])
@@ -155,7 +158,6 @@ module case_front()
 module case_right()
 {
 	tr=[vec_add(y_slot_bottomright_tr()[0],[10,y_slot()/2-case_offset(),10]),[0,90,90]];
-	echo(tr);
 	length=y_slot()-case_offset()*2;
 	screws=[case_screws_offset(),y_slot()-case_screws_offset()];
 	c45=3;
@@ -166,7 +168,24 @@ module case_right()
 	
 	difference()
 	{
-		case_side(tr,length,screws,c45);
+		union()
+		{
+			difference()
+			{
+				union()
+				{
+					case_side(tr,length,screws,c45);
+					translate_rotate(case_fan_tr())
+						case_fan(op="add");
+				}
+				translate_rotate(case_fan_tr())
+					case_fan(op="sub");
+			}
+			translate_rotate(case_fan_tr())
+				case_fan(op="screw_add");
+		}
+		translate_rotate(case_fan_tr())
+			case_fan(op="screw_sub");
 		
 		translate(z_right_rail_tr()[0])
 		translate ([-rw/2,-rh,-z_rail()/2])
@@ -261,20 +280,59 @@ module case_top_screws_cut(report=false,offs=[0,0])
 					translate ([0,0,-0.01])
 					hull()
 					{
+						dd=is_m5_screw?m5_screw_diameter():m3_screw_diameter();
 						translate ([offs[1],0,0])
-							cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
-						cylinder (d=m3_screw_diameter()+offs[0]*2,h=case_top_screw+1,$fn=60);
+							cylinder (d=dd+offs[0]*2,h=case_top_screw+1,$fn=60);
+						cylinder (d=dd+offs[0]*2,h=case_top_screw+1,$fn=60);
 					}
 				}
 				else
 				{
-					if (report)
-						report_m3_washer_squarenut(case_top_screw);
-					m3_screw(h=case_top_screw+1,cap_out=20);
+					if (is_m5_screw)
+					{
+						if (report)
+						{
+							report_m5_hexnut();
+							report_m5_bolt(case_top_screw);
+						}
+						m5_screw(h=case_top_screw+6,cap_out=20);
+					}
+					else
+					{
+						if (report)
+							report_m3_washer_squarenut(case_top_screw);
+						m3_screw(h=case_top_screw+1,cap_out=20);
+					}
 				}
 				translate ([0,0,case_top_screw-3])
 				rotate ([0,0,90])
-					m3_square_nut();
+				{
+					if (is_m5_screw)
+					{
+						hull()
+						{
+							rotate ([0,0,90])
+								m5_nut();
+							translate ([0,10,0])
+							rotate ([0,0,90])
+								m5_nut();
+						}
+						translate ([0,4.5,0])
+						scale ([1.1,1,1])
+						hull()
+						{
+							rotate ([0,0,90])
+								m5_nut();
+							translate ([0,10,0])
+							rotate ([0,0,90])
+								m5_nut();
+						}
+					}
+					else
+					{
+						m3_square_nut();
+					}
+				}
 			}
 		}
 }
@@ -285,7 +343,7 @@ module case_top_screws_add()
 	translate(case_top_tr())
 		for (s=case_top_screws())
 		{
-			dim=[case_top_screws_offset()*2+cadd.x*2,case_top_screws_offset()*2+cadd.y*2,8+s[2]];
+			dim=[case_top_screws_offset()*2+cadd.x*2,case_top_screws_offset()*2+cadd.y*2,case_top_screw+2+s[2]];
 			
 			translate (s[0])
 			rotate ([0,180,0])
@@ -320,10 +378,173 @@ module case_top()
 			linear_extrude(case_top_thickness()+0.4)
 				text (text="ucorexy",size=10,font="Free Sans:style=Bold");
 		}
-		case_top_screws_cut(report=true,offs=[0.6,10]);
+		case_top_screws_cut(report=false,offs=[0.6,10]);
+		
+		translate(tr)
+		{
+			offs=[17.5,26];
+			xmax=21;
+			ymax=19;
+			dd=6;
+			diff=dd+1;
+			for (x=[0:xmax])
+				for (y=[0:2:ymax])
+					translate ([offs.x+x*diff,offs.y+y*diff,-1])
+						rotate ([0,0,90])
+							cylinder(d=6.6,h=10,$fn=6);
+			for (x=[0:xmax-1])
+				for (y=[1:2:ymax])
+					translate ([offs.x+diff/2+x*diff,offs.y+y*diff,-1])
+						rotate ([0,0,90])
+							cylinder(d=6.6,h=10,$fn=6);
+		}
 	}
 }
 
+
+function case_fan_points(offs,down=0)=[
+		 [-offs-fan_width(case_fan_type())/2+down,-offs-fan_width(case_fan_type())/2,4]
+		,[+offs+fan_width(case_fan_type())/2,-offs-fan_width(case_fan_type())/2,4]
+		,[+offs+fan_width(case_fan_type())/2,+offs+fan_width(case_fan_type())/2,4]
+		,[-offs-fan_width(case_fan_type())/2+down,+offs+fan_width(case_fan_type())/2,4]
+	];
+module case_fan(op="add")
+{
+	offs=0.4;
+	thickness=4;
+	cut=thickness-1;
+	down=fan_width(case_fan_type())-case_height()-case_fan_up()+4;//+thickness*2;
+	if (op=="add")
+	{
+		translate([0,0,-case_fan_depth()-fan_depth(case_fan_type())/2])
+		difference()
+		{
+			sequental_hull()
+			{
+				linear_extrude(0.1)
+					polygon(polyRound(case_fan_points(thickness,down=down),20));
+				translate([0,0,case_fan_depth()-thickness])
+				linear_extrude(0.1)
+					polygon(polyRound(case_fan_points(thickness),20));
+				translate([0,0,case_fan_depth()+fan_depth(case_fan_type())-0.1])
+				linear_extrude(0.1)
+					polygon(polyRound(case_fan_points(thickness),20));
+			}
+			translate ([fan_width(case_fan_type())/2+thickness-cut
+					,-fan_width(case_fan_type())/2-thickness-1
+					,-50])
+				cube ([cut+1,fan_width(case_fan_type())+thickness*2+2,100]);
+		}
+	}
+	if (op=="sub")
+	{
+		translate([0,0,-case_fan_depth()-fan_depth(case_fan_type())/2])
+		sequental_hull()
+		{
+			translate([0,0,-0.01])
+			linear_extrude(0.1)
+				polygon(polyRound(case_fan_points(offs,down=down),20));
+			translate([0,0,case_fan_depth()-thickness])
+			linear_extrude(0.1)
+				polygon(polyRound(case_fan_points(offs),20));
+			translate([0,0,case_fan_depth()+fan_depth(case_fan_type())+0.1])
+			linear_extrude(0.1)
+				polygon(polyRound(case_fan_points(offs),20));
+		}
+	}
+	
+	screw=16;
+	screws=[
+		 [[-fan_hole_pitch(case_fan_type()),-fan_hole_pitch(case_fan_type()),fan_depth(case_fan_type())/2],180]
+		,[[fan_hole_pitch(case_fan_type()),-fan_hole_pitch(case_fan_type()),fan_depth(case_fan_type())/2],270]
+		,[[fan_hole_pitch(case_fan_type()),fan_hole_pitch(case_fan_type()),fan_depth(case_fan_type())/2],0]
+		,[[-fan_hole_pitch(case_fan_type()),fan_hole_pitch(case_fan_type()),fan_depth(case_fan_type())/2],90]
+	];
+	hh=screw+1;
+	if (op=="screw_add")
+	{
+		dd=6;
+		for (s=screws)
+		{
+			translate (s[0])
+			translate([0,0,-hh])
+			{
+				cylinder(d=dd,h=hh-fan_depth(case_fan_type()),$fn=60);
+				sphere(d=dd,$fn=60);
+			}
+		}
+		intersection()
+		{
+			case_fan(op="add");
+			for (s=screws)
+			{
+				hull()
+				for (x=[10,0])
+				for (y=[10,0])
+					translate (s[0])
+					rotate([0,0,s[1]])
+					translate([x,y,-hh-dd])
+						cylinder(d=dd,h=hh-fan_depth(case_fan_type())+dd,$fn=60);
+			}
+		}
+	}
+	if (op=="screw_sub")
+	{
+		dd=6;
+		for (s=screws)
+			translate (s[0])
+			translate([0,0,-hh+0.1])
+			{
+				report_m3(screw);
+				cylinder(d=3,h=hh,$fn=60);
+			}
+	}
+}
+
+module m5_cap()
+{
+	hhex=3.65;
+	up=0.8;
+	rays=10;
+	angle=360/rays;
+	
+	difference()
+	{
+		for (a=[0:rays-1])
+			rotate ([0,0,angle*a])
+			fillet(r=0.4,steps=4)
+			{
+				dd=10;
+				cylinder (d=dd,h=hhex+up,$fn=80);
+				translate ([dd/2,0,0])
+					cylinder (d=2,h=hhex+up,$fn=80);
+			}
+		translate ([0,0,up])
+			cylinder (d=8.79+0.2,h=hhex+0.1,$fn=6);
+		translate ([0,0,-0.1])
+			cylinder(d=5.2,h=hhex,$fn=80);
+	}
+}
+
+/*
+translate_rotate(case_fan_tr())
+{
+	translate([0,0,0.1]) fan(case_fan_type());
+	difference()
+	{
+		union()
+		{
+			difference()
+			{
+				case_fan(op="add");
+				case_fan(op="sub");
+			}
+			case_fan(op="screw_add");
+		}
+		case_fan(op="screw_sub");
+	}
+}
+*/
 
 //proto_slot_brackets();
 //proto_front_slots();
@@ -337,9 +558,12 @@ module case_top()
 //xt90();
 
 //case_front();
-//case_right();
 //case_left();
+//case_right();
+
 //case_backleft();
 //case_backright();
 
-case_top();
+//case_top();
+
+m5_cap();

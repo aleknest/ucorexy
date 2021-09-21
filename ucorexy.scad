@@ -63,7 +63,9 @@ translate ([xposition,y_rail_y()+yposition,0])
 
 translate ([xposition,y_rail_y()+yposition,0])
 {
-	x_carriage_main();
+	//x_carriage_main();
+	x_carriage_top();
+	x_carriage_bottom();
 	x_carriage_back();
 	x_carriage_front();
 	x_carriage_belt_fixer_left();
@@ -219,6 +221,7 @@ case_backleft();
 case_backright();
 
 case_top();
+case_proto();
 
 //////////////////////////////////////////////////////////////
 

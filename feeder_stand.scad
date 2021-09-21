@@ -17,28 +17,59 @@ g=sqrt(c*c*2);
 corner=1/(180/90);
 
 dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
+nema_corner=3;
+nema_diag=sqrt(NEMA_width(motor_type())*NEMA_width(motor_type())*2);
+nema_offs=(nema_diag-NEMA_width(motor_type()))/2-2.12;
+feeder_nema_trs=[
+	[[[0,0,0],[0,0,0]],8]
+	,[[[0,nema_offs,0],[0,0,45]],20]
+	,[[[0,nema_offs-4,0],[0,0,45]],20]
+	];
 
 is_motor_plate_add=false;
 
 function feeder_stand_middle_cut()=37;
 
-module feeder_plate(report=false)
+module feeder_plate_cut(feeder_nema_index=0,report=false)
 {
+	feeder_nema_tr=feeder_nema_trs[feeder_nema_index];
+	dim=dim_nema;
+	translate_rotate(center_tr)
+	translate([0,-0.01,-feeder_thickness()/2])
+	translate ([0,dim.y/2,0])
+	translate_rotate (feeder_nema_tr[0])
+	{
+		translate ([0,0,dim.z])
+		linear_extrude(100)
+			polygon(polyRound([
+				 [dim.x/2,dim.y/2,nema_corner]
+				,[-dim.x/2,dim.y/2,nema_corner]
+				,[-dim.x/2,-dim.y/2,nema_corner]
+				,[dim.x/2,-dim.y/2,nema_corner]
+			],1));
+	}
+}
+
+module feeder_plate(feeder_nema_index=0,report=false)
+{
+	feeder_nema_tr=feeder_nema_trs[feeder_nema_index];
 	add=is_motor_plate_add?7:0;
 	dim=dim_nema;
 	difference()
 	{
-		fillet (r=8,steps=$preview?2:16)
+		union()
+		fillet (r=feeder_nema_tr[1],steps=$preview?16:32)
 		{
 			translate_rotate(center_tr)
 			translate([0,-0.01,-feeder_thickness()/2])
 			translate ([0,dim.y/2,0])
+			translate_rotate (feeder_nema_tr[0])
 			linear_extrude(dim.z)
 				polygon(polyRound([
-					 [dim.x/2+add,dim.y/2,3]
-					,[-dim.x/2,dim.y/2,3]
-					,[-dim.x/2,-dim.y/2,3]
-					,[dim.x/2+add,-dim.y/2,3]
+					 [dim.x/2+add,dim.y/2,nema_corner]
+					,[-dim.x/2,dim.y/2,nema_corner]
+					,[-dim.x/2,-dim.y/2,nema_corner]
+					,[dim.x/2+add,-dim.y/2,nema_corner]
 				],1));
 			
 			translate ([-feeder_thickness()/2,-y+cut,-10])
@@ -55,6 +86,7 @@ module feeder_plate(report=false)
 		translate_rotate(center_tr)
 		translate([0,-0.01,-feeder_thickness()/2])
 		translate ([0,dim.y/2,0])
+		translate_rotate (feeder_nema_tr[0])
 		nema17_cut(washers=true
 				,shaft=false
 				,bighole=true
@@ -66,7 +98,7 @@ module feeder_plate(report=false)
 	}			
 }
 
-module feeder_stand(report=false)
+module feeder_stand(feeder_nema_index=0,report=false)
 {
 	difference()
 	{
@@ -112,7 +144,7 @@ module feeder_stand(report=false)
 						],1));
 				}
 			}
-			feeder_plate(report=report);
+			feeder_plate(feeder_nema_index=feeder_nema_index,report=report);
 			translate_rotate(feeder_stand_tr())
 			translate([-feeder_stand_width()/2,0,0])
 			rotate ([90,0,90])
@@ -131,20 +163,6 @@ module feeder_stand(report=false)
 			}
 			
 		st_dim=[3,4];
-		
-		/*	
-		translate ([-feeder_thickness()/2,-y+cut,-10])
-		translate(center_tr[0])
-		{
-			for (iy = [-1,1])
-			for (iz = [0:0])
-			{
-				z=7*iy-st_dim[0]/2+10;
-				translate ([-feeder_thickness(),12+iz*11,z])
-					cube ([40,st_dim[1],st_dim[0]]);
-			}
-		}
-		*/
 		
 			
 		translate ([-20,-y,-z+feeder_base_thickness()])
@@ -179,6 +197,7 @@ module feeder_stand(report=false)
 						cube ([40,st_dim[0],st_dim[1]]);
 				}
 			}
+		feeder_plate_cut(feeder_nema_index=feeder_nema_index,report=report);
 	}
 }
 
@@ -307,13 +326,13 @@ module feeder_stand_bottom()
 	}
 }
 
-module feeder_stand_nobottom()
+module feeder_stand_nobottom(feeder_nema_index=0)
 {
 	difference()
 	{
 		difference()
 		{
-			feeder_stand();
+			feeder_stand(feeder_nema_index=feeder_nema_index);
 			mirror([1,0,0])
 				cut_bottom(op="cut",offs=0.1);
 		}
@@ -366,13 +385,13 @@ module feeder_stand_top()
 	}
 }
 
-module feeder_stand_plate()
+module feeder_stand_plate(feeder_nema_index=0)
 {
 	union()
 	{
 		difference()
 		{
-			feeder_stand_nobottom();
+			feeder_stand_nobottom(feeder_nema_index=feeder_nema_index);
 				
 			translate ([0,0,-1])
 			mirror([1,0,0])
@@ -403,10 +422,10 @@ proto_y_left(slot_only=true);
 
 
 
-feeder_stand_bottom();
-feeder_stand_middle();
-translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();
-feeder_stand_top();
-feeder_stand_plate();
+//feeder_stand_bottom();
+//feeder_stand_middle();
+//translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();
+//feeder_stand_top();
+feeder_stand_plate(feeder_nema_index=2);
 
 //feeder_plate();

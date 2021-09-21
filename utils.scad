@@ -36,6 +36,11 @@ module report_xt90()
 	deb(str("XT90 jack"));
 }
 
+module report_rj45()
+{
+	deb(str("RJ45 jack"));
+}
+
 module report_hotend()
 {
 	deb(str("E3D v6 hotend"));
@@ -100,6 +105,11 @@ module report_m5_screw(screw)
 {
 	deb(str("M5x",screw," DIN912"));
 	deb(str("M5 washer"));
+}
+
+module report_m5_bolt(screw)
+{
+	deb(str("M5x",screw," bolt"));
 }
 
 module report_m5_point()

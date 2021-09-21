@@ -97,11 +97,11 @@ module y_carriage(part)
 	
 	pulleys=part=="left"?
 	[
-		 [y_leftfront_pulley_tr(),270,25,15]
-		,[y_leftback_pulley_tr(),0,25,8]
+		 [y_leftfront_pulley_tr(),270,25,15+2.5,0]
+		,[y_leftback_pulley_tr(),0,25,8,2.6]
 	]:[
-		 [y_rightback_pulley_tr(),90,25,15]
-		,[y_rightfront_pulley_tr(),180,25,8]
+		 [y_rightback_pulley_tr(),90,25,15+2.5,0]
+		,[y_rightfront_pulley_tr(),180,25,8,2.6]
 	];
 	
 	belt_cut=part=="left"?[
@@ -149,12 +149,13 @@ module y_carriage(part)
 						}
 					}
 				}
+				
 				roffs=0.2;
 				rw=rail_width(x_rail_type())+roffs*2;
-				rh=100;
+				rh=100;			
 				translate(x_slot_tr()[0])
 				translate ([-x_rail()/2-roffs,10-rh,-rw/2])
-					cube ([x_rail()+roffs*2,rh,rw]);
+					cube ([x_rail()+roffs*2,rh*2,rw]);
 				
 				offs=0.1;
 				translate_rotate (tr)
@@ -188,11 +189,11 @@ module y_carriage(part)
 							}
 						}
 					}
-					
+				
 				translate_rotate (ttr_slot)
 				translate([-1,0,10+y_carriage_sidethickness()])
 				rotate ([0,90,0])
-					slot_cut(height=dim_slot.x+2);			
+					slot_cut(height=dim_slot.x+2,offs=0.25);
 					
 				screw_offset=7;
 				for (a=[0,90,180])
@@ -206,9 +207,10 @@ module y_carriage(part)
 						m5n_screw_washer(thickness=4,diff=2, washer_out=20);
 				}
 		
-				for (p=pulleys)		
+				for (p=pulleys)
 					translate_rotate(p[0])
-						pulley_cut(pulley_type=y_pulley_type(),op=0,angle=p[1],screw=p[2],up=p[3],report=true);
+						pulley_cut(pulley_type=y_pulley_type(),op=0,angle=p[1]
+							,screw=p[2],up=p[3],nut_offset=p[4],report=true);
 				
 				translate (belt_cut)
 					cube ([1.52+2,100,6+2],true);
@@ -221,7 +223,7 @@ module y_carriage(part)
 			}
 			for (p=pulleys)		
 				translate_rotate(p[0])
-					pulley_cut(pulley_type=y_pulley_type(),op=1,angle=p[1],screw=p[2],up=p[3]);
+					pulley_cut(pulley_type=y_pulley_type(),op=1,angle=p[1],screw=p[2],up=p[3],nut_offset=p[4]);
 		}
 	}
 }
@@ -241,9 +243,10 @@ module y_carriage_right_flag()
 	y_carriage(part="flag");
 }
 
+//translate ([0,y_rail_y(),0]) proto_x_slot();
 //proto_y_left(yposition=0);
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
 //y_carriage_left();
-//y_carriage_right();
-y_carriage_right_flag();
+y_carriage_right();
+//y_carriage_right_flag();

@@ -32,6 +32,13 @@ module proto_slot2020_cr(length)
 	report_slot(length);
 }
 
+module case_proto()
+{
+	report_fan();
+	translate_rotate (case_fan_tr())
+		fan(case_fan_type());
+}
+
 module proto_x_blowers(xposition=0)
 {
 	report_blower();
@@ -53,6 +60,9 @@ module proto_x_slot(xposition=0)
 		proto_slot2020_cr(length=x_slot());
 	report_rail("C",x_rail());
 	translate_rotate (x_rail_tr())
+		rail_assembly(x_rail_type(), x_rail(), xposition);
+	report_rail("C",x_rail());
+	translate_rotate (x2_rail_tr())
 		rail_assembly(x_rail_type(), x_rail(), xposition);
 }
 

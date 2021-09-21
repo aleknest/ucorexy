@@ -12,7 +12,7 @@ include <../_utils_v2/NopSCADlib/vitamins/blower.scad>
 include <../_utils_v2/NopSCADlib/vitamins/blowers.scad>
 
 fix_thickness=2+2;
-fix_out=2;
+fix_out=6;
 nozzle_in=2.2+2;
 nozzle_out=2;
 nozzle_thickness=0.8;
@@ -42,15 +42,26 @@ module blower_nozzle_cut(cut_nozzle,up_cut_nozzle,height,cut_nozzle_diff=0)
 	}
 }
 
-function blower_nozzle_fix_points(up=0,in=0,r=0)=
+function blower_nozzle_fix_points(up=0,in=0,r=0,upbody=0)=
 			polyRound([
-				  [-1,-fix_out,1]
-				, [4.9+in,-fix_out,r]
+				  [-1,-fix_out+upbody,1]
+				, [4.9+in,-fix_out+upbody,r]
 				, [4.9+in,4.9+up,1.5]
 				, [-1,4.9+up,1]
 			],20);
 
-module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutboxz=0,cutboxrot=0,upcounter=0)
+module blower_nozzle(figure1
+					,figure2
+					,nozzle_cut
+					,up_cut_nozzle
+					,txt
+					,cutboxy=0
+					,cutboxz=0
+					,cutboxrot=0
+					,upcounter=0
+					,upbody=0
+					,txtmirror=[0,0,0]
+		)
 {
 	nozzle_points=[
 		 [5-nozzle_thickness-nozzle_offs.x,-nozzle_thickness-nozzle_offs.y-0.4]
@@ -76,10 +87,10 @@ module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutb
 					translate([0,0,3-out2])
 					{
 						linear_extrude(fix_thickness+out+out2)
-							polygon(blower_nozzle_fix_points());
+							polygon(blower_nozzle_fix_points(up=0,in=0,r=0,upbody=upbody));
 						translate ([0,0,-nut_fix[0]+nut_fix[1]])
 						linear_extrude(nut_fix[0])
-							polygon(blower_nozzle_fix_points(up=nut_fix[2],in=nut_fix[3],r=1.5));
+							polygon(blower_nozzle_fix_points(up=nut_fix[2],in=nut_fix[3],r=1.5,upbody=upbody));
 					}
 				}
 			
@@ -139,6 +150,9 @@ module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutb
 					report_m2p5_screw(screw=16);
 					
 					cylinder(d=m2p5_screw_diameter(),h=20,$fn=30);
+					translate ([0,0,10])
+					rotate ([0,180,0])
+						cylinder(d=3.5,h=20,$fn=30);
 					m2p5_nut();
 				}
 		
@@ -160,9 +174,10 @@ module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutb
 		
 		translate ([14,nozzle_in,0.3])
 		rotate ([90,0,0])
-		translate ([6,nozzle_points[2].y-0.2,0.7])
+		translate ([6,nozzle_points[2].y-0.2,2.7])
 			rotate ([-90,0,0])
 			linear_extrude(1)
+				mirror(txtmirror)
 				text(text=txt,font="Arial Black:Bold",size=5,valign="top",halign="center");
 		
 		translate ([-40,-0.2-0.4,1.8-0.4])
@@ -170,42 +185,44 @@ module blower_nozzle(figure1,figure2,nozzle_cut,up_cut_nozzle,txt,cutboxy=0,cutb
 	}
 }
 
-//888888
-function blower_nozzle_figure(corr=[0],add1=10)=
+function blower_nozzle_figure(corr=0,add1=9,upbody=0)=
 	polyRound([
 		  [-2,10+nozzle_thickness,0]
-		, [2,10+nozzle_thickness,0]
-		, [4,8,6]
-		, [0+add1,-22,0]
+		, [6-upbody,10+nozzle_thickness,0]
+		, [-3-upbody+add1,-10,0]
 	
-		, [0+add1+corr[0],-22,0]
+		, [-2+add1+corr,-22,0]
 		, [-0.1,-nozzle_thickness-nozzle_offs.y*2,0]
 		, [-2,-nozzle_thickness,0]
 	],20);
 
-module blower_nozzle_()
+module blower_nozzle_(txt="",txtmirror=[0,0,0],upbody=0)
 {
-	blower_nozzle(figure1=blower_nozzle_figure()
-				,figure2=blower_nozzle_figure([3])
-				,nozzle_cut=14
+	blower_nozzle(figure1=blower_nozzle_figure(upbody=upbody)
+				,figure2=blower_nozzle_figure(corr=2,upbody=upbody)
+				,nozzle_cut=14-10
 				,up_cut_nozzle=5
-				,txt=""
-				,cutboxy=-6+8
-				,cutboxz=-0
-				,cutboxrot=4
-				,upcounter=38);
+				,txt=txt
+				,cutboxy=-6.8
+				,cutboxz=-6
+				,cutboxrot=53
+				,upcounter=38
+				,upbody=upbody
+				,txtmirror=txtmirror
+		);
 }
+
 module blower_nozzle_left()
 {
 	translate_rotate (e3d_blower_left_tr(0))
 	translate ([40,0,0])
 	mirror([1,0,0])
-		blower_nozzle_();
+		blower_nozzle_(txt="LEFT",txtmirror=[1,0,0]);
 }
 module blower_nozzle_right()
 {
 	translate_rotate (e3d_blower_right_tr(0))
-		blower_nozzle_();
+		blower_nozzle_(txt="RIGHT",txtmirror=[0,0,0],upbody=0);
 }
 
 //proto_x();
@@ -214,7 +231,7 @@ module blower_nozzle_right()
 //use <xcarriage.scad>
 //x_carriage_fans();
 
-blower_nozzle_left();
+//blower_nozzle_left();
 blower_nozzle_right();
 
 //translate ([-34,0,-60])

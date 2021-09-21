@@ -24,6 +24,8 @@ function x_slot_tr()=[[0,0,carriage_height(rail_carriage(y_rail_type()))],[0,90,
 function x_rail_type()=MGN9C();
 function x_rail()=150;
 function x_rail_tr()=[vec_add(x_slot_tr()[0],[0,-10,0]),[90,0,0]];
+function is_x2_rail()=true;
+function x2_rail_tr()=is_x2_rail()?[vec_add(x_slot_tr()[0],[0,10,0]),[-90,0,0]]:x_rail_tr();
 
 function e3d_type()=E3Dv6;
 function e3d_tr(position=0)=[vec_add([
@@ -47,7 +49,8 @@ function e3d_blower_right_tr(position)=[
 	vec_add(e3d_tr(position)[0],[e3d_blower_offset().x,e3d_blower_offset().y,e3d_blower_offset().z])
 	,[90,0,90]];
 	
-function xcarriage_thickness()=[36,26+2,4,4.9+0.8];
+back_add=13;
+function xcarriage_thickness()=[36,28,4,5.7,is_x2_rail()?back_add:0,is_x2_rail()?back_add:0];
 function xcarriage_dim()=[28,20+xcarriage_thickness()[0]+xcarriage_thickness()[2],20+xcarriage_thickness()[1]+xcarriage_thickness()[3]];	
 function xcarriage_tr() = [vec_add(x_slot_tr()[0]
 	,[-xcarriage_dim().x/2,-10-xcarriage_thickness()[0],x_slot_tr()[0].z-20-xcarriage_thickness()[3]])
@@ -383,18 +386,24 @@ function case_top_tr()=[-front_back_slot()/2+case_top_offset(),-y_slot()/2+case_
 function case_top_dim()=[front_back_slot()-case_top_offset()*2,y_slot()-case_top_offset()*2,case_top_thickness()];
 function case_top_screws_offset()=4;
 function case_top_screws()=[
-	 [[20,case_top_screws_offset()],[0,0,90],0]
-	,[[front_back_slot()-20,case_top_screws_offset()],[0,0,90],0]
+	 [[20,case_top_screws_offset()-1],[0,0,90],0]
+	,[[front_back_slot()-20,case_top_screws_offset()-1],[0,0,90],0]
 	
-	,[[front_back_slot()-case_top_screws_offset(),20],[0,0,180],0]
-	,[[front_back_slot()-case_top_screws_offset(),y_slot()-20],[0,0,180],0]
+//	,[[front_back_slot()-case_top_screws_offset(),20],[0,0,180],0]
+//	,[[front_back_slot()-case_top_screws_offset(),y_slot()-20],[0,0,180],0]
 	
-	,[[case_top_screws_offset(),20],[0,0,0],0]
-	,[[case_top_screws_offset(),y_slot()-20],[0,0,0],0]
+//	,[[case_top_screws_offset(),20],[0,0,0],0]
+////	,[[case_top_screws_offset(),y_slot()-20],[0,0,0],0]
 	
 	,[[15+16,y_slot()-case_top_screws_offset()],[0,0,-90],0]
 	,[[front_back_slot()-15-12,y_slot()-case_top_screws_offset()],[0,0,-90],0]
 ];
+function case_fan_type()=fan40x11;
+function case_fan_up()=1;
+function case_fan_depth()=9;
+function case_fan_tr()=[vec_add(y_slot_bottomright_tr()[0]
+	,[10-fan_depth(case_fan_type())/2,14,10+fan_width(case_fan_type())/2+case_fan_up()])
+	,[0,90,0]];
 
 function oled_encoder_dim()=[65,40,37];
 function oled_encoder_tr()=tr_add(z_slot_rightfront_tr(),[-oled_encoder_dim().x+10,-oled_encoder_dim().y-10,-z_slot()/2+oled_encoder_dim().z+30]);

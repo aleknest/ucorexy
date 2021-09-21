@@ -5,9 +5,9 @@ BOM:
     2020 t-slot: 180mm, 8 pcs
     2020 t-slot: 190mm, 2 pcs
     2020 t-slot: 230mm, 4 pcs
-    M3 t-slot nut, 40 pcs
-    M3x8 DIN912, 40 pcs
-    MGN9 rail with MGN9C carriage: 150mm
+    M3 t-slot nut, 48 pcs
+    M3x8 DIN912, 48 pcs
+    MGN9 rail with MGN9C carriage: 150mm, 2 pcs
     MGN9 rail with MGN9H carriage: 150mm, 4 pcs
 * Corner brackets:
     2020 slot corner bracket, 18 pcs
@@ -17,15 +17,15 @@ BOM:
     E3D v6 hotend
     GY-291 ADXL345
     M2.5x8, 4 pcs
-    M3 nut (hex), 6 pcs
+    M3 nut (hex), 9 pcs
     M3 nut (thin square), 41 pcs
-    M3 washer, 58 pcs
+    M3 washer, 69 pcs
     M3x10 DIN912, 3 pcs
     M3x12 DIN912, 16 pcs
     M3x16 DIN912, 13 pcs
     M3x20 DIN912, 12 pcs
-    M3x6 DIN912, 8 pcs
-    M3x8 DIN912, 6 pcs
+    M3x25 DIN912, 6 pcs
+    M3x6 DIN912, 19 pcs
 * Fan nozzles:
     M2.5x16, 4 pcs
 * X carriage fans holder:
@@ -41,7 +41,6 @@ BOM:
     SS443A Hall-effect sensor
 * Y carriage:
     DIN912 M3x25, 4 pcs
-    ECHO: false, 2 pcs
     GT2 pulley 16 teeth, 4 pcs
     M3 nut (hex), 4 pcs
     M3 nut (thin square), 4 pcs
@@ -137,10 +136,12 @@ BOM:
     M6 washer, 4 pcs
     M6x10 DIN912, 4 pcs
 * Case:
-    ECHO: [[110, 89.6, -200], [0, 90, 90]]
-    ECHO: false, 12 pcs
+    4010 fan
+    M3x16 DIN912, 4 pcs
+    M5 nut (hex), 4 pcs
     M5 t-slot nut, 8 pcs
     M5 washer, 8 pcs
+    M5x10 bolt, 4 pcs
     M5x10 DIN912, 8 pcs
 * Wire fix:
     M3 nut (hex), 3 pcs
@@ -170,14 +171,12 @@ Aggregated BOM:
     2020 t-slot: 190mm, 2 pcs
     2020 t-slot: 230mm, 4 pcs
     4010 blower fan, 2 pcs
-    4010 fan
+    4010 fan, 2 pcs
     bed spring (10-20mm), 4 pcs
     DIN912 M3x16, 5 pcs
     DIN912 M3x20, 6 pcs
     DIN912 M3x25, 8 pcs
     E3D v6 hotend
-    ECHO: [[110, 89.6, -200], [0, 90, 90]]
-    ECHO: false, 14 pcs
     Encoder module
     GT2 belts
     GT2 motor pulley 16 teeth, 3 pcs
@@ -189,21 +188,23 @@ Aggregated BOM:
     M2.5x8, 4 pcs
     M2.5x8 DIN965, 4 pcs
     M3 nut for hotbed, 4 pcs
-    M3 nut (hex), 42 pcs
+    M3 nut (hex), 45 pcs
     M3 nut (thin square), 55 pcs
-    M3 t-slot nut, 40 pcs
-    M3 washer, 125 pcs
+    M3 t-slot nut, 48 pcs
+    M3 washer, 136 pcs
     M3x10 DIN912, 24 pcs
     M3x12 DIN912, 22 pcs
-    M3x16 DIN912, 13 pcs
+    M3x16 DIN912, 17 pcs
     M3x20 DIN912, 12 pcs
+    M3x25 DIN912, 6 pcs
     M3x35 DIN965
     M3x40 DIN 965 for hotbed, 4 pcs
-    M3x6 DIN912, 16 pcs
-    M3x8 DIN912, 70 pcs
-    M5 nut (hex), 3 pcs
+    M3x6 DIN912, 27 pcs
+    M3x8 DIN912, 72 pcs
+    M5 nut (hex), 7 pcs
     M5 t-slot nut, 91 pcs
     M5 washer, 58 pcs
+    M5x10 bolt, 4 pcs
     M5x10 DIN912, 55 pcs
     M5x16 DIN912, 3 pcs
     M5x8 DIN967, 36 pcs
@@ -212,7 +213,7 @@ Aggregated BOM:
     M6x12 DIN912, 2 pcs
     M6x16 DIN912, 2 pcs
     Magnet: diameter=2mm, length=2mm, 2 pcs
-    MGN9 rail with MGN9C carriage: 150mm
+    MGN9 rail with MGN9C carriage: 150mm, 2 pcs
     MGN9 rail with MGN9H carriage: 150mm, 4 pcs
     Nema 17 motor, 4 pcs
     Power supply 12V

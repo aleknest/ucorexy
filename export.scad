@@ -25,8 +25,9 @@ use <oled_encoder.scad>
 use <klipper_head_mcu.scad>
 use <filament_runout_sensor.scad>
 use <rpi_camera.scad>
+use <rj45.scad>
 
-cmd="filament_runout_sensor/filament_runout_sensor_bottom";
+cmd="rj45/rj45_top";
 
 module list(s)
 {
@@ -35,6 +36,12 @@ module list(s)
 
 if (cmd=="list")
 {
+	list("rj45/rj45_top");
+	list("rj45/rj45_bottom");
+	
+	list("nozzles/blower_nozzle_left");
+	list("nozzles/blower_nozzle_right");
+
 	list("rpi_camera/rpi_camera_bottom");
 	list("rpi_camera/rpi_camera_top");
 	list("rpi_camera/rpi_cable_fix");
@@ -42,13 +49,17 @@ if (cmd=="list")
 	list("filament_runout_sensor/filament_runout_sensor_top");
 	list("filament_runout_sensor/filament_runout_sensor_bottom");
 	list("filament_runout_sensor/filament_runout_sensor_stand");
+	list("filament_runout_sensor/filament_runout_sensor_stand0");
 	
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
+	list("klipper_front_mcu/usbfix");
 	
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
-	list("x_carriage/x_carriage_main");
+	//list("x_carriage/x_carriage_main");
+	list("x_carriage/x_carriage_top");
+	list("x_carriage/x_carriage_bottom");
 	list("x_carriage/x_carriage_fan_spacer_m2p5");
 	
 	list("x_carriage/x_carriage_belt_fixer_left");
@@ -61,6 +72,7 @@ if (cmd=="list")
 	list("feeder_stand/feeder_stand_middle");
 	list("feeder_stand/feeder_stand_bottom");
 	list("feeder_stand/feeder_stand_plate");
+	list("feeder_stand/feeder_stand_plate45");
 	
 	list("x_endstop/x_endstop");
 	list("x_endstop/x_endstop_lock");
@@ -112,10 +124,8 @@ if (cmd=="list")
 	list("case/case_left");
 	list("case/case_backleft");
 	list("case/case_backright");
-		
-	list("nozzles/blower_nozzle_left");
-	list("nozzles/blower_nozzle_right");
-		
+	list("case/m5_cap");
+			
 	list("wire_fix/wire_fix_lefttop_corner");
 	list("wire_fix/wire_fix_righttop_corner");
 	list("wire_fix/wire_fix_front");
@@ -127,6 +137,19 @@ if (cmd=="list")
 
 //////////////////////////////////////////////////////////////
 
+if (cmd=="rj45/rj45_top")
+{
+	rotate ([0,180,0])
+		rj45_top();
+}
+if (cmd=="rj45/rj45_bottom")
+{
+	rotate ([0,180,0])
+		rj45_bottom();
+}
+
+//////////////////////////////////////////////////////////////
+
 if (cmd=="rpi_camera/rpi_camera_bottom")
 {
 	rpi_camera_bottom();
@@ -134,7 +157,7 @@ if (cmd=="rpi_camera/rpi_camera_bottom")
 if (cmd=="rpi_camera/rpi_camera_top")
 {
 	rotate ([0,180,0])
-	rpi_camera_top();
+		rpi_camera_top();
 }
 if (cmd=="rpi_camera/rpi_cable_fix")
 {
@@ -156,9 +179,18 @@ if (cmd=="filament_runout_sensor/filament_runout_sensor_stand")
 {
 	filament_runout_sensor_stand();
 }
+if (cmd=="filament_runout_sensor/filament_runout_sensor_stand0")
+{
+	filament_runout_sensor_stand0();
+}
 
 //////////////////////////////////////////////////////////////
 
+if (cmd=="klipper_front_mcu/usbfix")
+{
+	rotate ([0,180,0])
+		k_oled_encoder_usbfix();
+}
 if (cmd=="klipper_front_mcu/nano_top")
 {
 	k_oled_encoder_top();
@@ -355,6 +387,12 @@ if (cmd=="feeder_stand/feeder_stand_plate")
 		feeder_stand_plate();
 }
 
+if (cmd=="feeder_stand/feeder_stand_plate45")
+{
+	rotate ([0,-90,0])
+		feeder_stand_plate(feeder_nema_index=1);
+}
+
 //////////////////////////////////////////////////////////////
 
 if (cmd=="legs/leg")
@@ -405,11 +443,23 @@ if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefixnut")
 
 //////////////////////////////////////////////////////////////
 
+if (cmd=="x_carriage/x_carriage_top")
+{
+	rotate ([-90,0,0])
+	x_carriage_top();
+}
+if (cmd=="x_carriage/x_carriage_bottom")
+{
+	rotate ([-90,0,0])
+	x_carriage_bottom();
+}
+/*
 if (cmd=="x_carriage/x_carriage_main")
 {
 	rotate ([-90,0,0])
 	x_carriage_main();
 }
+*/
 if (cmd=="x_carriage/x_carriage_fan_spacer_m2p5")
 {
 	x_carriage_fan_spacer(blower_screw_diameter=2.4);
@@ -461,6 +511,10 @@ if (cmd=="case/case_backleft")
 if (cmd=="case/case_backright")
 {
 	case_backright();
+}
+if (cmd=="case/m5_cap")
+{
+	m5_cap();
 }
 
 //////////////////////////////////////////////////////////////
