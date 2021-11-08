@@ -347,10 +347,11 @@ module nano(op,offs=0,usb_diam=0)
 					cube ([cc.x,cc.y+offs*2,100]);
 		}
 		dd=usb_diam;
-		updd=10;
+		updd=10-4;
 		hdd=40;
 		if (op==43)
 		{
+			//88888
 			translate (nano_tr)
 			translate ([(k_oled_encoder_dim().x-nano_dim.x)/2,(k_oled_encoder_dim().y-nano_dim.y)/2,0])
 			translate ([nano_dim.x,nano_dim.y,0])
@@ -396,7 +397,7 @@ module nano(op,offs=0,usb_diam=0)
 module k_oled_encoder_usbfix()
 {
 	side_offset=0.3-0.15;//after print
-	usb_diam=[16,4];
+	usb_diam=[18,4];
 
 	translate_rotate(k_oled_encoder_tr())
 	difference()

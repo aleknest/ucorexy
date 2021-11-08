@@ -54,7 +54,13 @@ module protoSS443A()
 	}
 }
 
-module SS443A(SS443A_out=SS443A_out,SS443A_yout=0,SS443A_yout_addthickness=0, wire_cut=[0,0])
+module SS443A(SS443A_out=SS443A_out
+			,SS443A_yout=0
+			,SS443A_yout2=0
+			,SS443A_yout_mirror=false
+			,SS443A_yout_addthickness=0
+			,SS443A_yout_sub=0
+			,wire_cut=[0,0])
 {
 	
 	translate ([0.19,0,0])
@@ -64,8 +70,8 @@ module SS443A(SS443A_out=SS443A_out,SS443A_yout=0,SS443A_yout_addthickness=0, wi
 		offset (delta=SS443A_offs)
 			polygon(pointsm());
 		
-		translate ([0,0,-SS443A_out+0.01])
-		linear_extrude(SS443A_out)
+		translate ([0,0,-SS443A_out-SS443A_yout_sub+0.01])
+		linear_extrude(SS443A_out+SS443A_yout_sub)
 			offset(delta=SS443A_offs) 
 				polygon(pointsl());
 		if (SS443A_yout>0)
@@ -73,10 +79,12 @@ module SS443A(SS443A_out=SS443A_out,SS443A_yout=0,SS443A_yout_addthickness=0, wi
 			w=SS443A_width+SS443A_offs*2;
 			h=SS443A_thickness-sk+SS443A_offs*2+SS443A_yout_addthickness;
 			out=SS443A_yout;
-			translate ([-w/2
+			mirr=SS443A_yout_mirror?SS443A_yout:0;
+			translate ([0,mirr,0])
+			translate ([-w/2-SS443A_yout2
 						,sk+(SS443A_thickness+SS443A_offs)/2-out
 						,-SS443A_out-SS443A_yout_addthickness])
-				cube([w,out,h]);
+				cube([w+SS443A_yout2,out,h-SS443A_yout_sub]);
 		}
 		if (wire_cut!=[0,0])
 		{
@@ -114,6 +122,14 @@ module SS443A_cut2(dim,tr,in)
 	}
 }
 
+SS443A(SS443A_out=2
+	,SS443A_yout=9
+	,SS443A_yout2=4
+	,SS443A_yout_mirror=true
+	,SS443A_yout_addthickness=4.17-1
+	,SS443A_yout_sub=1
+	,wire_cut=[0.6+0.4,8]
+);
 //SS443A(SS443A_out=10,SS443A_yout=false);
 //SS443A_cut2([10,20,40],[-5,0,-5],[1,2,1]);
 //protoSS443A();

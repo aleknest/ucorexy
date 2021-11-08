@@ -11,6 +11,7 @@ include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 use <zmotion.scad>
 use <xt90.scad>
 use <slot_cover.scad>
+use <rj45.scad>
 include <../_utils_v2/NopSCADlib/vitamins/fan.scad>
 include <../_utils_v2/NopSCADlib/vitamins/fans.scad>
 
@@ -132,7 +133,7 @@ module case_side(tr,length,screws,c45,report=false)
 	}
 }
 
-module case_front()
+module case_front(rj45=false)
 {
 	tr=[vec_add(z_slot_bottomfront_tr()[0],[front_back_slot()/2-case_offset(),-10,10]),[0,90,0]];
 	length=front_back_slot()-case_offset()*2;
@@ -153,8 +154,14 @@ module case_front()
 		rotate([0,0,90])
 		translate ([0,-10-1,-z_slot()/2])
 			slot_cover_cut(h=z_slot(),up=up,down=1,offs=slot_cover_offs);
+
+		if (rj45)
+		translate (tr[0])
+		translate ([-length/2,0,0])
+			rj45_to_case(offs=0.2);
 	}
 }
+
 module case_right()
 {
 	tr=[vec_add(y_slot_bottomright_tr()[0],[10,y_slot()/2-case_offset(),10]),[0,90,90]];
@@ -557,7 +564,7 @@ translate_rotate(case_fan_tr())
 
 //xt90();
 
-//case_front();
+case_front(rj45=true);
 //case_left();
 //case_right();
 
@@ -566,4 +573,4 @@ translate_rotate(case_fan_tr())
 
 //case_top();
 
-m5_cap();
+//m5_cap();

@@ -153,9 +153,17 @@ module zz_endstop_block(tr,etr,bdim,m3_screw_height,ss443_out,report=false)
 				}
 			}
 			
+			//8888888
 			if (report) report_SS443a();
 			translate_rotate (etr)
-				SS443A(SS443A_out=ss443_out-3,SS443A_yout=8,SS443A_yout_addthickness=4.17-1,wire_cut=[0.6+0.4,8]);
+				SS443A(SS443A_out=ss443_out-3-1
+					,SS443A_yout=14
+					,SS443A_yout2=10
+					,SS443A_yout_mirror=true
+					,SS443A_yout_addthickness=4.17-1
+					,SS443A_yout_sub=0
+					,wire_cut=[1,8]
+				);
 			
 			if (report) report_m3_washer_squarenut(m3_screw_height);
 			translate_rotate (tr)
@@ -247,4 +255,4 @@ z=90;
 //z_carriage_right(z);
 
 z_endstop();
-//z_endstop_lock();
+z_endstop_lock();

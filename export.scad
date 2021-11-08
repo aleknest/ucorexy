@@ -120,6 +120,7 @@ if (cmd=="list")
 
 	list("case/case_top");
 	list("case/case_front");
+	list("case/case_front_rj45");
 	list("case/case_right");
 	list("case/case_left");
 	list("case/case_backleft");
@@ -495,6 +496,10 @@ if (cmd=="case/case_top")
 if (cmd=="case/case_front")
 {
 	case_front();
+}
+if (cmd=="case/case_front_rj45")
+{
+	case_front(rj45=true);
 }
 if (cmd=="case/case_right")
 {
