@@ -27,7 +27,7 @@ use <filament_runout_sensor.scad>
 use <rpi_camera.scad>
 use <rj45.scad>
 
-cmd="rj45/rj45_top";
+cmd="x_carriage/x_carriage_motor_plate";
 
 module list(s)
 {
@@ -61,6 +61,8 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_top");
 	list("x_carriage/x_carriage_bottom");
 	list("x_carriage/x_carriage_fan_spacer_m2p5");
+	list("x_carriage/x_carriage_motor_plate");
+	list("x_carriage/xcarriage_slot_wire_holder");
 	
 	list("x_carriage/x_carriage_belt_fixer_left");
 	list("x_carriage/x_carriage_belt_fixer_right");	
@@ -465,7 +467,16 @@ if (cmd=="x_carriage/x_carriage_fan_spacer_m2p5")
 {
 	x_carriage_fan_spacer(blower_screw_diameter=2.4);
 }                    
-
+if (cmd=="x_carriage/xcarriage_slot_wire_holder")
+{
+	rotate ([-90,0,0])
+		xcarriage_slot_wire_holder();
+}
+if (cmd=="x_carriage/x_carriage_motor_plate")
+{
+	rotate ([0,0,0])
+		xcarriage_motor_plate();
+}
 if (cmd=="x_carriage/x_carriage_front")
 {
 	rotate ([0,0,0])

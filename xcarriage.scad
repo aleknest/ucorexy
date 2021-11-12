@@ -913,7 +913,9 @@ module adxl345(op=1)
 				rotate ([180,0,0])
 				{
 					m3_screw(h=screw+2);
-					m3_washer(out=10);
+					m3_washer(out=15);
+					translate ([0,0,-60])
+						cylinder (d=3.5,h=60,$fn=40);
 				}
 	}
 	
@@ -956,37 +958,59 @@ module proto_adxl345()
 	adxl345(op=0+1);
 }
 
-ditan_motorplate_tr=[-10,-7.5,90-14.7];
-ditan_tr=[ditan_motorplate_tr.x,ditan_motorplate_tr.y-13.0,ditan_motorplate_tr.z];
-module ditan_plate()
+motorplate_tr=[-4,-15.0+4+1.7,75.3+30-5];
+feeder_tr=[motorplate_tr.x-20.95,motorplate_tr.y,motorplate_tr.z-21];
+module xcarriage_motor_plate()
 {
 	base_dim = [28,32,6];
 	dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
+	addy=motorplate_tr.z-69.15-4;
+	pdim=[4,7,2];
 	difference()
 	{
 		union()
-		//fillet(r=3,steps=8)
 		{
-			translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
-			translate_rotate (xcarriage_tr())
-			translate ([-base_dim.x,-base_dim.y-2,0])
-				cube(base_dim);
-			addy=ditan_motorplate_tr.z-69.15-4;
-			translate (ditan_motorplate_tr)
+			fillet(r=11,steps=32)
+			{
+				translate ([xcarriage_dim().x,xcarriage_dim().y,xcarriage_dim().z])
+				translate (xcarriage_tr()[0])
+				translate ([-base_dim.x,-base_dim.y-2,0])
+					cube(base_dim);
+	
+			translate ([xcarriage_dim().x+xcarriage_tr()[0].x-base_dim.x
+					,motorplate_tr.y
+					,xcarriage_dim().z+xcarriage_tr()[0].z])
+					cube([base_dim.x,dim_nema.z,base_dim.z+20]);
+			}
+			
+			translate (motorplate_tr)
 			rotate ([-90,0,0])
 			linear_extrude(dim_nema.z)
 				polygon(polyRound([
-					 [dim_nema.x/2,dim_nema.y/2+addy,0]
-					,[-dim_nema.x/2,dim_nema.y/2+addy,3]
+					 [dim_nema.x/2,dim_nema.y/2+addy,5.1]
+					,[-dim_nema.x/2,dim_nema.y/2+addy,13.2]
 					,[-dim_nema.x/2,-dim_nema.y/2,3]
-					,[dim_nema.x/2,-dim_nema.y/2,3]
+					,[dim_nema.x/2+pdim.x,-dim_nema.y/2,1]
+					,[dim_nema.x/2+pdim.x,-dim_nema.y/2+pdim.y,0]
+					,[dim_nema.x/2,-dim_nema.y/2+pdim.y+pdim.x,0]
 				],1));
 		}
-	
-		translate([0,0,1])
+		
+		translate ([0,-1,0])
+		translate (motorplate_tr)
+		rotate ([-90,0,0])
+		linear_extrude(dim_nema.z+2)
+			polygon(polyRound([
+				 [dim_nema.x/2,-dim_nema.y/2+pdim.z,0]
+				,[dim_nema.x/2+pdim.x-pdim.z,-dim_nema.y/2+pdim.z,0]
+				,[dim_nema.x/2+pdim.x-pdim.z,-dim_nema.y/2+pdim.y-pdim.z/2,0]
+				,[dim_nema.x/2,-dim_nema.y/2+pdim.y-pdim.z/2,0]
+		],1));
+		
+		translate([0,0,2.5])
 			adxl345(op=5);
 		
-		translate (ditan_motorplate_tr)
+		translate (motorplate_tr)
 		translate ([0,dim_nema.z,0])
 		rotate ([90,0,0])
 			nema17_cut(washers=true
@@ -998,6 +1022,55 @@ module ditan_plate()
 					,report=false
 					,report_pulley=false);
 	}	
+}
+
+module xcarriage_slot_wire_holder()
+{
+	cdim=[26+10,18,11];
+	pdim=[3.5,3,5];
+	ndim=[10,6,40+10];
+	sdim=[40,20,5];
+	
+	difference()
+	{
+		union()
+		{
+			cylinder (d=cdim.y,h=cdim.x,$fn=80);
+			
+			fillet(r=4,steps=16)
+			{
+				translate ([-ndim.x/2,cdim.z/2,-ndim.z+cdim.x])
+					cube (ndim);
+				translate ([-sdim.x/2,cdim.z/2-sdim.y+ndim.y,-ndim.z+cdim.x-sdim.z+0.01])
+				{
+					linear_extrude(sdim.z)
+					polygon(polyRound([
+						 [0,0,4]
+						,[sdim.x,0,4]
+						,[sdim.x,sdim.y,4]
+						,[0,sdim.y,4]
+					],1));
+				}
+			}
+		}
+		translate ([0,0,-0.1])
+			cylinder (d=cdim.z,h=cdim.x+0.2,$fn=80);
+		translate ([-cdim.y/2-0.1,-cdim.y,-0.1])
+			cube ([cdim.y+0.2,cdim.y,cdim.x+0.2]);
+		
+		for (z=[pdim.z,cdim.x/2,cdim.x-pdim.z])
+		translate ([0,0,-pdim.x/2+z])
+		difference()
+		{
+			cylinder (d=50,h=pdim.x,$fn=80);
+			cylinder (d=cdim.y-pdim.y,h=pdim.x,$fn=80);
+		}
+		
+		for (x=[-1,1])
+			translate ([x*(-sdim.x/2+7),cdim.z/2-sdim.y+ndim.y+sdim.y/2,-ndim.z+cdim.x+0.01])
+			rotate ([180,0,0])
+				m5n_screw_washer(thickness=sdim.z);
+	}
 }
 
 yposition=-55;
@@ -1017,21 +1090,37 @@ xposition=55;
 //translate ([xposition,y_rail_y()+yposition,0])
 {
 	//x_carriage_top();
+	//x_carriage_front();
+	
 	//x_carriage_bottom();
 	//x_carriage_main();//obsolete
 
-	//x_carriage_front();
 	//x_carriage_back();
-
-	include <../ucorexy_feeder/ditan/assembled.scad>
-	translate (ditan_tr)
-	rotate ([90,0,0])
-	{
-		//ditan("/home/aleknest/clouds/Dropbox/aleknest/3DPrinter/Modelling/ucorexy_feeder/ditan/");
-	}
-	//ditan_plate();
 	
-	x_carriage_belt_fixer_left();
+		/*
+	translate (feeder_tr)
+	{
+		color ("red")
+		rotate ([90,0,0])
+			import ("../bmg3/produce/bottom.stl");
+		color ("red")
+		rotate ([90,0,180])
+			import ("../bmg3/produce/top.stl");
+		color ("red")
+		rotate ([12-90,180,0])
+			import ("../bmg3/produce/top_latch.stl");
+		
+		color ("lime")
+		translate ([25,-22,12.8])
+		rotate ([0,180,0])
+			import ("proto/ptfe_fix.stl");
+	}
+		*/
+	xcarriage_motor_plate();
+	//xcarriage_slot_wire_holder();
+	
+	
+	//x_carriage_belt_fixer_left();
 	//x_carriage_belt_fixer_right();
 }
 //x_endstop();
