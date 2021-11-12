@@ -1,9 +1,9 @@
-use <../_utils/mfunctions.scad>
-use <../_utils/atomic.scad>
-use <../_utils/_round/polyround.scad>
-use <../_utils/fillet.scad>
-use <../_utils/polyfillethedron.scad>
-use <../_utils/points_math.scad>
+//use <../_utils/mfunctions.scad>
+//use <../_utils/atomic.scad>
+use <../_utils_v2/_round/polyround.scad>
+use <../_utils_v2/fillet.scad>
+//use <../_utils_v2/polyfillethedron.scad>
+//use <../_utils/points_math.scad>
 use <../_utils_v2/m3-m8.scad>
 
 part="";
@@ -130,6 +130,6 @@ SS443A(SS443A_out=2
 	,SS443A_yout_sub=1
 	,wire_cut=[0.6+0.4,8]
 );
-//SS443A(SS443A_out=10,SS443A_yout=false);
-//SS443A_cut2([10,20,40],[-5,0,-5],[1,2,1]);
-//protoSS443A();
+SS443A(SS443A_out=10,SS443A_yout=false);
+SS443A_cut2([10,20,40],[-5,0,-5],[1,2,1]);
+protoSS443A();
