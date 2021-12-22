@@ -418,3 +418,49 @@ function k_oled_encoder_tr()=[vec_add(z_slot_topfront_tr()[0],[
 	,-10-k_oled_encoder_dim().y
 	,10-k_oled_encoder_dim().z+k_oled_encoder_cut()+k_oled_encoder_wire_cut().y+k_oled_encoder_thickness()
 	]),[0,0,0]];
+
+
+// alternative
+
+function leftfront_motors_yoffset()=NEMA_width(motor_type())-20;
+
+function y_endstop_alt_tr()=[[y_slot_right_tr()[0].x
+						,rightfront_motorblock_tr()[0].y-leftfront_motors_yoffset()
+						,y_slot_right_tr()[0].z+20+4]
+						,[0,-90,180]];
+
+function left_motorpulley_alt_tr()=[vec_add(vec_replace(y_leftfront_pulley_tr()[0],1
+	,z_slot_topfront_tr()[0].y+(NEMA_width(motor_type())-20)/2-leftfront_motors_yoffset())
+	,[-motor_pulley_xshift(),0,0]),[180,0,0]];
+function right_motorpulley_alt_tr()=[vec_add(vec_replace(y_rightfront_pulley_tr()[0],1
+	,z_slot_topfront_tr()[0].y+(NEMA_width(motor_type())-20)/2-leftfront_motors_yoffset())
+	,[motor_pulley_xshift(),0,0]),[180,0,0]];
+function motor_z_offset_alt()=15;
+function left_motor_alt_tr()=[vec_add(left_motorpulley_alt_tr()[0],[0,0,motor_z_offset_alt()]),[180,0,0]];
+function right_motor_alt_tr()=[vec_add(right_motorpulley_alt_tr()[0],[0,0,motor_z_offset_alt()]),[180,0,0]];
+
+function leftfront_motorblock_alt_dim()=[NEMA_width(motor_type())
+									,NEMA_width(motor_type())
+									,left_motor_alt_tr()[0].z-(y_slot_left_tr()[0].z+10)];
+function leftfront_motorblock_alt_tr()=[[
+	 left_motor_alt_tr()[0].x-NEMA_width(motor_type())/2
+	,z_slot_topfront_tr()[0].y-10-leftfront_motors_yoffset()
+	,y_slot_left_tr()[0].z+10
+	],[0,0,0]];
+function leftfront_motorblock_alt_thickness()=[10,5,5,5];
+	
+function rightfront_motorblock_alt_dim()=[NEMA_width(motor_type())
+									,NEMA_width(motor_type())
+									,right_motor_alt_tr()[0].z-(y_slot_right_tr()[0].z+10)];
+function rightfront_motorblock_alt_tr()=[[
+	 right_motor_alt_tr()[0].x+NEMA_width(motor_type())/2
+	,z_slot_topfront_tr()[0].y+rightfront_motorblock_alt_dim().y-10-leftfront_motors_yoffset()
+	,y_slot_right_tr()[0].z+10
+	],[0,0,180]];
+	
+function lrz_xymotor_alt_diff() =abs(left_motor_alt_tr()[0].z-right_motor_alt_tr()[0].z);
+function rightfront_motorblock_alt_thickness()=[leftfront_motorblock_alt_thickness()[0]+lrz_xymotor_alt_diff()
+										,leftfront_motorblock_alt_thickness()[1]
+										,leftfront_motorblock_alt_thickness()[2]
+										,leftfront_motorblock_alt_thickness()[3]
+										];

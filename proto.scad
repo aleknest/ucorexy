@@ -136,9 +136,9 @@ module proto_xymotors()
 	translate_rotate (left_motor_tr())
 		NEMA(motor_type(), shaft_angle = 0, jst_connector = false);
 	
-	translate_rotate (right_motorpulley_tr())
+	translate_rotate (right_motorpulley_alt_tr())
 		pulley_assembly(motor_pulley_type());
-	translate_rotate (right_motor_tr())
+	translate_rotate (right_motor_alt_tr())
 		NEMA(motor_type(), shaft_angle = 0, jst_connector = false);
 }
 
@@ -315,6 +315,44 @@ module proto_approx_electronics()
 	translate ([-6,-68,-220])
 		cube ([99,159,50]);
 }
+
+// alternative
+
+module proto_xymotors_alt()
+{
+	translate_rotate (left_motorpulley_alt_tr())
+		pulley_assembly(motor_pulley_type());
+	translate_rotate (left_motor_alt_tr())
+		NEMA(motor_type(), shaft_angle = 0, jst_connector = false);
+	
+	translate_rotate (right_motorpulley_alt_tr())
+		pulley_assembly(motor_pulley_type());
+	translate_rotate (right_motor_alt_tr())
+		NEMA(motor_type(), shaft_angle = 0, jst_connector = false);
+}
+
+module proto_xybelts_alt(xposition=0,yposition=55)
+{
+	path_top=[
+         [y_rightback_pulley_tr()[0].x,y_rightback_pulley_tr()[0].y+yposition, pulley_pr(y_pulley_type())]
+        ,[y_leftfront_pulley_tr()[0].x,y_leftfront_pulley_tr()[0].y+yposition, -pulley_pr(y_pulley_type())]
+		,[left_motorpulley_alt_tr()[0].x,left_motorpulley_alt_tr()[0].y,pulley_pr(motor_pulley_type())]
+		,[left_top_backpulley()[0].x,left_top_backpulley()[0].y, pulley_pr(y_pulley_type())]
+		,[right_top_backpulley()[0].x,right_top_backpulley()[0].y, pulley_pr(y_pulley_type())]
+		];	
+	path_bottom=[
+         [y_leftback_pulley_tr()[0].x,y_leftback_pulley_tr()[0].y+yposition, pulley_pr(y_pulley_type())]
+		,[left_bottom_backpulley()[0].x,left_bottom_backpulley()[0].y, pulley_pr(y_pulley_type())]
+		,[right_bottom_backpulley()[0].x,right_bottom_backpulley()[0].y, pulley_pr(y_pulley_type())]
+		,[right_motorpulley_alt_tr()[0].x,right_motorpulley_alt_tr()[0].y,pulley_pr(motor_pulley_type())]
+        ,[y_rightfront_pulley_tr()[0].x,y_rightfront_pulley_tr()[0].y+yposition, -pulley_pr(y_pulley_type())]
+	];	
+	translate ([0,0,left_motorpulley_tr()[0].z])
+		belt(type=xybelt_type(),points=path_top,gap=xcarriage_dim().x,gap_pos=[xposition,yposition,90]);
+	translate ([0,0,right_motorpulley_tr()[0].z])
+		belt(type=xybelt_type(),points=path_bottom,gap=xcarriage_dim().x,gap_pos=[xposition,yposition,90]);
+}
+
 
 z=0;
 

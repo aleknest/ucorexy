@@ -15,6 +15,9 @@ middle_height=11+10+middle_to_nut_height;
 nut_height=4;
 fix_height=screw_height+nut_height+middle_height;
 
+middle_height2=11+10+middle_to_nut_height-4;
+fix_height2=screw_height+nut_height+middle_height2;
+
 module e3d_fitting_nut()
 {
 	translate ([0,0,fix_height])
@@ -132,7 +135,52 @@ module e3d_fitting()
 	}
 }
 
+module e3d_fitting2(middle_height=middle_height2,fix_height=fix_height2)
+{
+	difference()
+	{
+		union()
+		{
+			translate ([0,0,screw_height])
+			rotate ([0,180,0])
+				metric_thread (diameter=10, pitch=1, length=screw_height, leadin=1);
+
+			translate ([0,0,screw_height+middle_height])
+				cylinder (d=14,h=nut_height,$fn=6);
+			
+			translate ([0,0,screw_height])
+				cylinder (d=11,h=middle_height,$fn=60);
+	
+			translate ([0,0,screw_height+middle_height])
+			hull()
+			{
+				cylinder (d=14,h=0.01,$fn=6);
+				translate ([0,0,-middle_to_nut_height])
+					cylinder (d=11,h=0.1,$fn=6);
+			}
+
+			translate ([0,0,fix_height])
+			difference()
+			{
+				pc4_add();
+				pc4_sub();
+				pc4_sub_filament();
+			}
+		}
+		per=[screw_height,20];
+		translate ([0,0,-1])
+		{
+			cylinder (d=tube_diameter,h=per[0],$fn=50);
+			translate ([0,0,per[0]-0.2])
+				cylinder (d=3.2,h=per[0]+per[1],$fn=50);
+			translate ([0,0,per[0]+per[1]])
+				cylinder (d=tube_diameter,h=50,$fn=50);
+		}
+	}
+}
+
 //e3d_fitting();
 //e3d_fitting_nut();
+e3d_fitting2();
 
 //ptfe 51

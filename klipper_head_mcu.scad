@@ -153,6 +153,57 @@ module base(offs=0,down=0)
 	}		
 }
 
+m5_screws_x=[12,k_oled_encoder_dim().x-12];
+
+module k_oled_encoder_side()
+{
+	translate_rotate(k_oled_encoder_tr())
+	{
+		translate (slot_ptr)
+		{
+			difference()
+			{
+				sth=6;
+				th=5;
+				zz=zreal-slot_ptr.z-5;
+				union()
+				{
+					fillet(r=2,steps=16)
+					{
+						translate ([0,-back_shift,thickness_slot])
+							cube ([k_oled_encoder_dim().x,20+back_shift,sth]);
+						translate ([k_oled_encoder_dim().x-th,-back_shift,thickness_slot])
+							cube ([th,20+back_shift,zz]);
+					}
+					translate ([k_oled_encoder_dim().x,-back_shift+10,thickness_slot])
+					rotate ([0,0,90])
+						slot_groove(height=zz,enabled=true,big=true);
+				}
+			
+				translate ([k_oled_encoder_dim().x-th,0,0])
+				translate ([0,10,thickness_slot+sth+(zz-sth)/2])
+				rotate ([0,90,0])
+					m5n_screw_washer(thickness=thickness_slot, diff=2, washer_out=8,tnut=true);
+				
+				translate ([-0.01,10,thickness_slot])
+				rotate ([90,0,90])
+					slot_groove(height=k_oled_encoder_dim().x+0.02,enabled=true,big=true,offs=[0,-0.2]);
+				
+				for (xx=m5_screws_x)
+				translate ([xx,0,0])
+				{
+					translate ([0,10,0])
+					{
+						m5_screw(h=10,cap_out=m5_cap_h());
+						translate ([0,0,8])
+							m5_nut(h=10);
+					}
+				}
+			}
+		}
+	}
+}
+
 module oled_encoder(report=false,bottom=false)
 {
 	if (report)
@@ -209,7 +260,7 @@ module oled_encoder(report=false,bottom=false)
 				encoder(op=1);
 		}
 		
-		for (xx=[12,k_oled_encoder_dim().x-12])
+		for (xx=m5_screws_x)
 		translate (slot_ptr)
 		translate ([xx,0,0])
 		{
@@ -259,7 +310,7 @@ module oled_encoder(report=false,bottom=false)
 					,k_oled_encoder_wire_cut().y+k_oled_encoder_wire_cut().z]);
 		nano(op=2);
 		if (bottom)
-			nano(op=4);//88888
+			nano(op=4);
 	}
 }
 module oled_encoder_cut(offs,xoffs=1)
@@ -347,11 +398,10 @@ module nano(op,offs=0,usb_diam=0)
 					cube ([cc.x,cc.y+offs*2,100]);
 		}
 		dd=usb_diam;
-		updd=10-4;
+		updd=6;
 		hdd=40;
 		if (op==43)
 		{
-			//88888
 			translate (nano_tr)
 			translate ([(k_oled_encoder_dim().x-nano_dim.x)/2,(k_oled_encoder_dim().y-nano_dim.y)/2,0])
 			translate ([nano_dim.x,nano_dim.y,0])
@@ -370,7 +420,7 @@ module nano(op,offs=0,usb_diam=0)
 				}
 		}
 		if (op==44)
-		{					
+		{	
 			translate (nano_tr)
 			translate ([(k_oled_encoder_dim().x-nano_dim.x)/2,(k_oled_encoder_dim().y-nano_dim.y)/2,0])
 			translate ([nano_dim.x,nano_dim.y,0])
@@ -378,12 +428,12 @@ module nano(op,offs=0,usb_diam=0)
 				translate (screw_coords_nano[0][0])
 				translate ([0,25-offs,18-offs])
 				{
-					uplock=0;
-					for (xx=[-0.5,-8.5])
-						translate ([hdd-7+xx,-10,updd])
-							cube ([3,40,2]);
+					pror=2;
+					for (xx=[-0.8])//-0.5,-8.5])
+						translate ([hdd-7+xx,-10,updd+usb_diam/2-pror+0.4])
+							cube ([3,40,pror]);
 					translate ([3,cc.y/2+offs-6,updd-dd/2-2])
-						cube ([20,12,40]);
+						cube ([20+7,12,40]);
 				}
 		}
 		if (op==4)
@@ -394,10 +444,10 @@ module nano(op,offs=0,usb_diam=0)
 	}
 }
 
-module k_oled_encoder_usbfix()
+module k_oled_encoder_usbfix(diam=2.75)
 {
 	side_offset=0.3-0.15;//after print
-	usb_diam=[18,4];
+	usb_diam=[18,diam+1.25];
 
 	translate_rotate(k_oled_encoder_tr())
 	difference()
@@ -467,7 +517,10 @@ module k_proto_nano()
 
 //k_oled_encoder_top();
 //k_oled_encoder_bottom();
-k_oled_encoder_usbfix();
+k_oled_encoder_side();
+
+//k_oled_encoder_usbfix(diam=2.75);
+//k_oled_encoder_usbfix(diam=4.00);
 
 /*
 intersection()

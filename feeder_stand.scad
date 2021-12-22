@@ -417,11 +417,6 @@ proto_y_left(slot_only=true);
 
 */
 
-//use <xymotorblock.scad>
-//leftfront_motorblock();
-
-
-
 //feeder_stand_bottom();
 //feeder_stand_middle();
 //translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();

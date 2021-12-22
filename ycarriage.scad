@@ -11,7 +11,7 @@ include <../_utils_v2/NopSCADlib/core.scad>
 include <../_utils_v2/NopSCADlib/vitamins/rails.scad>
 include <../_utils_v2/NopSCADlib/vitamins/pulleys.scad>
 
-module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
+module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr(),report=true)
 {
 	offs=0.2;
 	y_magnet_outd=4;
@@ -26,10 +26,11 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
 		for (x=[-y_magnet_fixdiff,y_magnet_fixdiff])
 			translate([0,x,0])
 				cylinder(d=y_magnet_fixd+offs*2,h=y_magnet_thickness+offs,$fn=60);
-		y_carriage_flag(part="fix");
+		y_carriage_flag(part="fix",report=report);
 	}
-	if (part=="detail")
+	if (part=="detail" || part=="detail_alt")
 	{
+		ym=part=="detail"?y_magnet_out:y_magnet_out+leftfront_motors_yoffset();
 		difference()
 		{
 			union()
@@ -41,17 +42,18 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
 					for (x=[-y_magnet_fixdiff,y_magnet_fixdiff])
 						translate([0,x,0])
 							cylinder(d=y_magnet_fixd,h=y_magnet_thickness,$fn=60);
-					cylinder(d=y_magnet_outd,h=y_magnet_out,$fn=60);
+					cylinder(d=y_magnet_outd,h=ym,$fn=60);
 				}
 			}
-			report_magnet(y_magnet_d(),y_magnet_h());
-			translate ([0,0,y_magnet_out+0.02])
+			if(report)
+				report_magnet(y_magnet_d(),y_magnet_h());
+			translate ([0,0,ym+0.02])
 			rotate ([180,0,0])
 			{
 				magnet_cut(magnet_d=y_magnet_d(),magnet_h=y_magnet_h());
 				cylinder (d=2.0,h=100,$fn=60);
 			}
-			y_carriage_flag(part="fix");
+			y_carriage_flag(part="fix",report=report);
 		}
 	}
 	if (part=="fix")
@@ -60,7 +62,8 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
 			translate([0,x,0])
 			rotate ([0,180,0])
 			{
-				report_m3_washer_squarenut(screw);
+				if (report)
+					report_m3_washer_squarenut(screw);
 				
 				m3_screw(h=screw,cap_out=20);
 				translate ([0,0,screw-3])
@@ -70,7 +73,7 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr())
 	}
 }
 
-module y_carriage(part)
+module y_carriage(part,report=true)
 {
 	tr=part=="left"?y_rail_left_tr():y_rail_right_tr();
 	up=2;
@@ -97,10 +100,10 @@ module y_carriage(part)
 	
 	pulleys=part=="left"?
 	[
-		 [y_leftfront_pulley_tr(),270,25,15+2.5,0]
+		 [y_leftfront_pulley_tr(),270,25,15+2.5,2.6]
 		,[y_leftback_pulley_tr(),0,25,8,2.6]
 	]:[
-		 [y_rightback_pulley_tr(),90,25,15+2.5,0]
+		 [y_rightback_pulley_tr(),90,25,15+2.5,2.6]
 		,[y_rightfront_pulley_tr(),180,25,8,2.6]
 	];
 	
@@ -115,7 +118,13 @@ module y_carriage(part)
 	if (part=="flag")
 	{
 		translate_rotate (etr)
-			y_carriage_flag(part="detail");
+			y_carriage_flag(part="detail",report=report);
+	}
+	else
+	if (part=="flag_alt")
+	{
+		translate_rotate (etr)
+			y_carriage_flag(part="detail_alt",report=report);
 	}
 	else
 	{
@@ -178,7 +187,8 @@ module y_carriage(part)
 						down=screw-scr;
 						translate ([0,0,down])
 						{
-							report_m3_washer(scr);
+							if(report)
+								report_m3_washer(scr);
 							m3_screw(h=scr);
 							hull()
 							{
@@ -198,7 +208,8 @@ module y_carriage(part)
 				screw_offset=7;
 				for (a=[0,90,180])
 				{
-					report_m5_point();
+					if(report)
+						report_m5_point();
 					translate_rotate (ttr_slot)
 					translate ([0,0,10+y_carriage_sidethickness()])
 					rotate ([a,0,0])
@@ -209,8 +220,10 @@ module y_carriage(part)
 		
 				for (p=pulleys)
 					translate_rotate(p[0])
+				{
 						pulley_cut(pulley_type=y_pulley_type(),op=0,angle=p[1]
 							,screw=p[2],up=p[3],nut_offset=p[4],report=true);
+				}
 				
 				translate (belt_cut)
 					cube ([1.52+2,100,6+2],true);
@@ -243,10 +256,16 @@ module y_carriage_right_flag()
 	y_carriage(part="flag");
 }
 
+module y_carriage_right_flag_alt()
+{
+	y_carriage(part="flag_alt",report=false);
+}
+
 //translate ([0,y_rail_y(),0]) proto_x_slot();
 //proto_y_left(yposition=0);
 //translate ([0,y_rail_y(),0]) proto_x(xposition=-55);
 //proto_y_right(yposition=0);
 //y_carriage_left();
-y_carriage_right();
+//y_carriage_right();
 //y_carriage_right_flag();
+y_carriage_right_flag_alt();

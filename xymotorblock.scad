@@ -243,9 +243,9 @@ module m6_screw_driver()
 yposition=-55;
 xposition=55;
 
-//proto_xybelts(yposition=yposition);
-//proto_front_slots();
-//proto_xymotors();
+proto_xybelts(yposition=yposition);
+proto_front_slots();
+proto_xymotors();
 
 leftfront_motorblock();
 //rightfront_motorblock();

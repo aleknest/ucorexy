@@ -8,7 +8,7 @@ use <xcarriage.scad>
 use <ycarriage.scad>
 use <zcarriage.scad>
 use <backcorners.scad>
-use <xymotorblock.scad>
+use <xymotorblock_alt.scad>
 use <zmotion.scad>
 use <hotbed.scad>
 use <enclosure.scad>
@@ -140,8 +140,8 @@ zmotion_middle_main(zposition=zposition);
 
 deb("*Front blocks:");
 
-proto_xymotors();
-proto_xybelts(xposition=xposition,yposition=yposition);
+proto_xymotors_alt();
+proto_xybelts_alt(xposition=xposition,yposition=yposition);
 
 leftfront_motorblock();
 rightfront_motorblock();

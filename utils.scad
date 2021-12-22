@@ -281,9 +281,10 @@ module nema17_cut(add=false
 				,nema17_cut=true
 				,report=false
 				,report_pulley=true
+				,nema17_offset=0.2
 	)
 {
-	nema17_dim=42.3+0.2;
+	nema17_dim=42.3+nema17_offset;
 	screw=screw_length-4;
 	if (add)
 	{
@@ -376,11 +377,10 @@ module slot_cut(height,grooves=[0,1,2,3])
 	}
 }
 
-module slot_groove(height,smooth=false,big=false,enabled=false)
+module slot_groove(height,smooth=false,big=false,enabled=false,offs=[0.2,0])
 {
-	offs=0.2;
 	dimc=big?[6.2,1]:[6.2,0.4];
-	dim=[dimc[0]-offs*2,dimc[1]*2,height];
+	dim=[dimc[0]-offs.x*2,dimc[1]*2-offs.y*2,height];
 	if (enabled)
 	translate ([-dim.x/2,-dim.y/2,0])
 	{
@@ -396,7 +396,7 @@ module slot_groove(height,smooth=false,big=false,enabled=false)
 	}
 }
 
-module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],report=false)
+module pulley_cut(pulley_type,op=0,angle,screw,up,nut_offset=0,nut_type="hex",out=[0,0],report=false)
 {
 	offs=[1,1];
 	dd=pulley_flange_dia(pulley_type)+offs[0]*2;
@@ -426,7 +426,7 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 			translate ([0,-dd/2,-hh/2])
 				cube ([100,diff,hh]);
 		}
-		pulley_cut(pulley_type=pulley_type,op=2,angle=angle,screw=screw,up=up,out=out,nut_type=nut_type);
+		pulley_cut(pulley_type=pulley_type,op=2,angle=angle,screw=screw,up=up,nut_offset=nut_offset,out=out,nut_type=nut_type);
 	}
 	if (op==1)
 	{
@@ -440,7 +440,7 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 				translate([0,0,-hh/2])
 					cylinder(d2=dd,d1=dd+offs[1],h=offs[1],$fn=40);
 			}
-			pulley_cut(pulley_type=pulley_type,op=2,angle=angle,screw=screw,up=up,nut_type=nut_type,out=out);
+			pulley_cut(pulley_type=pulley_type,op=2,angle=angle,screw=screw,up=up,nut_offset=nut_offset,nut_type=nut_type,out=out);
 		}
 	}
 	if (op==2)
@@ -452,7 +452,7 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 			{
 				translate ([0,0,2])
 					m3_screw(h=screw,cap_out=60);
-				translate ([0,0,screw-2.6])
+				translate ([0,0,screw-2.6+nut_offset])
 				{
 					m3_nut_inner();
 					translate ([0,0,m3_nut_h()-0.01])
@@ -463,7 +463,7 @@ module pulley_cut(pulley_type,op=0,angle,screw,up,nut_type="hex",out=[0,0],repor
 			if (nut_type=="square")
 			{
 				m3_screw(h=screw,cap_out=60);
-				translate ([0,0,screw-2.6])
+				translate ([0,0,screw-2.6+nut_offset])
 					m3_square_nut();
 			}
 		}

@@ -8,7 +8,7 @@ use <xcarriage.scad>
 use <ycarriage.scad>
 use <zcarriage.scad>
 use <backcorners.scad>
-use <xymotorblock.scad>
+use <xymotorblock_alt.scad>
 use <zmotion.scad>
 use <hotbed.scad>
 use <enclosure.scad>
@@ -27,7 +27,7 @@ use <filament_runout_sensor.scad>
 use <rpi_camera.scad>
 use <rj45.scad>
 
-cmd="x_carriage/x_carriage_motor_plate";
+cmd="";
 
 module list(s)
 {
@@ -51,13 +51,14 @@ if (cmd=="list")
 	list("filament_runout_sensor/filament_runout_sensor_stand");
 	list("filament_runout_sensor/filament_runout_sensor_stand0");
 	
+	list("klipper_front_mcu/nano_side");
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
-	list("klipper_front_mcu/usbfix");
+	list("klipper_front_mcu/usbfix_2p75");
+	list("klipper_front_mcu/usbfix_4p00");
 	
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
-	//list("x_carriage/x_carriage_main");
 	list("x_carriage/x_carriage_top");
 	list("x_carriage/x_carriage_bottom");
 	list("x_carriage/x_carriage_fan_spacer_m2p5");
@@ -68,6 +69,7 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_belt_fixer_right");	
 
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefix");
+	list("x_carriage/e3dv6_throat_bore4p1_ptfefix2");
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefixnut");
 	
 	list("feeder_stand/feeder_stand_top");
@@ -82,6 +84,7 @@ if (cmd=="list")
 	list("y_carriage/y_carriage_left");
 	list("y_carriage/y_carriage_right");
 	list("y_carriage/y_carriage_right_flag");
+	list("y_carriage/y_carriage_right_flag_alt");
 	list("y_carriage/mgn9_y_stopper");
 	
 	list("z_carriage/z_endstop");
@@ -189,10 +192,15 @@ if (cmd=="filament_runout_sensor/filament_runout_sensor_stand0")
 
 //////////////////////////////////////////////////////////////
 
-if (cmd=="klipper_front_mcu/usbfix")
+if (cmd=="klipper_front_mcu/usbfix_2p75")
 {
 	rotate ([0,180,0])
-		k_oled_encoder_usbfix();
+		k_oled_encoder_usbfix(diam=2.75);
+}
+if (cmd=="klipper_front_mcu/usbfix_4p00")
+{
+	rotate ([0,180,0])
+		k_oled_encoder_usbfix(diam=4.00);
 }
 if (cmd=="klipper_front_mcu/nano_top")
 {
@@ -201,6 +209,10 @@ if (cmd=="klipper_front_mcu/nano_top")
 if (cmd=="klipper_front_mcu/nano_bottom")
 {
 	k_oled_encoder_bottom();
+}
+if (cmd=="klipper_front_mcu/nano_side")
+{
+	k_oled_encoder_side();
 }
 
 //////////////////////////////////////////////////////////////
@@ -269,12 +281,12 @@ if (cmd=="z_axis/z_top_lock")
 
 if (cmd=="motor_blocks/left_motor_block")
 {
-	rotate ([90,0,0])
+	rotate ([-90,0,0])
 	leftfront_motorblock();
 }
 if (cmd=="motor_blocks/right_motor_block")
 {
-	rotate ([90,0,0])
+	rotate ([-90,0,0])
 	rightfront_motorblock();
 }
 if (cmd=="motor_blocks/y_endstop_lock")
@@ -338,6 +350,11 @@ if (cmd=="y_carriage/y_carriage_right_flag")
 {
 	rotate ([-90,0,0])
 	y_carriage_right_flag();
+}
+if (cmd=="y_carriage/y_carriage_right_flag_alt")
+{
+	rotate ([-90,0,0])
+	y_carriage_right_flag_alt();
 }
 if (cmd=="y_carriage/mgn9_y_stopper")
 {
@@ -438,6 +455,10 @@ if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefix")
 {
 	e3d_fitting();
 }
+if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefix2")
+{
+	e3d_fitting2();
+}
 if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefixnut")
 {
 	rotate ([0,180,0])
@@ -474,7 +495,7 @@ if (cmd=="x_carriage/xcarriage_slot_wire_holder")
 }
 if (cmd=="x_carriage/x_carriage_motor_plate")
 {
-	rotate ([0,0,0])
+	rotate ([-90,0,0])
 		xcarriage_motor_plate();
 }
 if (cmd=="x_carriage/x_carriage_front")
