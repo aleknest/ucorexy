@@ -149,7 +149,6 @@ module e3d_v6_fan_face(up=0)
 	],20));
 }
 
-//8888888
 module e3d_v6_fan_air_hull(addy=0,addx=0)
 {
 	dim=e3d_v6_dim[0];
@@ -681,9 +680,12 @@ module x_carriage_fan_spacer(blower_screw_diameter=2.9)
 
 module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 {
-	fix_th=2-0;
-	fix_offs=0.1+0.1;
-	hh=20;
+	
+	blower_inner_add=0.6;//888888888888888
+	fix_th=2;
+	fix_th_down=9.6;
+	fix_offs=0.2;
+	hh=20;//888888888888888
 	sdiff=17.3*2;
 	bsh=blower_screw_holes(e3d_blower_type());
 	blower_corner_coords=[
@@ -726,11 +728,15 @@ module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 						x=cc%2==0?-fix_th:-out;
 						translate ([-dd/2+x,dd/2-down-dd,0])
 						{
-							cube ([dd+out+fix_th,down+dd,hh]);
+							yy=(((cc+i)%2)!=0)?0:(i==0?-blower_inner_add*2:blower_inner_add*2);
+							translate ([yy,0,0])
+								cube ([dd+out+fix_th,down+dd,hh]);
 							translate ([lng.y,0,0])
 								cube ([dd+out+fix_th+lng.x,down+dd,xcarriage_dim().x/2+fan_side_thickness_add]);
 						}
 					}
+					
+					translate ([0,blower_inner_add,0])
 					translate_rotate (t)
 					translate (blower_corner_coords[cc][0])
 					rotate (blower_corner_coords[cc][1])
@@ -739,20 +745,24 @@ module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 					
 					fix_z=-5;
 					fix=2;
+					ftd=(((cc+i)%2)==0)?fix_th_down:0;
 					fix_points=[
 						[-2.2-fix_offs,-20]
 						,[-2.2-fix_offs,10+fix_offs]
 						,[fix-fix_th,10+fix_offs]
 						,[fix-fix_th,10+fix_th]
-						,[-2.2-fix_th,10+fix_th]
-						,[-2.2-fix_th,-20]
+						,[-2.2-fix_th-ftd,10+fix_th]
+						,[-2.2-fix_th-ftd,-20]
 					];
+					
+					yy=((cc+i)%2)?0:blower_inner_add*2;
+					translate ([0,yy,0])
 					translate_rotate (t)
 					translate ([c.x,c.y+fix_z,-0.01])
-					mirror([cc==3?1:0,0,0])
-					rotate ([90,0,0])
-					linear_extrude(25+fix_z)
-						polygon(fix_points);
+						mirror([cc==3?1:0,0,0])
+						rotate ([90,0,0])
+						linear_extrude(25+fix_z)
+							polygon(fix_points);
 				}
 			}
 		}
@@ -771,6 +781,7 @@ module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 			for (cc=[2,3])
 			{
 				c=bsh[cc];
+				translate ([0,blower_inner_add,0])
 				translate_rotate (t)
 				translate ([c.x,c.y,-hh+9])
 				{
@@ -944,7 +955,6 @@ module adxl345(op=1,tr=[-24,-33+4,1.3],rot=[0,0,0])
 				rotate ([180,0,0])
 				{
 					m3_screw(h=screw+2);
-					//8888888
 					hull()
 					for (y=[0,c[2][1]])
 						translate ([0,y,0])
@@ -1005,8 +1015,9 @@ module adxl345(op=1,tr=[-24,-33+4,1.3],rot=[0,0,0])
 				}
 		}
 		plate_h=1.25;
-		translate ([0,0,-plate_h])
-			cube ([20,15,plate_h]);
+		offsb=0.5;
+		translate ([-offsb,-offsb,-plate_h])
+			cube ([20+offsb*2,15+offsb*2,plate_h]);
 		cut_h=3;
 		cut_w=2;
 		cut_y=0.5;
@@ -1026,7 +1037,7 @@ module adxl345(op=1,tr=[-24,-33+4,1.3],rot=[0,0,0])
 	}
 }
 
-tr_accel2=[-30.3-fan_side_thickness_add,-33,-77+13];
+tr_accel2=[-31.2-fan_side_thickness_add,-32.6,-77+13];
 rot_accel2=[-90,180,90];
 module proto_adxl345(accelerometer=1)
 {
@@ -1192,7 +1203,7 @@ xposition=55;
 //proto_x();
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
-proto_adxl345(accelerometer=2);
+//proto_adxl345(accelerometer=2);
 x_carriage_bottom();
 //proto_x_blowers();
 

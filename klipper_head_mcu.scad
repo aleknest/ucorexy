@@ -515,9 +515,9 @@ module k_proto_nano()
 //proto_front_slots();
 //k_proto_nano();
 
-//k_oled_encoder_top();
-//k_oled_encoder_bottom();
-k_oled_encoder_side();
+k_oled_encoder_top();
+k_oled_encoder_bottom();
+//k_oled_encoder_side();
 
 //k_oled_encoder_usbfix(diam=2.75);
 //k_oled_encoder_usbfix(diam=4.00);

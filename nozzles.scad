@@ -21,6 +21,9 @@ nozzle_offs=[0.6,0.2];
 function up2points(arg,upcounter)=[
 	for (i=[0:len(arg)-1]) i<upcounter?[arg[i].x,arg[i].y+1]:arg[i]
 ];
+function up2points2(arg,counter1,counter2,counter3)=[
+	for (i=[0:len(arg)-1]) (i==counter1)||(i==counter2)||(i==counter3)?[arg[i].x-2,arg[i].y]:arg[i]
+];
 	
 module blower_nozzle_cut(cut_nozzle,up_cut_nozzle,height,cut_nozzle_diff=0)
 {
@@ -122,8 +125,9 @@ module blower_nozzle(figure1
 				rotate ([90,0,-90])
 				intersection()
 				{
+					//888888888
 					linear_extrude (ee)
-						polygon(up2points(arg=figure1,upcounter=upcounter));
+						polygon(up2points2(up2points(arg=figure1,upcounter=upcounter),counter1=0,counter2=4,counter3=5));
 					blower_nozzle_cut(
 						 cut_nozzle=nozzle_cut
 						,up_cut_nozzle=up_cut_nozzle
@@ -231,8 +235,8 @@ module blower_nozzle_right()
 //use <xcarriage.scad>
 //x_carriage_fans();
 
-//blower_nozzle_left();
-blower_nozzle_right();
+blower_nozzle_left();
+//blower_nozzle_right();
 
 //translate ([-34,0,-60])
 //#cube (14);

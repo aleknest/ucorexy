@@ -23,11 +23,12 @@ use <nozzles.scad>
 use <e3dv6_ptfe_fix.scad>
 use <oled_encoder.scad>
 use <klipper_head_mcu.scad>
+use <klipper_head_mcu_alt.scad>
 use <filament_runout_sensor.scad>
 use <rpi_camera.scad>
 use <rj45.scad>
 
-cmd="";
+cmd="nozzles/blower_nozzle_right";
 
 module list(s)
 {
@@ -51,11 +52,16 @@ if (cmd=="list")
 	list("filament_runout_sensor/filament_runout_sensor_stand");
 	list("filament_runout_sensor/filament_runout_sensor_stand0");
 	
+	/*
 	list("klipper_front_mcu/nano_side");
 	list("klipper_front_mcu/nano_bottom");
 	list("klipper_front_mcu/nano_top");
 	list("klipper_front_mcu/usbfix_2p75");
 	list("klipper_front_mcu/usbfix_4p00");
+	*/
+	list("klipper_head_mcu/bottom");
+	list("klipper_head_mcu/middle");
+	list("klipper_head_mcu/top");
 	
 	list("x_carriage/x_carriage_front");
 	list("x_carriage/x_carriage_back");
@@ -132,10 +138,13 @@ if (cmd=="list")
 	list("case/case_backright");
 	list("case/m5_cap");
 			
-	list("wire_fix/wire_fix_lefttop_corner");
-	list("wire_fix/wire_fix_righttop_corner");
-	list("wire_fix/wire_fix_front");
-	
+			/*
+	list("wire_fix/wire_fix_lefttop_corner_side");
+	list("wire_fix/wire_fix_righttop_corner_side");
+	*/
+	list("wire_fix/wire_fix_corner_top_left");
+	list("wire_fix/wire_fix_corner_top_right");
+		
 	list("oled_encoder/oled_encoder_top");
 	list("oled_encoder/oled_encoder_bottom");
 	list("oled_encoder/encoder_knob");
@@ -191,7 +200,19 @@ if (cmd=="filament_runout_sensor/filament_runout_sensor_stand0")
 }
 
 //////////////////////////////////////////////////////////////
-
+if (cmd=="klipper_head_mcu/top")
+{
+	klipper_nano_top();
+}
+if (cmd=="klipper_head_mcu/middle")
+{
+	klipper_nano_middle();
+}
+if (cmd=="klipper_head_mcu/bottom")
+{
+	klipper_nano_bottom();
+}
+/*
 if (cmd=="klipper_front_mcu/usbfix_2p75")
 {
 	rotate ([0,180,0])
@@ -214,7 +235,7 @@ if (cmd=="klipper_front_mcu/nano_side")
 {
 	k_oled_encoder_side();
 }
-
+*/
 //////////////////////////////////////////////////////////////
 
 if (cmd=="x_endstop/x_endstop")
@@ -555,33 +576,39 @@ if (cmd=="case/m5_cap")
 }
 
 //////////////////////////////////////////////////////////////
-
-if (cmd=="wire_fix/wire_fix_lefttop_corner")
+/*
+if (cmd=="wire_fix/wire_fix_lefttop_corner_side")
 {
 	rotate ([0,90,0])
-	wire_fix_lefttop_corner();
+	wire_fix_lefttop_corner_side();
 }
-if (cmd=="wire_fix/wire_fix_righttop_corner")
+if (cmd=="wire_fix/wire_fix_righttop_corner_side")
 {
 	rotate ([0,-90,0])
-	wire_fix_righttop_corner();
+	wire_fix_righttop_corner_side();
 }
-if (cmd=="wire_fix/wire_fix_front")
+*/
+if (cmd=="wire_fix/wire_fix_corner_top_left")
 {
-	rotate ([0,-90,0])
-	wire_fix_front();
+	rotate ([180,0,0])
+		wire_fix_corner_top_left();
+}
+if (cmd=="wire_fix/wire_fix_corner_top_right")
+{
+	rotate ([180,0,0])
+		wire_fix_corner_top_right();
 }
 
 //////////////////////////////////////////////////////////////
 
 if (cmd=="nozzles/blower_nozzle_left")
 {
-	rotate ([0,-90,0])
+	rotate ([0,0,0])
 	blower_nozzle_left();
 }
 if (cmd=="nozzles/blower_nozzle_right")
 {
-	rotate ([0,90,0])
+	rotate ([0,0,0])
 	blower_nozzle_right();
 }
 

@@ -15,8 +15,9 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr(),report=true)
 {
 	offs=0.2;
 	y_magnet_outd=4;
-	y_magnet_fixdiff=6;
 	y_magnet_fixd=6.5;
+	y_magnet_dim_alt=[y_magnet_fixd,6,2];
+	y_magnet_fixdiff=6;
 	y_magnet_thickness=2;
 	screw=8;
 	if (part=="cut")
@@ -42,7 +43,18 @@ module y_carriage_flag(part="",y_magnet_out=5.5+e3d_tr_ycorr(),report=true)
 					for (x=[-y_magnet_fixdiff,y_magnet_fixdiff])
 						translate([0,x,0])
 							cylinder(d=y_magnet_fixd,h=y_magnet_thickness,$fn=60);
-					cylinder(d=y_magnet_outd,h=ym,$fn=60);
+					if (part=="detail")
+						cylinder(d=y_magnet_outd,h=ym,$fn=60);
+					else
+					{
+						linear_extrude(ym)
+						polygon (polyRound([
+							 [-y_magnet_dim_alt.x/2,-y_magnet_dim_alt.y/2,y_magnet_dim_alt.z]
+							,[y_magnet_dim_alt.x/2,-y_magnet_dim_alt.y/2,y_magnet_dim_alt.z]
+							,[y_magnet_dim_alt.x/2,y_magnet_dim_alt.y/2,y_magnet_dim_alt.z]
+							,[-y_magnet_dim_alt.x/2,y_magnet_dim_alt.y/2,y_magnet_dim_alt.z]
+						],20));
+					}
 				}
 			}
 			if(report)

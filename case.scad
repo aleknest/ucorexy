@@ -564,13 +564,13 @@ translate_rotate(case_fan_tr())
 
 //xt90();
 
-case_front(rj45=true);
+//case_front(rj45=true);
 //case_left();
 //case_right();
 
 //case_backleft();
 //case_backright();
 
-//case_top();
+case_top();
 
 //m5_cap();

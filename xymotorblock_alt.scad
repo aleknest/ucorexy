@@ -194,8 +194,58 @@ module y_endstop_lock()
 	}
 }
 
+module nut(G=undef,H,S=undef)
+{
+    // G,e
+	// S,F
+    //R = 0.5; A = 0; x = cos(A) * R; y = sin(A) * R;
+	
+	gg=str(S) != "undef" ? S/cos(30) : G;
+	
+    nut_points=[
+	 [0.5,0]
+	,[0.25,0.433013]
+	,[-0.25,0.433013]
+	,[-0.5,0]
+	,[-0.25,-0.433013]
+	,[0.25,-0.433013]
+    ];
+
+    scale ([gg,gg,1])
+    linear_extrude(H)
+	polygon (points=nut_points);
+}
+
+module m6_screw_driver()
+{
+	fillet (r=2,steps=12)
+	{
+		s=4.8;
+		h=12;
+		cut=0.6;
+		hh=3;
+		
+		nut(H=h-cut,S=s);	
+		translate ([0,0,h-cut-0.1])
+		hull()
+		{
+			nut(H=0.1,S=s);
+			translate ([0,0,cut])
+				nut(H=0.1,S=s-cut*2);
+		}
+		hull()
+		{
+			nut(H=2,S=s+2);
+			translate ([20,0,0])
+				cylinder(h=2,d=s+4);
+		}
+	}
+}
+
 yposition=-55;
 xposition=55;
+
+m6_screw_driver();
 
 //proto_front_slots();
 
@@ -203,7 +253,7 @@ xposition=55;
 //proto_xymotors_alt();
 
 //leftfront_motorblock();
-rightfront_motorblock();
+//rightfront_motorblock();
 //y_endstop_lock();
 
 //use <ycarriage.scad>
