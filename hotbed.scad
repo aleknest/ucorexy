@@ -91,7 +91,7 @@ module hotbed_support(zposition,tr,xpos,ypos,double=true)
 			rotate ([180,0,0])
 			{
 				cylinder (d=10,h=12,$fn=30);
-				cylinder (d=3.5,h=40,$fn=30);
+				cylinder (d=4.0,h=40,$fn=30);
 			}
 			
 			xx=xpos<0?thickness:0;

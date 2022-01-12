@@ -681,11 +681,11 @@ module x_carriage_fan_spacer(blower_screw_diameter=2.9)
 module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 {
 	
-	blower_inner_add=0.6;//888888888888888
+	blower_inner_add=0.6;
 	fix_th=2;
 	fix_th_down=9.6;
 	fix_offs=0.2;
-	hh=20;//888888888888888
+	hh=20;
 	sdiff=17.3*2;
 	bsh=blower_screw_holes(e3d_blower_type());
 	blower_corner_coords=[
@@ -1052,7 +1052,7 @@ module xcarriage_motor_plate()
 	base_dim = [28,32,6];
 	dim_nema=[NEMA_width(motor_type()),NEMA_width(motor_type()),feeder_nema_plate_thickness()];
 	addy=0;//motorplate_tr.z-69.15-4;
-	pdim=[4,7,2,8];
+	pdim=[4,7,2,8+20.3];
 	motorbox_th=3;
 	difference()
 	{
@@ -1112,8 +1112,8 @@ module xcarriage_motor_plate()
 			}
 		}
 		
-		for(z=[0:1])
-		translate ([motorbox_th,-1,z*-8])
+		for(z=[0:3])
+		translate ([motorbox_th,-1,z*-9])
 		translate (motorplate_tr)
 		rotate ([-90,0,0])
 		linear_extrude(dim_nema.z+2)
@@ -1134,6 +1134,7 @@ module xcarriage_motor_plate()
 			dim=[18,40,40];
 			translate ([-dim.x/2,0,-dim.z-10])
 				cube (dim);
+			//88888
 			nema17_cut(washers=true
 					,shaft=false
 					,bighole=true
@@ -1142,7 +1143,7 @@ module xcarriage_motor_plate()
 					,main_cyl_length=100
 					,report=false
 					,report_pulley=false
-					,nema17_offset=0.3
+					,nema17_offset=0.3+0.3
 			);
 		}
 	}	
@@ -1204,7 +1205,7 @@ xposition=55;
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
 //proto_adxl345(accelerometer=2);
-x_carriage_bottom();
+//x_carriage_bottom();
 //proto_x_blowers();
 
 //x_carriage_fan_spacer();
@@ -1241,7 +1242,7 @@ x_carriage_bottom();
 		*/
 	}
 		
-	//xcarriage_motor_plate();
+	xcarriage_motor_plate();
 	//xcarriage_slot_wire_holder();
 	
 	
@@ -1250,3 +1251,4 @@ x_carriage_bottom();
 }
 //x_endstop();
 //x_endstop_lock();
+	

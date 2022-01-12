@@ -125,7 +125,6 @@ module blower_nozzle(figure1
 				rotate ([90,0,-90])
 				intersection()
 				{
-					//888888888
 					linear_extrude (ee)
 						polygon(up2points2(up2points(arg=figure1,upcounter=upcounter),counter1=0,counter2=4,counter3=5));
 					blower_nozzle_cut(
@@ -135,6 +134,11 @@ module blower_nozzle(figure1
 				}
 			
 				translate ([0,0,-2.4])
+				{
+					cube ([40,10,18]);
+				}
+
+				translate ([0,-14,-20])
 				{
 					cube ([40,10,18]);
 				}
@@ -157,7 +161,8 @@ module blower_nozzle(figure1
 					translate ([0,0,10])
 					rotate ([0,180,0])
 						cylinder(d=3.5,h=20,$fn=30);
-					m2p5_nut();
+					cylinder (d=5.65+0.3,h=2.2,$fn=6);
+
 				}
 		
 		translate ([ee+5-nozzle_thickness*2-nozzle_offs.x,0,0])
@@ -176,7 +181,7 @@ module blower_nozzle(figure1
 			);
 		}
 		
-		translate ([14,nozzle_in,0.3])
+		translate ([14,nozzle_in+2,0.3])
 		rotate ([90,0,0])
 		translate ([6,nozzle_points[2].y-0.2,2.7])
 			rotate ([-90,0,0])
