@@ -171,7 +171,7 @@ module report_m2p5_screw_din(screw,din)
 {
 	deb(str("M2.5x",screw," ",din));
 }
-module report_m2p5_hexnut(screw)
+module report_m2p5_hexnut()
 {
 	deb(str("M2.5 nut (hex)"));
 }

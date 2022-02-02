@@ -10,6 +10,16 @@ include <../_utils_v2/NopSCADlib/vitamins/fans.scad>
 include <../_utils_v2/NopSCADlib/vitamins/pulleys.scad>
 include <../_utils_v2/NopSCADlib/vitamins/stepper_motors.scad>
 
+//
+
+printer_number=0; //0-ucorexy,1-ucorexy2
+function printers()=[
+	//slots X    Y    Z
+	 [       178 ,180 ,230, "ucorexy"]
+	,[       205 ,205 ,230+35, "ucorexy2"]
+];
+function printer()=printers()[printer_number];
+
 //                 L     L1    W   H   H1   C   B
 MGN9C_carriage  = [ 28.9, 18.9, 20, 10, 2,   10, 15, M3_cap_screw ];
 function MGN9C() = [ "MGN9",  9,  6,   7.5, 20, 6.0, 3.5, 3.5, M3_cap_screw, MGN9C_carriage, M3_cs_cap_screw ];
@@ -18,7 +28,7 @@ function MGN9H() = [ "MGN9H",  9,  6,   7.5, 20, 6.0, 3.5, 3.5, M3_cap_screw,   
 
 function e3d_tr_ycorr()=3;
 
-function x_slot()=184-6;
+function x_slot()=printer().x;
 function x_slot_tr()=[[0,0,carriage_height(rail_carriage(y_rail_type()))],[0,90,0]];
 
 function x_rail_type()=MGN9C();
@@ -56,7 +66,7 @@ function xcarriage_tr() = [vec_add(x_slot_tr()[0]
 	,[-xcarriage_dim().x/2,-10-xcarriage_thickness()[0],x_slot_tr()[0].z-20-xcarriage_thickness()[3]])
 	,[0,0,0]];
 
-function y_slot()=180;
+function y_slot()=printer().y;
 function y_slot_offset()=1;
 function y_slot_left_tr()=[[-x_slot()/2-y_slot_offset()-10
 						,0,0],[0,90,90]];
@@ -73,7 +83,7 @@ function y_carriage_thickness()=30;
 function y_carriage_sidethickness()=4;
 function y_carriage_slot_crawl()=10;
 
-function z_slot()=230;
+function z_slot()=printer().z;
 function z_slot_fronty()=y_slot_left_tr()[0].y-y_slot()/2-10;
 function z_slot_backy()=y_slot_left_tr()[0].y+y_slot()/2+10;
 function z_slot_leftfront_tr()=[[y_slot_left_tr()[0].x,z_slot_fronty(),-z_slot()/2+10],[0,0,0]];

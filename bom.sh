@@ -2,7 +2,7 @@ threads=2
 PROJ='ucorexy.scad'
 EX='openscad '$PROJ
 
-list_export=("$EX -D xposition=0 -D yposition=0 --csglimit=3200000 --preview  --camera=10,-25,-50,55,0,25,1158 --projection=ortho --colorscheme Starnight --imgsize=800,800 -o render.png")
+list_export=("$EX -D printer_number=0 -D xposition=0 -D yposition=0 --csglimit=3200000 --preview  --camera=10,-25,-50,55,0,25,1158 --projection=ortho --colorscheme Starnight --imgsize=800,800 -o render.png")
 $list_export 2> ./0bom.txt
 
 cat ./0bom.txt | grep ECHO | cut -d'"' -f 2 | cut -d ">" -f2 > ./1bom.txt

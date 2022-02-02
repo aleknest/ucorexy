@@ -4,7 +4,7 @@ use <../_utils_v2/deb.scad>
 use <utils.scad>
 use <proto.scad>
 use <configuration.scad>
-use <xcarriage.scad>
+use <xcarriage_alt.scad>
 use <ycarriage.scad>
 use <zcarriage.scad>
 use <backcorners.scad>
@@ -23,7 +23,7 @@ use <nozzles.scad>
 use <oled_encoder.scad>
 
 xposition=0;//-55..55
-yposition=55;//-55..55
+yposition=0;//-55..55
 zposition=10;//0..90
 
 deb(str("#Dimension: x=",front_back_slot()+20*2,", y=",y_slot()+20*2, ", z=",z_slot()));
@@ -63,7 +63,6 @@ translate ([xposition,y_rail_y()+yposition,0])
 
 translate ([xposition,y_rail_y()+yposition,0])
 {
-	//x_carriage_main();
 	x_carriage_top();
 	x_carriage_bottom();
 	x_carriage_back();
@@ -179,12 +178,14 @@ rotate ([0,0,270])
 
 //////////////////////////////////////////////////////////////
 
+/*
 deb("*Feeder stand:");
 feeder_stand_top();
 feeder_stand_bottom();
 feeder_stand_middle();
 translate ([0,0,feeder_stand_middle_cut()]) feeder_stand_middle();
 feeder_stand_plate();
+*/
 
 //////////////////////////////////////////////////////////////
 
@@ -231,10 +232,11 @@ wire_fix_righttop_corner();
 wire_fix_front();
 
 //////////////////////////////////////////////////////////////
-
+/*
 deb("*oled screen and encoder:");
 oled_encoder_top();
 oled_encoder_bottom();
+*/
 
 //////////////////////////////////////////////////////////////
 

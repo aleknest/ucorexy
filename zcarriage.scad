@@ -244,15 +244,15 @@ module z_endstop_lock()
 }
 
 z=90;
-//proto_back_slots();
+proto_back_slots();
 
-//proto_heatbed_slots(z);
-//proto_heatbed(z);
-//proto_z_rails(z);
-//proto_slot_brackets();
+proto_heatbed_slots(z);
+proto_heatbed(z);
+proto_z_rails(z);
+proto_slot_brackets();
 
-//z_carriage_left(z);
-//z_carriage_right(z);
+z_carriage_left(z);
+z_carriage_right(z);
 
 z_endstop();
 z_endstop_lock();

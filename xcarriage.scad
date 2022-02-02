@@ -740,8 +740,8 @@ module x_carriage_fans(blower_screw_diameter=2.9,accelerometer=0)
 					translate_rotate (t)
 					translate (blower_corner_coords[cc][0])
 					rotate (blower_corner_coords[cc][1])
-					linear_extrude(3)
-						polygon(fan_points);
+						linear_extrude(3)
+							polygon(fan_points);
 					
 					fix_z=-5;
 					fix=2;
@@ -1205,7 +1205,7 @@ xposition=55;
 //translate ([0,-y_rail_y(),0]) proto_xybelts(xposition=0,yposition=0);
 
 //proto_adxl345(accelerometer=2);
-//x_carriage_bottom();
+x_carriage_bottom();
 //proto_x_blowers();
 
 //x_carriage_fan_spacer();
@@ -1242,7 +1242,7 @@ xposition=55;
 		*/
 	}
 		
-	xcarriage_motor_plate();
+	//xcarriage_motor_plate();
 	//xcarriage_slot_wire_holder();
 	
 	

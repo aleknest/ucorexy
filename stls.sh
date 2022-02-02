@@ -18,7 +18,7 @@ do
     dir=${part%/*}
     mkdir -p ./produce/$dir
 
-    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\"")
+    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\" -D printer_number=1")
 done
 
 index=0

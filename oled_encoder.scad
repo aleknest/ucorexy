@@ -297,4 +297,6 @@ module encoder_knob()
 //proto_front_slots();
 //oled_encoder_top();
 //oled_encoder_bottom();
-encoder_knob();
+//encoder_knob();
+
+oled_encoder(report=true,wire=true);

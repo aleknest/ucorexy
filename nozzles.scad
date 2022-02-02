@@ -205,7 +205,7 @@ function blower_nozzle_figure(corr=0,add1=9,upbody=0)=
 		, [-2,-nozzle_thickness,0]
 	],20);
 
-module blower_nozzle_(txt="",txtmirror=[0,0,0],upbody=0)
+module blower_nozzle_(txt="",txtmirror=[0,0,0],upbody=0.5)
 {
 	blower_nozzle(figure1=blower_nozzle_figure(upbody=upbody)
 				,figure2=blower_nozzle_figure(corr=2,upbody=upbody)

@@ -39,15 +39,24 @@ module case_proto()
 		fan(case_fan_type());
 }
 
+module blower_stl()
+{
+	color ("#555555")
+	translate ([-1.6,-7.4,-15.285])
+		import ("proto/4010_Blower.stl");
+}
+
 module proto_x_blowers(xposition=0)
 {
 	report_blower();
 	translate_rotate (e3d_blower_left_tr(xposition))
-		blower(e3d_blower_type());
+		blower_stl();
+		//blower(e3d_blower_type());
 	
 	report_blower();
 	translate_rotate (e3d_blower_right_tr(xposition))
-		blower(e3d_blower_type());
+		blower_stl();
+		//blower(e3d_blower_type());
 	
 	report_fan();
 	translate_rotate (e3d_fan_tr(xposition))
@@ -354,29 +363,4 @@ module proto_xybelts_alt(xposition=0,yposition=55)
 }
 
 
-z=0;
-
-//translate ([0,y_rail_y(),0]) proto_x(xposition=0);
-//proto_y_left(yposition=0);
-//proto_y_right(yposition=0);
-//proto_other_slots();
-//proto_xybelts(0,0);
-//proto_xymotors();
-//proto_z_belt(z);
-
-//proto_front_slots();
-//proto_back_slots();
-//proto_heatbed_slots(z);
-//proto_heatbed(z);
-
-//proto_z_rails(z);
-
-proto_slot_brackets(0);
-
-// fysetc s6
-//translate ([-0,-68,-220])
-//	cube ([87,117,30]);
-	
-//proto_approx_electronics();
-
-//proto_z_endstop();
+proto_x_blowers(xposition=0);

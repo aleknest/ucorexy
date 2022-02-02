@@ -108,19 +108,19 @@ module hotbed_support(zposition,tr,xpos,ypos,double=true)
 	}
 }
 
-module left_front_hotbed_support(zposition)
+module left_front_hotbed_support(zposition=0)
 {
 	hotbed_support(zposition,leftheatbed_slot_tr(),-1,-1,double=false);
 }
-module right_front_hotbed_support(zposition)
+module right_front_hotbed_support(zposition=0)
 {
 	hotbed_support(zposition,rightheatbed_slot_tr(),1,-1,double=false);
 }
-module left_back_hotbed_support(zposition)
+module left_back_hotbed_support(zposition=0)
 {
 	hotbed_support(zposition,leftheatbed_slot_tr(),-1,1);
 }
-module right_back_hotbed_support(zposition)
+module right_back_hotbed_support(zposition=0)
 {
 	hotbed_support(zposition,rightheatbed_slot_tr(),1,1);
 }
@@ -200,9 +200,9 @@ z=0;
 //proto_slot_brackets();
 
 //proto_heatbed(z);
-left_front_hotbed_support(z);
+//left_front_hotbed_support(z);
 //right_front_hotbed_support(z);
-//left_back_hotbed_support(z);
+left_back_hotbed_support(z);
 /*
 right_back_hotbed_support(z);
 hotbed_knobs(z);
