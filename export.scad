@@ -51,7 +51,6 @@ if (cmd=="list")
 	list("x_carriage/x_carriage_belt_fixer_left");
 	list("x_carriage/x_carriage_belt_fixer_right");	
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefix");
-	list("x_carriage/e3dv6_throat_bore4p1_ptfefix2");
 	list("x_carriage/e3dv6_throat_bore4p1_ptfefixnut");
 	
 	list("klipper_head_mcu/bottom");
@@ -459,10 +458,6 @@ if (cmd=="slot_cover/slot_bigcover_1mm")
 //////////////////////////////////////////////////////////////
 
 if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefix")
-{
-	e3d_fitting();
-}
-if (cmd=="x_carriage/e3dv6_throat_bore4p1_ptfefix2")
 {
 	e3d_fitting2();
 }

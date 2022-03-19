@@ -182,7 +182,7 @@ module zmotion_bottom_main(report=false)
 			
 			for (i=[1:z_pulley_count()-1])
 				translate_rotate (zbottom_pulley_tr(i))
-					zpulley_cut(pulley_type=z_pulley_type(),op=0,angle=0,screw=16,up=7,nut_type="hex",report=report);
+					zpulley_cut(pulley_type=z_pulley_type(),op=0,angle=0,screw=16+4,up=7+3.5,nut_type="hex",report=report);
 			
 			translate_rotate (zmotor_pulley_tr())
 			{
@@ -503,10 +503,10 @@ z=70;
 //proto_z_belt(z);
 //proto_heatbed(z);
 
-zmotion_bottom_lock();
+//zmotion_bottom_lock();
 		
 //zmotion_top_lock();
 
-//zmotion_bottom();
+zmotion_bottom();
 //zmotion_top();
 //zmotion_middle_main(z);

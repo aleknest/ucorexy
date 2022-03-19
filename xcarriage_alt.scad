@@ -1404,13 +1404,13 @@ xposition=55;
 
 //proto_adxl345(accelerometer=2);
 
-//x_carriage_bottom();
+x_carriage_bottom();
 //proto_x_blowers();
 //blower_nozzle_l();
 //blower_nozzle_r();
 
 //blower_stl();
-blower_nozzle();
+//blower_nozzle();
 //blower_up_fix(m=false);
 
 //x_carriage_fan_spacer();

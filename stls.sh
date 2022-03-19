@@ -1,4 +1,4 @@
-threads=6
+threads=1
 PROJ='export.scad'
 EX='openscad '$PROJ
 
@@ -18,7 +18,7 @@ do
     dir=${part%/*}
     mkdir -p ./produce/$dir
 
-    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\" -D printer_number=1")
+    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\" -D printer_number=0")
 done
 
 index=0
