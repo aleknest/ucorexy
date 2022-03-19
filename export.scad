@@ -118,13 +118,6 @@ if (cmd=="list")
 	list("enclosure/enclosure_spacer_raspberrypi");
 	list("enclosure/enclosure_spacer_ramps");
 	
-	list("xt90/xt90");
-	list("wago/wago");
-	list("legs/leg");
-	list("legs/leg_tennis_ball");
-	list("slot_cover/slot_cover_1mm");
-	list("slot_cover/slot_bigcover_1mm");
-
 	list("case/case_top");
 	list("case/case_front");
 	list("case/case_front_rj45");
@@ -140,6 +133,13 @@ if (cmd=="list")
 	list("oled_encoder/oled_encoder_top");
 	list("oled_encoder/oled_encoder_bottom");
 	list("oled_encoder/encoder_knob");
+
+	list("xt90/xt90");
+	list("wago/wago");
+	list("slot_cover/slot_cover_1mm");
+	list("slot_cover/slot_bigcover_1mm");
+	list("legs/leg");
+	list("legs/leg_tennis_ball");
 }
 
 //////////////////////////////////////////////////////////////

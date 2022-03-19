@@ -293,7 +293,7 @@ module zmotion_top_main(report=false)
 			
 			for (i=[0:z_pulley_count()-1])
 				translate_rotate (ztop_pulley_tr(i))
-					zpulley_cut(pulley_type=z_pulley_type(),op=0,angle=180,screw=16,up=7,nut_type="hex",report=report);
+					zpulley_cut(pulley_type=z_pulley_type(),op=0,angle=180,screw=16+4,up=7+3.5,nut_type="hex",report=report);
 			
 			for (y=[-1,1])
 			{
@@ -424,7 +424,7 @@ module zmotion_middle_main(zposition)
 				for (i=[0:z_pulley_count()-1])
 					translate_rotate (zmiddle_pulley_tr(i,mid,0))
 							zpulley_cut(pulley_type=z_pulley_type(),op=0
-								,angle=-90+90*mid,screw=20,up=7,nut_type="hex",report=true);
+								,angle=-90+90*mid,screw=20,up=7+1.4,nut_type="hex",report=true);
 				
 			fix_up=5;	
 				
@@ -507,6 +507,6 @@ z=70;
 		
 //zmotion_top_lock();
 
-zmotion_bottom();
+//zmotion_bottom();
 //zmotion_top();
-//zmotion_middle_main(z);
+zmotion_middle_main(z);
