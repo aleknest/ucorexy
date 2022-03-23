@@ -168,6 +168,8 @@ module case_right()
 	length=y_slot()-case_offset()*2;
 	screws=[case_screws_offset(),y_slot()-case_screws_offset()];
 	c45=3;
+    
+    //echo (length);
 	
 	roffs=0.2;
 	rw=rail_width(z_rail_type())+roffs*2;
@@ -365,6 +367,7 @@ module case_top()
 {
 	dd=12;
 	dim=vec_add(case_top_dim(),[-case_top_in*2,-case_top_in*2,0]);
+    //echo(dim);
 	tr=vec_add(case_top_tr(),[case_top_in,case_top_in,0]);
 	difference()
 	{
@@ -566,11 +569,11 @@ translate_rotate(case_fan_tr())
 
 //case_front(rj45=true);
 //case_left();
-//case_right();
+case_right();
 
 //case_backleft();
 //case_backright();
 
-case_top();
+//case_top();
 
 //m5_cap();

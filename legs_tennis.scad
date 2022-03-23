@@ -24,10 +24,10 @@ module base(add=0,fn=200)
 	sphere(d=ball_diameter_outer+add*2,$fn=fn);
 }
 
-module tbase(add=0)
+module tbase(add=0,fn=200)
 {
 	translate ([0,0,-ball_diameter_outer/2])
-		base(add=add);
+		base(add=add,fn=fn);
 }
 
 module base_sphere()
@@ -106,13 +106,13 @@ module tennis_leg()
 		{
 			difference()
 			{
-				//hull()
-				fillet (r=8,steps=$preview?2:16)
+				//union()
+				fillet (r=8,steps=$preview?8:16)
 				{
 					translate ([0,0,h-thickness])
 					translate ([-10,-10,-h-add])
 						cube ([20,20,h+add]);
-					tbase(add=-0.01);
+					tbase(add=-0.01,fn=80);
 				}
 				tbase();
 			}

@@ -2,10 +2,7 @@ threads=1
 PROJ='export.scad'
 EX='openscad '$PROJ
 
-rm -r ./produce/*
-mkdir -p ./produce
-
-list_export=("$EX -D cmd=\"list\" -o null.stl")
+list_export=("$EX -D cmd=\"list\" -D printer_number=$1 -o null.stl")
 $list_export 2> ./produce/list.txt
 cat ./produce/list.txt | grep list | cut -d'"' -f 2 | cut -d ":" -f2 > ./produce/list_parts.txt
 rm ./produce/list.txt
@@ -18,7 +15,7 @@ do
     dir=${part%/*}
     mkdir -p ./produce/$dir
 
-    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\" -D printer_number=0")
+    parts+=("$EX -o ./produce/$part.stl -D cmd=\"$part\" -D printer_number=$1")
 done
 
 index=0

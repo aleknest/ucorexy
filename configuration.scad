@@ -15,10 +15,11 @@ include <../_utils_v2/NopSCADlib/vitamins/stepper_motors.scad>
 printer_number=0; //0-ucorexy,1-ucorexy2
 function printers()=[
 	//slots X    Y    Z
-	 [       178 ,180 ,230, "ucorexy"]
-	,[       205 ,205 ,230+35, "ucorexy2"]
+	 [       178 ,180 ,230, "ucorexy_bed120mm"]
+	,[       205 ,205 ,230+35, "ucorexy_bed220mm"]
 ];
 function printer()=printers()[printer_number];
+function printer_dir()=printer()[3];
 
 //                 L     L1    W   H   H1   C   B
 MGN9C_carriage  = [ 28.9, 18.9, 20, 10, 2,   10, 15, M3_cap_screw ];
